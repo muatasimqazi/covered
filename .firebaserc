@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "covered-d3bfe"
+    "default": "covered-d3bfe",
+    "staging": "covered-dev-7d37b"
   }
 }
