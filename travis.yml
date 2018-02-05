@@ -3,6 +3,10 @@ language: node_js
 node_js:
   - 9
 
+notifications:
+  email:
+    - thatmichaelpark@gmail.com
+
 cache:
   directories:
   - node_modules
