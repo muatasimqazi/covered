@@ -1,5 +1,6 @@
 import React from 'react';
 import calender from '../img/calendar.svg';
+import { Link } from 'react-router-dom';
 
 const styles = {
     hero: {
@@ -24,6 +25,7 @@ const Hero = () => (
             <div style={styles.heroTitle} className={'hero-title'}>
                 <h1>Covered</h1>
                 <p>An intutive app to simplify your scheduling</p>
+                <p><Link to="/signup">Sign up</Link></p>
             </div>
             <div style={styles.heroImage} className={'hero-img'}></div>
         </div>

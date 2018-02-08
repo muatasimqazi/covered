@@ -49,7 +49,8 @@ class App extends Component {
         loggedIn: true,
         openSnackbar: true,
         snackbarMessage: 'Successfully logged in!',
-      })
+      });
+      this.props.history.push('/employee');
     }
   }
   handleSnackbarClose = () => {
