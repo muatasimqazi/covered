@@ -6,6 +6,7 @@ import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
 import Hero from './components/Hero';
 import Features from './components/Features';
+import Calendar from './components/Calendar';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -20,6 +21,7 @@ const App = () => (
     <div>
       <AppBarTop />
       <Hero />
+      <Calendar />
       <Features />
     </div>
   </MuiThemeProvider>
