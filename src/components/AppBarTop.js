@@ -13,12 +13,19 @@ const styles = {
   }
 };
 
-const AppBarTop = () => (
-  <AppBar
-    title={<span style={styles.title}>Covered</span>}
-    style={styles.appBar}
-    iconElementRight={<FlatButton label="Login" />}
-  />
-);
+class AppBarTop extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <AppBar
+        title={<span style={styles.title}>Covered</span>}
+        style={styles.appBar}
+        iconElementRight={<FlatButton label="Log In" onClick={this.props.onLoginClick} />}
+      />
+    );
+  }
+}
 
 export default AppBarTop;
