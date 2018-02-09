@@ -6,6 +6,8 @@ import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
 import Hero from './components/Hero';
 import Features from './components/Features';
+import logo from './logo.svg';
+import './App.css';
 
 const muiTheme = getMuiTheme({
   palette: {
