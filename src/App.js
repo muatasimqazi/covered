@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'; //eslint-disable jsx-a11y/alt-text
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
