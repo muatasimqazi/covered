@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import events from './events';
 import BigCalendar from 'react-big-calendar';

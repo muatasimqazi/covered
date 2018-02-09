@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 import AppBar from 'material-ui/AppBar';

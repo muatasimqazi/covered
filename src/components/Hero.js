@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const styles = {
     hero: {
         background: '#598d1c',
-        background: 'linear-gradient(to bottom, #598d1c 25%, #285f00 75%)',
+        backgroundImage: 'linear-gradient(to bottom, #598d1c 25%, #285f00 75%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

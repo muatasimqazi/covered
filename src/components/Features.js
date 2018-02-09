@@ -62,7 +62,7 @@ const Features = () => (
         {
             icons.map((item, index) => {
                 return (
-                    <div style={styles.item} className={'feature-item'}>
+                    <div style={styles.item} className={'feature-item'} key={index}>
                         <div style={styles.circle}>
                             <FontIcon style={styles.icon} className="material-icons">{item.icon}</FontIcon>
                         </div>
