@@ -25,7 +25,7 @@ deploy:
   - provider: firebase
     token:
       secure: "TwiPb001fTZkKESFtDlvNddRIRyrdKI7jIvXOSb4KgNWqSMJb+ZxKtVdFuuc3gDGdJRRj9s0UbxkJ79u78C3MjhupPOuvSYsP4BaQUsYoAFrMTJaNjGN5RlNlCdh4h36M49eOqCG7MeR6rBsL2TQtp1AJaH+qD4ih2d9irqDZC3WqJcJwSo+vh2/u2bGA1gL9JhU8wJ4RnwgwcCucLhhpXymqkJM93g7EOgGgbwaepuT1JpyWiigg/ht1z09ohnkWmWVPCCjom2e1wNLF9RKKbLOlLUJFr5AA2jLzVYQzwtLjBx21GXiyKLt6rBgiHsrKHLnjlad0RLIMn2c1eLxLaZz/4W5lMQLzFekIc9ZTR9POF3NHUJykAA/94mpUMF8Zpqsnp/9/8Zs5g7pslzEIopqlWVCOVykDDZS2oRRYgWyGZofXVX7e4hYbQLl3aX+lO8xYkI/F9Xct1EE5Fe5/uljQfmMBKNQzwLjZjWeJ1ETn1bH6hJobC3+9G+IknTgz211ZhG0uYIhMM7/JMqfS325wMsO9RKUhWr10nHopzzNvbHIH8lDkSpaO88GovKsAHgRapYcKF55cPUV5zMUeFljOSBrpMWZxZLkAQ9qFEoMhuD3/bBhNrG5IFAWJ7FpCw+EKsTc5pCftovUMVWlQYM3goJJgmuVYHA1Gqnmdtw="
-    project: "production"
+    project: "default"
     message: "deploying to production"
     on:
       branch: master
@@ -33,7 +33,7 @@ deploy:
   - provider: firebase
     token:
       secure: "TwiPb001fTZkKESFtDlvNddRIRyrdKI7jIvXOSb4KgNWqSMJb+ZxKtVdFuuc3gDGdJRRj9s0UbxkJ79u78C3MjhupPOuvSYsP4BaQUsYoAFrMTJaNjGN5RlNlCdh4h36M49eOqCG7MeR6rBsL2TQtp1AJaH+qD4ih2d9irqDZC3WqJcJwSo+vh2/u2bGA1gL9JhU8wJ4RnwgwcCucLhhpXymqkJM93g7EOgGgbwaepuT1JpyWiigg/ht1z09ohnkWmWVPCCjom2e1wNLF9RKKbLOlLUJFr5AA2jLzVYQzwtLjBx21GXiyKLt6rBgiHsrKHLnjlad0RLIMn2c1eLxLaZz/4W5lMQLzFekIc9ZTR9POF3NHUJykAA/94mpUMF8Zpqsnp/9/8Zs5g7pslzEIopqlWVCOVykDDZS2oRRYgWyGZofXVX7e4hYbQLl3aX+lO8xYkI/F9Xct1EE5Fe5/uljQfmMBKNQzwLjZjWeJ1ETn1bH6hJobC3+9G+IknTgz211ZhG0uYIhMM7/JMqfS325wMsO9RKUhWr10nHopzzNvbHIH8lDkSpaO88GovKsAHgRapYcKF55cPUV5zMUeFljOSBrpMWZxZLkAQ9qFEoMhuD3/bBhNrG5IFAWJ7FpCw+EKsTc5pCftovUMVWlQYM3goJJgmuVYHA1Gqnmdtw="
-    project: "develop"
+    project: "staging"
     message: "deploying to staging"
     on:
       branch: develop
