@@ -9,6 +9,8 @@ import Hero from './components/Hero';
 import Features from './components/Features';
 import './App.css';
 
+import Calendar from './components/Calendar';
+
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: lightGreen800,
@@ -22,6 +24,7 @@ const App = () => (
     <div>
       <AppBarTop />
       <Hero />
+      <Calendar />
       <Features />
     </div>
   </MuiThemeProvider>
