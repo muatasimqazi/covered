@@ -58,7 +58,7 @@ const Features = () => (
                 <FontIcon style={styles.icon} className="material-icons">schedule</FontIcon>
                 <div style={styles.desc}>
                     <h2>Track Shifts</h2>
-                    <p style={styles.descInfo}>Some text that explains the feature offered</p>
+                    <p style={styles.descInfo}>Shift</p>
                 </div>
             </div>
         </div>
