@@ -24,6 +24,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       loggedIn: false,
       openLoginDialog: false,
       openSignupDialog: false,
@@ -69,6 +70,13 @@ class App extends Component {
       openSnackbar: false
     });
   }
+
+
+componentDidMount() {
+  // simulates an async action, and hides the spinner
+  setTimeout(() => this.setState({ loading: false }), 3000); // 3 sec
+}
+
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
@@ -82,7 +90,7 @@ class App extends Component {
             <Route path="/signup" component={SignUp}/>
             <Route path="/employee" component={Employee}/>
             <Route path="/manager" component={Manager}/>
-            <Route path="/" component={HomePage}/>
+            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading}/>}/>
           </Switch>
           <LoginDialog 
             onClose={this.handleLoginClose}

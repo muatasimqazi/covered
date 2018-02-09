@@ -19,8 +19,10 @@ const styles = {
         backgroundImage: `url(${calender})`,
     }
 }
-const Hero = () => (
-    <div>
+class Hero extends React.Component {
+    render() {
+        return (
+                <div>
         <div style={styles.hero} className={'hero'}>
             <div style={styles.heroTitle} className={'hero-title'}>
                 <h1>Covered</h1>
@@ -30,6 +32,7 @@ const Hero = () => (
             <div style={styles.heroImage} className={'hero-img'}></div>
         </div>
     </div>
-);
-
+        )
+    }
+}
 export default Hero;

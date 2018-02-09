@@ -62,6 +62,15 @@ const Features = () => (
                 </div>
             </div>
         </div>
+        <div style={styles.item} className={'feature-item'}>
+            <div style={styles.circle}>
+                <FontIcon style={styles.icon} className="material-icons">schedule</FontIcon>
+                <div style={styles.desc}>
+                    <h2>Track Shifts</h2>
+                    <p style={styles.descInfo}>Some text that explains the feature offered</p>
+                </div>
+            </div>
+        </div>
     </div>
 );
 
