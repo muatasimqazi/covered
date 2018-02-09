@@ -5,11 +5,10 @@ import Calendar from './Calendar';
 import Spinner from './Spinner';
 import PaperCard from './PaperCard';
 import { Container, Row, Col } from 'react-grid-system'
-
 class HomePage extends React.Component {
   render() {
     const loading = this.props.loading;
-    const authenticated = true;//this.props.authenticated;
+    const authenticated = this.props.authenticated;
     return (
       <div>
         {
@@ -20,7 +19,7 @@ class HomePage extends React.Component {
             authenticated
               ?
               <div>
-                <br /><br /><br /><br />
+               <br/><br/><br/>
                 <Container fluid>
                   <Row>
                     <Col sm={9}>
@@ -30,8 +29,8 @@ class HomePage extends React.Component {
                     </Col>
                     <Col sm={3}>
                       <PaperCard>
-                        <h4>This is a smaple card</h4>
-                        <p>tesxt</p>
+                        <h4>A Sample Card</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                       </PaperCard>
                     </Col>
                   </Row>

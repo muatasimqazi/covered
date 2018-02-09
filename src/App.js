@@ -15,9 +15,12 @@ import Snackbar from 'material-ui/Snackbar';
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: lightGreen800,
-    accent1Color: amberA400,
-    secondaryTextColor: '#000'
-  },
+    accent1Color: '#ffa726',
+    primaryTextColor: '#FFF',
+    secondaryTextColor: '#000',
+    accent1TextColor: '#000',
+    alternateTextColor: '#FFF'
+  }
 });
 
 class App extends Component {
@@ -25,6 +28,7 @@ class App extends Component {
     super(props);
     this.state = {
       loading: true,
+      drawerOpen: false,
       loggedIn: false,
       openLoginDialog: false,
       openSignupDialog: false,
@@ -71,10 +75,12 @@ class App extends Component {
     });
   }
 
+  handleDrawerToggle = () => this.setState({drawerOpen: !this.state.drawerOpen});
+
 
 componentDidMount() {
   // simulates an async action, and hides the spinner
-  setTimeout(() => this.setState({ loading: false }), 3000); // 3 sec
+  setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
 }
 
   render() {
@@ -85,6 +91,8 @@ componentDidMount() {
             loggedIn={this.state.loggedIn}
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerToggle={this.handleDrawerToggle}
           />
           <Switch>
             <Route path="/signup" component={SignUp}/>

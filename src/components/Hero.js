@@ -1,10 +1,12 @@
 import React from 'react';
 import calender from '../img/calendar.svg';
+import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
 
 const styles = {
     hero: {
-        backgroundColor: '#e5b252',
+        background: '#598d1c',
+        background: 'linear-gradient(to bottom, #598d1c 25%, #285f00 75%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,16 +24,16 @@ const styles = {
 class Hero extends React.Component {
     render() {
         return (
-                <div>
-        <div style={styles.hero} className={'hero'}>
-            <div style={styles.heroTitle} className={'hero-title'}>
-                <h1>Covered</h1>
-                <p>An intutive app to simplify your scheduling</p>
-                <p><Link to="/signup">Sign up</Link></p>
+            <div>
+                <div style={styles.hero} className={'hero'}>
+                    <div style={styles.heroTitle} className={'hero-title'}>
+                        <h1>Covered</h1>
+                        <p>An intutive app to simplify your scheduling</p>
+                        <RaisedButton label="Sign up" secondary={true} containerElement={<Link to="/signup"></Link>} />
+                    </div>
+                    <div style={styles.heroImage} className={'hero-img'}></div>
+                </div>
             </div>
-            <div style={styles.heroImage} className={'hero-img'}></div>
-        </div>
-    </div>
         )
     }
 }
