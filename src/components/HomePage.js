@@ -19,7 +19,6 @@ class HomePage extends React.Component {
             authenticated
               ?
               <div>
-               <br/><br/><br/>
                 <Container fluid>
                   <Row>
                     <Col sm={9}>

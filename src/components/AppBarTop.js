@@ -51,7 +51,7 @@ class AppBarTop extends React.Component {
           <MenuItem onClick={this.handleToggle}>Menu Item 1</MenuItem>
           <MenuItem onClick={this.handleToggle}>Menu Item 2</MenuItem>
         </Drawer>
-
+        <div style={{height: 64}}/>
       </div>
     );
   }
