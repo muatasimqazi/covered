@@ -1,0 +1,507 @@
+{
+	"teams": {
+		"teamId0001": {
+			"supervisors": [
+				{
+					"name": "Lisa Leslie",
+					"role": "supervisor",
+					"email": "",
+					"notifications": {
+					}
+				}
+			],
+			"employees": [
+				{
+					"id": "0001",
+					"name": "Lana Linden",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1312018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1412018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0002",
+					"name": "Lars Levine",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1312018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1412018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1512018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1612018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1712018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0003",
+					"name": "Laraine Lilly",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1312018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1412018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1512018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1612018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0004",
+					"name": "Logan Lock",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1312018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0005",
+					"name": "Leo Lathey",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1312018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0006",
+					"name": "Landon Loft",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1312018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0007",
+					"name": "Lamar Lowrie",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1312018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0008",
+					"name": "Laila Langston",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1312018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1412018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1512018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1612018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1712018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1812018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0009",
+					"name": "Lawrence Leahy",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1312018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1712018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				},
+				{
+					"id": "0010",
+					"name": "Lola Lacey",
+					"role": "employee",
+					"email": "",
+					"shifts": {
+						"1212018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1312018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1412018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1512018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1612018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						},
+						"1712018": {
+							"working": true,
+							"shiftStart":"08:00:00",
+							"shiftEnd": "17:00:00"
+						},
+						"1812018": {
+							"working": false,
+							"shiftStart": null,
+							"shiftEnd": null
+						}
+					},
+					"notifications": {
+					}
+				}
+			],
+			"coverage": {
+				"1212018": "7",
+				"1312018": "5",
+				"1412018": "6",
+				"1512018": "4",
+				"1612018": "6",
+				"1712018": "5",
+				"1812018": "5"
+			},
+			"hours": {
+				"1212018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1312018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1412018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1512018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1612018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1712018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						},
+				"1812018": {
+							"storeOpen": "08:00:00",
+							"storeClose": "17:00:00"
+						}
+			}
+
+		}
+	}
+}

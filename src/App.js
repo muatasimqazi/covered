@@ -1,23 +1,35 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import ReactDOM from 'react-dom'; //eslint-disable jsx-a11y/alt-text
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
+import AppBarTop from './components/AppBarTop';
+import Hero from './components/Hero';
+import Features from './components/Features';
 import './App.css';
-// import { app } from './base';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-          Testing on develop branch - Sergey
-        </p>
-      </div>
-    );
-  }
-}
+import Calendar from './components/Calendar';
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: lightGreen800,
+    accent1Color: amberA400,
+    secondaryTextColor: '#000'
+  },
+});
+
+const App = () => (
+  <MuiThemeProvider muiTheme={muiTheme}>
+    <div>
+      <AppBarTop />
+      <Hero />
+      <Calendar />
+      <Features />
+    </div>
+  </MuiThemeProvider>
+);
 
 export default App;
+
+
