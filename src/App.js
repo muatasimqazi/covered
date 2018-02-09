@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
-import Hero from './components/Hero';
-import Features from './components/Features';
+import HomePage from './components/HomePage';
 import SignUp from './components/SignUp.js';
 import Employee from './components/Employee.js';
 import Manager from './components/Manager.js';
@@ -78,14 +77,12 @@ class App extends Component {
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
           />
-              <Switch>
-                  <Route path="/signup" component={SignUp}/>
-                  <Route path="/employee" component={Employee}/>
-                  <Route path="/manager" component={Manager}/>
-                  <Route path="/" component={Hero}/>
-              </Switch>
-          {/* <Hero />
-          <Features /> */}
+          <Switch>
+            <Route path="/signup" component={SignUp}/>
+            <Route path="/employee" component={Employee}/>
+            <Route path="/manager" component={Manager}/>
+            <Route path="/" component={HomePage}/>
+          </Switch>
           <LoginDialog 
             onClose={this.handleLoginClose}
             open={this.state.openLoginDialog}
