@@ -1,6 +1,7 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import { app } from '../base';
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -16,8 +17,16 @@ class SignUp extends React.Component {
     });
   }
   handleClick = (info) => {
+    // info is either null or { email, password }
     if (info) {
-      
+      app.auth().createUserWithEmailAndPassword(info.email, info.password)
+      .then(stuff => {
+        console.log(stuff);
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        console.log('Error:', error.code, error.message);
+      });
     }
     else {
       this.props.history.push('/');
@@ -42,6 +51,7 @@ class SignUp extends React.Component {
           hintText='Password'
           name='password'
           onChange={this.handleChange}
+          type='password'
           value={this.state.password}
         />
         <br />

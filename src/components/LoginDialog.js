@@ -54,6 +54,7 @@ class LoginDialog extends React.Component {
           hintText='Password'
           name='password'
           onChange={this.handleChange}
+          type='password'
           value={this.state.password}
         />
       </Dialog>

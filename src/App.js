@@ -11,6 +11,7 @@ import Employee from './components/Employee.js';
 import Manager from './components/Manager.js';
 import LoginDialog from './components/LoginDialog';
 import Snackbar from 'material-ui/Snackbar';
+import { app } from './base';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -55,12 +56,24 @@ class App extends Component {
     });
     if (loginInfo) {
       // use loginInfo.email, loginInfo.password to log in
-      this.setState({
-        loggedIn: true,
-        openSnackbar: true,
-        snackbarMessage: 'Successfully logged in!',
+      app.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
+      .then(stuff => {
+        console.log(stuff);
+        this.setState({
+          loggedIn: true,
+          openSnackbar: true,
+          snackbarMessage: 'Successfully logged in!',
+        });
+      })
+      .catch(error => {
+        // Handle Errors here.
+        console.log('Error:', error.code, error.message);
+        this.setState({
+          loggedIn: false,
+          openSnackbar: true,
+          snackbarMessage: error.message,
+        });
       });
-      console.log(loginInfo.email, loginInfo.email === 'm');
       if (loginInfo.email === 'm') {
         this.props.history.push('/manager');
       }
