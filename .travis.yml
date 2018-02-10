@@ -18,6 +18,9 @@ branches:
   - master
   - develop
   
+env:
+  - REACT_APP_FIREBASE_KEY = "AIzaSyBoyJl9hCFNUTwkBIZHmXxtzq-Um9wW0uU"
+
 script:
   - npm run build
 
