@@ -43,12 +43,13 @@ class App extends Component {
     });
   }
   handleLogoutClick = () => {
-    this.setState({
-      loggedIn: false,
-      openSnackbar: true,
-      snackbarMessage: 'You have logged out',
+    app.auth().signOut()
+    .catch(error => {
+      this.setState({
+        openSnackbar: true,
+        snackbarMessage: error.message,
+      });
     });
-    this.props.history.push('/');
   }
   handleLoginClose = (loginInfo) => {
     this.setState({
@@ -57,29 +58,14 @@ class App extends Component {
     if (loginInfo) {
       // use loginInfo.email, loginInfo.password to log in
       app.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
-      .then(stuff => {
-        console.log(stuff);
-        this.setState({
-          loggedIn: true,
-          openSnackbar: true,
-          snackbarMessage: 'Successfully logged in!',
-        });
-      })
       .catch(error => {
         // Handle Errors here.
-        console.log('Error:', error.code, error.message);
         this.setState({
           loggedIn: false,
           openSnackbar: true,
           snackbarMessage: error.message,
         });
       });
-      if (loginInfo.email === 'm') {
-        this.props.history.push('/manager');
-      }
-      else {
-        this.props.history.push('/employee');
-      }
     }
   }
   handleSnackbarClose = () => {
@@ -94,6 +80,21 @@ class App extends Component {
 componentDidMount() {
   // simulates an async action, and hides the spinner
   setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
+
+  // real-time authentication listener
+  app.auth().onAuthStateChanged(firebaseUser => {
+    console.log('auth state changed');;;
+    if (firebaseUser) {
+      this.setState({
+        loggedIn: true
+      });
+    }
+    else {
+      this.setState({
+        loggedIn: false
+      });
+    }
+  });
 }
 
   render() {
