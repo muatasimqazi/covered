@@ -31,6 +31,7 @@ class App extends Component {
       loading: true,
       drawerOpen: false,
       loggedIn: false,
+      email: '',
       openLoginDialog: false,
       openSignupDialog: false,
       openSnackbar: false,
@@ -83,10 +84,11 @@ componentDidMount() {
 
   // real-time authentication listener
   app.auth().onAuthStateChanged(firebaseUser => {
-    console.log('auth state changed');;;
+    console.log('auth state changed', firebaseUser);;;
     if (firebaseUser) {
       this.setState({
-        loggedIn: true
+        loggedIn: true,
+        email: firebaseUser.email,
       });
     }
     else {
@@ -103,6 +105,7 @@ componentDidMount() {
         <div>
           <AppBarTop 
             loggedIn={this.state.loggedIn}
+            email={this.state.email}
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
             drawerOpen={this.state.drawerOpen}
