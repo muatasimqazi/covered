@@ -6,10 +6,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
 import HomePage from './components/HomePage';
-import SignUp from './components/SignUp.js';
-import Employee from './components/Employee.js';
-import Manager from './components/Manager.js';
+import SignUp from './components/SignUp';
+import Employee from './components/Employee';
+import Manager from './components/Manager';
 import LoginDialog from './components/LoginDialog';
+import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
 
@@ -115,6 +116,7 @@ componentDidMount() {
             <Route path="/signup" component={SignUp}/>
             <Route path="/employee" component={Employee}/>
             <Route path="/manager" component={Manager}/>
+            <Route path="/blah" component={Blah}/>
             <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading}/>}/>
           </Switch>
           <LoginDialog 

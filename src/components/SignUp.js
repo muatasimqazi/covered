@@ -18,7 +18,6 @@ class SignUp extends React.Component {
     }
   }
   handleChange = (e) => {
-    console.log(e.target.name);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -29,14 +28,13 @@ class SignUp extends React.Component {
       const { firstName, lastName, phone, email, isSupervisor } = this.state;
       app.auth().createUserWithEmailAndPassword(info.email, info.password)
       .then(stuff => {
-        console.log(stuff);
-        console.log(stuff.uid);
         return app.database().ref(`users/${stuff.uid}`).set({
           firstName,
           lastName,
           phone,
           email,
-          isSupervisor
+          isSupervisor,
+          uid: stuff.uid
         })
       })
       .catch(function(error) {
