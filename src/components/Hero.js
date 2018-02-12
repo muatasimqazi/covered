@@ -28,7 +28,7 @@ class Hero extends React.Component {
                 <div style={styles.hero} className={'hero'}>
                     <div style={styles.heroTitle} className={'hero-title'}>
                         <h1>Covered</h1>
-                        <p>An intutive app to simplify your scheduling</p>
+                        <p>An intuitive app to simplify your scheduling</p>
                         <RaisedButton label="Sign up" secondary={true} containerElement={<Link to="/signup"></Link>} />
                     </div>
                     <div style={styles.heroImage} className={'hero-img'}></div>
