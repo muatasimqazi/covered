@@ -14,11 +14,12 @@ class Blah extends React.Component {
         console.log('Error:', error);
         return;
       }
-      const keys = Object.keys(snapshot.val());
+      const val = snapshot.val() || {};
+      const keys = Object.keys(val);
       const users = [];
       keys.forEach(key => {
-        users.push(snapshot.val()[key]);
-        console.log(snapshot.val(), key, snapshot.val()[key]);
+        users.push(val[key]);
+        console.log(val, key, val[key]);
       });
       console.log(users);
       this.setState({ users });

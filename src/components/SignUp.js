@@ -11,7 +11,7 @@ class SignUp extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
-      isSupervisor: false,
+      role: "employee",
       email: '',
       password: '',
       phone: '',
@@ -25,17 +25,47 @@ class SignUp extends React.Component {
   handleClick = (info) => {
     // info is either null or { email, password }
     if (info) {
-      const { firstName, lastName, phone, email, isSupervisor } = this.state;
+      const { firstName, lastName, phone, email, role } = this.state;
       app.auth().createUserWithEmailAndPassword(info.email, info.password)
       .then(stuff => {
-        return app.database().ref(`users/${stuff.uid}`).set({
-          firstName,
-          lastName,
-          phone,
-          email,
-          isSupervisor,
-          uid: stuff.uid
-        })
+        const teamId = 'teamId0001';
+        if (role === 'supervisor') {
+          return app.database().ref(`teams/${teamId}/supervisors/${stuff.uid}`).set({
+            firstName,
+            lastName,
+            phone,
+            email,
+            role,
+            uid: stuff.uid
+          });
+        }
+        else {
+          const shifts = {};
+          for (let i = 0; i < 14; ++i) {
+            const d = new Date(Date.now() + i * 24 * 60 * 60 * 1000);
+            const yyyy = d.getFullYear().toString();
+            let mm = (d.getMonth() + 1).toString();
+            if (mm.length === 1) {
+              mm = '0' + mm;
+            }
+            let dd = d.getDate().toString();
+            if (dd.length === 1) {
+              dd = '0' + dd;
+            }
+            shifts[yyyy + mm + dd] = Math.random() < 0.50 ?
+              { "working": false, "shiftStart": null, "shiftEnd": null } :
+              { "working": true, "shiftStart": "08:00:00", "shiftEnd": "17:00:00"}
+          }
+          return app.database().ref(`teams/${teamId}/employees/${stuff.uid}`).set({
+            firstName,
+            lastName,
+            phone,
+            email,
+            role,
+            shifts,
+            uid: stuff.uid
+          });
+        }
       })
       .catch(function(error) {
         // Handle Errors here.
@@ -48,7 +78,7 @@ class SignUp extends React.Component {
     this.setState({
       firstName: '',
       lastName: '',
-      isSupervisor: true,
+      role: "employee",
       email: '',
       password: '',
       phone: '',
@@ -74,11 +104,11 @@ class SignUp extends React.Component {
         <br />
         <SelectField
           // floatingLabelText="Frequency"
-          value={this.state.isSupervisor}
-          onChange={(event, index, value) => this.handleChange({target: {name: 'isSupervisor', value}})}
+          value={this.state.role}
+          onChange={(event, index, value) => this.handleChange({target: {name: 'role', value}})}
         >
-          <MenuItem value={false} primaryText="Employee" />
-          <MenuItem value={true} primaryText="Supervisor" />
+          <MenuItem value="employee" primaryText="Employee" />
+          <MenuItem value="supervisor" primaryText="Supervisor" />
         </SelectField>
         <br />
         <TextField
