@@ -84,20 +84,20 @@ componentDidMount() {
   setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
 
   // real-time authentication listener
-  app.auth().onAuthStateChanged(firebaseUser => {
-    console.log('auth state changed', firebaseUser);;;
-    if (firebaseUser) {
-      this.setState({
-        loggedIn: true,
-        email: firebaseUser.email,
-      });
-    }
-    else {
-      this.setState({
-        loggedIn: false
-      });
-    }
-  });
+  // app.auth().onAuthStateChanged(firebaseUser => {
+  //   console.log('auth state changed', firebaseUser);;;
+  //   if (firebaseUser) {
+  //     this.setState({
+  //       loggedIn: true,
+  //       email: firebaseUser.email,
+  //     });
+  //   }
+  //   else {
+  //     this.setState({
+  //       loggedIn: false
+  //     });
+  //   }
+  // });
 }
 
   render() {
