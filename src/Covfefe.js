@@ -1,59 +1,70 @@
 import { app } from './base';
-import { toJS, computed, observable } from 'mobx';
+import { computed, observable } from 'mobx';
 
 const auth = app.auth();
 let db = app.database();
 
 class Covfefe {
-  @observable email = '';
   @observable isLoggedIn = false;
-  @observable uid = '';
-  @observable employeesObj = {};
-  @observable supervisorsObj = {};
-  @computed get currentUser() {
-    console.log('get', this.isLoggedIn);
-    // if (!this.isLoggedin) {
-    //   return {};
-    // }
-    console.log('emps', toJS(this.employeesObj));
-    for (let id in this.employeesObj) {
-      console.log(id, this.employeesObj[id].email, this.email);
-      if (this.employeesObj[id].email === this.email) {
-        return this.employeesObj[id];
-      }
+  @observable isBusy = false;
+  @observable currentUser = null;
+  @observable usersObj = {};
+  @observable teamsObj = {};
+  
+  @computed get currentTeamName() {
+    const team = this.teamsObj[this.currentUser.teamId];
+    return team ? team.teamName: '???';
+  }
+  @computed get usersArray() {
+    const result = [];
+    for (let k in this.usersObj) {
+      result.push(this.usersObj[k]);
     }
-    console.log('supes', toJS(this.supervisorsObj));
-    for (let id in this.supervisorsObj) {
-      console.log(id, this.supervisorsObj[id].email, this.email);
-      if (this.supervisorsObj[id].email === this.email) {
-        return this.supervisorsObj[id];
-      }
-    }
-    return {};
+    return result;
+  }
+  @computed get employeesArray() {
+    return this.usersArray.filter(u => u.role === 'employee');
+  }
+  @computed get supervisorsArray() {
+    return this.usersArray.filter(u => u.role === 'supervisor');
   }
   constructor() {
     // real-time listeners
     auth.onAuthStateChanged(firebaseUser => {
+      this.isBusy = false;
       if (firebaseUser) {
-        this.isLoggedIn = true;
         this.email = firebaseUser.email;
         this.uid = firebaseUser.uid;
-        console.log('email', this.email, this.isLoggedIn);
-        db.ref('test/employees').on('value', (snapshot, error) => {
+        
+        // Find user by email:
+        db.ref('test/users').orderByChild('email').equalTo(this.email)
+        .once('value', (snapshot, error) => {
           if (error) {
-            console.log('Error:', error);
-            return;
+            return console.log('Error:', error.message);
           }
-          console.log('empsObj', snapshot.val());
-          this.employeesObj = observable(snapshot.val() || {});
+          const obj = snapshot.val();
+          this.currentUser = obj && obj[Object.keys(obj)[0]];
+          // Now load users on same team:
+          if (this.currentUser) {
+            db.ref('test/users').orderByChild('teamId').equalTo(this.currentUser.teamId)
+            .on('value', (snapshot, error) => {
+              if (error) {
+                return console.log('Error:', error.message);
+              }
+              this.usersObj = snapshot.val() || {};
+            });
+          }
+          else {
+            this.usersObj = {};
+          }
+          this.isLoggedIn = true;
         });
-        db.ref('test/supervisors').on('value', (snapshot, error) => {
+        db.ref('test/teams').on('value', (snapshot, error) => {
           if (error) {
             console.log('Error:', error);
             return;
           }
-          console.log('supesObj' ,snapshot.val());
-          this.supervisorsObj = observable(snapshot.val() || {});
+          this.teamsObj = observable(snapshot.val() || {});
         });
       }
       else {
@@ -61,12 +72,47 @@ class Covfefe {
         this.email = '';
       }
     });
-
+  }
+  createEmployeeAccount(email, password) {
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(stuff => {
+      db.ref('test/users').orderByChild('email').equalTo(email)
+      .once('value', (snapshot, error) => {
+        if (error) {
+          return console.log(error.message);
+        }
+        db.ref(`test/users/${Object.keys(snapshot.val())[0]}`).update({ uid: stuff.uid });
+      });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
+  }
+  createSupervisorAccount(user, password, teamName) {
+    auth.createUserWithEmailAndPassword(user.email, password)
+    .then(stuff => {
+      const teamId = db.ref('test/teams').push({ teamName }).key;
+      const id = db.ref(`test/users`).push();
+      db.ref('test/users').set({
+        id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        email: user.email,
+        role: user.role,
+        teamId,
+        uid: stuff.uid
+      });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
   }
   logIn(email, password) {
-    console.log('log in');
+    this.isBusy = true;
     auth.signInWithEmailAndPassword(email, password)
     .catch(error => {
+      this.isBusy = false;
       this.loggedIn = false;
       this.email = '';
       console.log('Error', error.message);
@@ -148,12 +194,12 @@ class Covfefe {
       teamId: team2Id
     }];
     employees.forEach(employee => {
-      const ref = db.ref(`test/employees`).push();
+      const ref = db.ref(`test/users`).push();
       employee.id = ref.key;
       ref.set(employee);
     });
     supervisors.forEach(supervisor => {
-      const ref = db.ref(`test/supervisors`).push();
+      const ref = db.ref(`test/users`).push();
       supervisor.id = ref.key;
       ref.set(supervisor);
     });
@@ -161,4 +207,4 @@ class Covfefe {
 }
 
 const covfefe = new Covfefe();
-export default covfefe;
+export { covfefe };
