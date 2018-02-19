@@ -124,6 +124,9 @@ class Covfefe {
       console.log('Error', error.message);
     });
   }
+  setShift(employee, yyyymmddDate, info) {
+    db.ref(`test/users/${employee.id}/shifts/${yyyymmddDate}`).set(info);
+  }
   resetDb() {
     db.ref('test').set(null);
     const team1Id = db.ref(`test/teams`).push({ teamName: 'Loss Leaders'}).key;

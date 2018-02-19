@@ -82,13 +82,85 @@ class LoggedInSupervisor extends React.Component {
     return (
       <div>
         <h1>Supervisor {covfefe.currentUser.firstName} {covfefe.currentUser.lastName}</h1>
-        <h2>{covfefe.currentTeamName} Team Members:</h2>
-        <ul>
-          {covfefe.usersArray.map(user => 
-            <li key={user.id}>{user.firstName} {user.lastName} ({user.role})</li>
-          )}
-        </ul>
+        <h2>Team {covfefe.currentTeamName}</h2>
+        <SupervisorCalendar/>
         <button name="logout" onClick={this.handleClick}>Log out</button>
+      </div>
+    );
+  }
+}
+
+@observer
+class SupervisorCalendar extends React.Component {
+  constructor(props) {
+    super(props);
+    const now = new Date();
+    this.state = {
+      startOfWeek: new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()),
+    };
+  }
+  handleClick = (e) => {
+    const w = e.target.name === 'prev' ? -7 : 7;
+    let { startOfWeek } = this.state;
+    startOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + w);
+    this.setState({ startOfWeek });
+  }
+  isWorking = (employee, yyyymmddDate) => {
+    return (employee.shifts && employee.shifts[yyyymmddDate]);
+  }
+  handleDayClick(employee, yyyymmddDate) {
+    if (this.isWorking(employee, yyyymmddDate)) {
+      covfefe.setShift(employee, yyyymmddDate, null);
+    }
+    else {
+      covfefe.setShift(employee, yyyymmddDate, {
+        shiftStart:"08:00:00",
+        shiftEnd: "17:00:00"
+      });
+    }
+  }
+  render() {
+    const dates = [];
+    const { startOfWeek } = this.state;
+    for (let i = 0; i < 7; ++i) {
+      const d = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + i);
+      function yyyymmdd(d) {
+        return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+      }
+      dates.push(yyyymmdd(d));
+    }
+    const col = {
+      display: 'inline-block',
+      width: '12.5%'
+    };
+    return (
+      <div>
+        <div>
+          <button name="prev" onClick={this.handleClick}>Prev Week</button>
+          <button name="next" onClick={this.handleClick}>Next Week</button>
+        </div>
+        <div>
+          <div style={col}></div>
+          {dates.map(date => 
+            <div key={date} style={col}>{date}</div>
+          )}
+        </div>
+        <div>
+          <div style={col}></div>
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => 
+            <div key={day} style={col}>{day}</div>
+          )}
+        </div>
+        {covfefe.employeesArray.map(employee => 
+          <div key={employee.id}>
+            <div style={col}>{employee.firstName} {employee.lastName}</div>
+            {dates.map(date => 
+              <div key={date} onClick={() => this.handleDayClick(employee, date)} style={col}>
+                {this.isWorking(employee, date) ? employee.shifts[date].shiftStart + '-' + employee.shifts[date].shiftEnd : '--'}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }
