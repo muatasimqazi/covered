@@ -38,22 +38,19 @@ class LoggedIn extends React.Component {
     }
   }
   render() {
-    if (covfefe.currentUser) {
-      return (
-        <div>
-          <button name="resetdb" onClick={this.handleClick}>Reset DB</button>
-          {covfefe.currentUser.role === 'employee' ? <LoggedInEmployee/> : <LoggedInSupervisor/>}
-        </div>
-      );
-    }
-    else {
-      return (
-        <div>
-          <h1>You are not recognized as an employee</h1>
-          <button name="logout" onClick={this.handleClick}>Log out</button>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <button name="resetdb" onClick={this.handleClick}>Reset DB</button>
+        {covfefe.currentUser ? (
+          covfefe.currentUser.role === 'employee' ? <LoggedInEmployee/> : <LoggedInSupervisor/>
+        ) : (
+          <div>
+            <h1>You are not recognized as an employee</h1>
+            <button name="logout" onClick={this.handleClick}>Log out</button>
+          </div>
+        )}
+      </div>
+    );
   }
 }
 
@@ -66,8 +63,71 @@ class LoggedInEmployee extends React.Component {
     return (
       <div>
         <h1>Employee {covfefe.currentUser.firstName} {covfefe.currentUser.lastName}</h1>
-        <h2>{covfefe.currentTeamName}</h2>
+        <h2>Team {covfefe.currentTeamName}</h2>
+        <EmployeeCalendar/>
         <button name="logout" onClick={this.handleClick}>Log out</button>
+      </div>
+    );
+  }
+}
+
+class EmployeeCalendar extends React.Component {
+  constructor(props) {
+    super(props);
+    const now = new Date();
+    this.state = {
+      startOfWeek: new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()),
+    };
+  }
+  handleClick = (e) => {
+    const w = e.target.name === 'prev' ? -7 : 7;
+    let { startOfWeek } = this.state;
+    startOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + w);
+    this.setState({ startOfWeek });
+  }
+  isWorking = (employee, date) => {
+    return employee.shifts[date];
+  }
+  render() {
+    const dates = [];
+    const { startOfWeek } = this.state;
+    for (let i = 0; i < 7; ++i) {
+      const d = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + i);
+      function yyyymmdd(d) {
+        return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+      }
+      dates.push(yyyymmdd(d));
+    }
+    const col = {
+      display: 'inline-block',
+      width: '12.5%'
+    };
+    return (
+      <div>
+        <div>
+          <button name="prev" onClick={this.handleClick}>Prev Week</button>
+          <button name="next" onClick={this.handleClick}>Next Week</button>
+        </div>
+        <div>
+          <div style={col}></div>
+          {dates.map(date => 
+            <div key={date} style={col}>{date}</div>
+          )}
+        </div>
+        <div>
+          <div style={col}></div>
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => 
+            <div key={day} style={col}>{day}</div>
+          )}
+        </div>
+        <div>
+          <div style={col}>{covfefe.currentUser.firstName} {covfefe.currentUser.lastName}</div>
+          {dates.map(date => 
+            <div key={date} style={col}>
+              {this.isWorking(covfefe.currentUser, date) ? covfefe.currentUser.shifts[date].shiftStart + '-' + covfefe.currentUser.shifts[date].shiftEnd : '--'}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -75,8 +135,32 @@ class LoggedInEmployee extends React.Component {
 
 @observer
 class LoggedInSupervisor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      role: 'employee'
+    }
+  }
+  handleChange = (e) => {
+    this.setState({ [[e.target.name]]: e.target.value });
+  }
   handleClick = (e) => {
-    covfefe.logOut();
+    if (e.target.name === 'add') {
+      covfefe.addEmployee({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        role: 'employee',
+        teamId: covfefe.currentUser.teamId
+      });
+    } else if (e.target.name === 'logout') {
+      covfefe.logOut();
+    }
   }
   render() {
     return (
@@ -84,6 +168,14 @@ class LoggedInSupervisor extends React.Component {
         <h1>Supervisor {covfefe.currentUser.firstName} {covfefe.currentUser.lastName}</h1>
         <h2>Team {covfefe.currentTeamName}</h2>
         <SupervisorCalendar/>
+        <div>
+          <h2>Add Team Member</h2>
+          <input name="firstName" onChange={this.handleChange} placeholder="First name" value={this.state.firstName}/>
+          <input name="lastName" onChange={this.handleChange} placeholder="Last name" value={this.state.lastName}/>
+          <input name="phone" onChange={this.handleChange} placeholder="Phone" value={this.state.phone}/>
+          <input name="email" onChange={this.handleChange} placeholder="Email" value={this.state.email}/>
+          <button name="add" onClick={this.handleClick}>Add Member</button>
+        </div>
         <button name="logout" onClick={this.handleClick}>Log out</button>
       </div>
     );

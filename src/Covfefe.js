@@ -6,7 +6,7 @@ let db = app.database();
 
 class Covfefe {
   @observable isLoggedIn = false;
-  @observable isBusy = false;
+  @observable isBusy = true;
   @observable currentUser = null;
   @observable usersObj = {};
   @observable teamsObj = {};
@@ -92,8 +92,8 @@ class Covfefe {
     auth.createUserWithEmailAndPassword(user.email, password)
     .then(stuff => {
       const teamId = db.ref('test/teams').push({ teamName }).key;
-      const id = db.ref(`test/users`).push();
-      db.ref('test/users').set({
+      const id = db.ref(`test/users`).push().key;
+      db.ref(`test/users/${id}`).set({
         id,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -106,6 +106,18 @@ class Covfefe {
     })
     .catch(error => {
       console.log(error.message);
+    });
+  }
+  addEmployee(user) {
+    const id = db.ref(`test/users`).push().key;
+    db.ref(`test/users/${id}`).set({
+      id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      email: user.email,
+      role: user.role,
+      teamId: user.teamId
     });
   }
   logIn(email, password) {
