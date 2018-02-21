@@ -1,173 +1,140 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
-import RequestForm from './components/request-form/requestForm';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import {Card, CardText} from 'material-ui/Card';
-
-// input
-import TextField from 'material-ui/TextField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-
-// schedule
-import data from './data.json';
-import { VictoryChart, VictoryAxis, VictoryTheme, VictoryBar } from 'victory';
-import {PropTypes} from 'prop-types';
-
+import AppBarTop from './components/AppBarTop';
+import HomePage from './components/HomePage';
+import SignUp from './components/SignUp';
+import Employee from './components/Employee';
+import Manager from './components/Manager';
+import LoginDialog from './components/LoginDialog';
+import Blah from './components/Blah';
+import Snackbar from 'material-ui/Snackbar';
+import { app } from './base';
 
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: lightGreen800,
-    accent1Color: amberA400,
-    secondaryTextColor: '#000'
-  },
+    accent1Color: '#ffa726',
+    primaryTextColor: '#FFF',
+    secondaryTextColor: '#000',
+    accent1TextColor: '#000',
+    alternateTextColor: '#FFF'
+  }
 });
 
-/* styles */
-const btnStyle = {
-  margin: 20
-};
-
-const instructionStyle = {
-  marginTop: 20,
-  fontSize: 18
-};
-
-const scheduleStyle = {
-  marginTop: 20
-};
-
-const inputArea = {
-  width: 100
-}
-
-const inputStyles = {
-  margin: 40
-}
-
-/* test data */
-const testDate = '1212018';
-const testTeam = 'teamId0001';
-const testEmployee = '0003';
-let testHours = [];
-let testChartData = [];
-
-(function createDataset() {
-  const team = data['teams'][testTeam]['employees'];
-  const testHoursObj = data['teams'][testTeam]['hours'][testDate];
-  testHours.push(testHoursObj.storeOpen);
-  testHours.push(testHoursObj.storeClose);
-
-  for(let i = 0; i < team.length; i++) {
-    let workShiftObj = {
-      employeeId: team[i]['id'],
-      employeeName: team[i]['name'],
-      isWorking: team[i]['shifts'][testDate]['working'],
-      shiftStart: team[i]['shifts'][testDate]['shiftStart'],
-      shiftEnd: team[i]['shifts'][testDate]['shiftEnd']
-
-    };
-    testChartData.push(workShiftObj)
-  }
-}());
-
-/* HELPER FUNCTIONS */
-
 class App extends Component {
-  /* tomove: state for RequestForm */
-  state = {
-      open: false,
-      startAMPM: 'AM',
-      endAMPM: 'AM',
-      from: '4:00',
-      to: '6:00',
-      action: 'remove'
-  };
-
-  handleOpen = () => {
-      this.setState({open: true});
-  };
-
-  handleCancel = () => {
-      this.setState({open: false});
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      drawerOpen: false,
+      loggedIn: false,
+      email: '',
+      openLoginDialog: false,
+      openSignupDialog: false,
+      openSnackbar: false,
+      snackbarMessage: '',
+    }
+  }
+  handleLoginClick = (e) => {
+    this.setState({
+      openLoginDialog: true
+    });
+  }
+  handleLogoutClick = () => {
+    app.auth().signOut()
+    .catch(error => {
+      this.setState({
+        openSnackbar: true,
+        snackbarMessage: error.message,
+      });
+    });
+  }
+  handleLoginClose = (loginInfo) => {
+    this.setState({
+      openLoginDialog: false
+    });
+    if (loginInfo) {
+      // use loginInfo.email, loginInfo.password to log in
+      app.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
+      .catch(error => {
+        // Handle Errors here.
+        this.setState({
+          loggedIn: false,
+          openSnackbar: true,
+          snackbarMessage: error.message,
+        });
+      });
+    }
+  }
+  handleSnackbarClose = () => {
+    this.setState({
+      openSnackbar: false
+    });
   }
 
-  handleSubmit = () => {
-    this.handleCancel();
-    //todo: send to method to add notification to data object
-  }
+  handleDrawerToggle = () => this.setState({drawerOpen: !this.state.drawerOpen});
 
-  handleActionChoice = (evt) => {
-    console.log(evt.target);
-  }
+
+componentDidMount() {
+  // simulates an async action, and hides the spinner
+  setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
+
+  // real-time authentication listener
+  app.auth().onAuthStateChanged(firebaseUser => {
+    console.log('auth state changed', firebaseUser);;;
+    if (firebaseUser) {
+      this.setState({
+        loggedIn: true,
+        email: firebaseUser.email,
+      });
+    }
+    else {
+      this.setState({
+        loggedIn: false
+      });
+    }
+  });
+}
 
   render() {
-    // tomove: for RequestForm
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.handleCancel}
-      />,
-      <FlatButton
-            label="Request Changes"
-            primary={true}
-            onClick={this.handleSubmit}
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <div>
+          <AppBarTop 
+            loggedIn={this.state.loggedIn}
+            email={this.state.email}
+            onLoginClick={this.handleLoginClick}
+            onLogoutClick={this.handleLogoutClick}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerToggle={this.handleDrawerToggle}
           />
-  ];
-    
-  return (
-    <MuiThemeProvider muiTheme={muiTheme}>
-    <div>
-      <RaisedButton label="Februrary 12th, 2018" className="open-modal" style={btnStyle} onClick={this.handleOpen} />
-      <Dialog
-                title="Februrary 12th, 2018"
-                actions={actions}
-                modal={false}
-                open={this.state.open}
-                onRequestClose={this.handleClose}
-                autoScrollBodyContent={true}
-            >
-            <div>
-              <div style={instructionStyle}>Would you like to... </div>
-              <RaisedButton label="Add Shift" dataset={'add'} style={btnStyle} />
-              <RaisedButton label="Remove Shift" dataset={'remove'} style={btnStyle} />
-              <RaisedButton label="Trade Shift" dataset={'trade'} style={btnStyle} disabled={true} />
-            </div>
-            <Card style={scheduleStyle}>
-              <CardText> Chart will go here  </CardText>
-            </Card>
-
-            <div style={inputStyles}>
-              From: <TextField style={inputArea} floatingLabelText="i.e. 1:00" />
-              <DropDownMenu value={"this.state.startAMPM"} onChange={this.handleChange}>
-                <MenuItem value={1} primaryText="AM" />
-                <MenuItem value={2} primaryText="PM" />
-              </DropDownMenu>
-
-              To: <TextField style={inputArea} floatingLabelText="i.e. 7:30" /> 
-              <DropDownMenu value={this.state.endAMPM} onChange={this.handleChange}>
-                <MenuItem value={1} primaryText="AM" />
-                <MenuItem value={2} primaryText="PM" />
-              </DropDownMenu>
-            </div>
-
-            <div>
-              { this.state.action ?
-              `Confirm: You would like to ${this.state.action} a shift from ${this.state.from} to ${this.state.to}.` : '' }
-            </div> 
-      </Dialog>    
-    </div>
-  </MuiThemeProvider>
-  );
+          <Switch>
+            <Route path="/signup" component={SignUp}/>
+            <Route path="/employee" component={Employee}/>
+            <Route path="/manager" component={Manager}/>
+            <Route path="/blah" component={Blah}/>
+            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading}/>}/>
+          </Switch>
+          <LoginDialog 
+            onClose={this.handleLoginClose}
+            open={this.state.openLoginDialog}
+          />
+          <Snackbar 
+            autoHideDuration={3000}
+            message={this.state.snackbarMessage}
+            onRequestClose={this.handleSnackbarClose}
+            open={this.state.openSnackbar}
+          />
+        </div>
+      </MuiThemeProvider>
+    );
   }
-}
+};
 
-export default App;
+export default withRouter(App);
 
 
