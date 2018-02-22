@@ -13,6 +13,7 @@ import LoginDialog from './components/LoginDialog';
 import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
+import { ROUTES } from './constants';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -108,10 +109,10 @@ class App extends Component {
             handleDrawerToggle={this.handleDrawerToggle}
           />
           <Switch>
-            <Route path="/signup" component={SignUp} />
-            <Route path="/employee" component={Employee} />
-            <Route path="/manager" component={Manager} />
-            <Route path="/blah" component={Blah} />
+            <Route path={ROUTES.signUp} component={SignUp} />
+            <Route path={ROUTES.employee}component={Employee} />
+            <Route path={ROUTES.manager} component={Manager} />
+            <Route path={ROUTES.blah} component={Blah} />
             <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading} />} />
           </Switch>
           {
