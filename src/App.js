@@ -22,7 +22,7 @@ const muiTheme = getMuiTheme({
     primaryTextColor: '#FFF',
     secondaryTextColor: '#000',
     accent1TextColor: '#000',
-    alternateTextColor: '#FFF'
+    alternateTextColor: '#FFF',
   }
 });
 

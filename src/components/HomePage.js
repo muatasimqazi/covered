@@ -5,6 +5,10 @@ import Calendar from './Calendar';
 import Spinner from './Spinner';
 import PaperCard from './PaperCard';
 import { Container, Row, Col } from 'react-grid-system'
+import FontIcon from 'material-ui/FontIcon';
+import TableCard from './TableCard';
+import NotificationMessages from './NotificationMessages';
+
 class HomePage extends React.Component {
   render() {
     const loading = this.props.loading;
@@ -14,7 +18,7 @@ class HomePage extends React.Component {
         {
           loading
             ?
-            <Spinner size={80} style={{top: 200}}/>
+            <Spinner size={80} style={{ top: 200 }} />
             :
             authenticated
               ?
@@ -28,8 +32,48 @@ class HomePage extends React.Component {
                     </Col>
                     <Col sm={3}>
                       <PaperCard>
+                        <div style={{ display: 'flex' }}>
+                          <h5 style={{ flex: 1 }}>Card Category</h5>
+                          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
+                        </div>
                         <h4>A Sample Card</h4>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                      </PaperCard>
+
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col sm={12}>
+                      <PaperCard>
+                        <div style={{ display: 'flex' }}>
+                          <h5 style={{ flex: 1 }}>New Requests</h5>
+                          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
+                        </div>
+                        <h4>Notifications</h4>
+                        <NotificationMessages/>
+                      </PaperCard>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={6}>
+                      <PaperCard>
+                        <div style={{ display: 'flex' }}>
+                          <h5 style={{ flex: 1 }}>Card Category</h5>
+                          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
+                        </div>
+                        <h4>A Sample Card</h4>
+                        <TableCard showCheck={false} />
+                      </PaperCard>
+                    </Col>
+                    <Col sm={6}>
+                      <PaperCard>
+                        <div style={{ display: 'flex' }}>
+                          <h5 style={{ flex: 1 }}>Card Category</h5>
+                          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
+                        </div>
+                        <h4>A Sample Card</h4>
+                        <TableCard id={true} />
                       </PaperCard>
                     </Col>
                   </Row>
