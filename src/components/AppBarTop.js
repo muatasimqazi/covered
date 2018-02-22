@@ -41,7 +41,7 @@ class AppBarTop extends React.Component {
           onLeftIconButtonClick={this.handleToggle}
           showMenuIconButton={true}
           iconElementRight={this.props.loggedIn ?
-            <FlatButton label={"Log Out " + this.props.email} onClick={this.props.onLogoutClick} /> :
+            <FlatButton label={"Log Out " + this.props.displayName} onClick={this.props.onLogoutClick} /> :
             <FlatButton label="Log In" onClick={this.props.onLoginClick} />
           }
         />

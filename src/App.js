@@ -32,12 +32,17 @@ class App extends Component {
       loading: true,
       drawerOpen: false,
       loggedIn: false,
-      email: '',
+      displayName: '',
       openLoginDialog: false,
       openSignupDialog: false,
       openSnackbar: false,
       snackbarMessage: '',
+      currentUser: undefined,
+      userRef: undefined,
+      userSnap: undefined,
     }
+
+    // this.handleLoginClose = this.handleLoginClose.bind(this)
   }
   handleLoginClick = (e) => {
     this.setState({
@@ -46,89 +51,79 @@ class App extends Component {
   }
   handleLogoutClick = () => {
     app.auth().signOut()
-    .catch(error => {
-      this.setState({
-        openSnackbar: true,
-        snackbarMessage: error.message,
-      });
-    });
   }
-  handleLoginClose = (loginInfo) => {
+  handleLoginClose = () => {
     this.setState({
-      openLoginDialog: false
-    });
-    if (loginInfo) {
-      // use loginInfo.email, loginInfo.password to log in
-      app.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
-      .catch(error => {
-        // Handle Errors here.
+      openLoginDialog: false,
+    })
+  }
+
+  handleDrawerToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+
+  componentDidMount() {
+    // simulates an async action, and hides the spinner
+    setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
+
+    // real-time authentication listener
+    this.authUnListen = app.auth().onAuthStateChanged(user => {
+      if (user) {
+        let userID = user.uid;
+        let ref = app.database().ref(`${userID}/stores`);
+        this.valueListener = ref.on('value', snapshot => this.setState({ userSnap: snapshot }))
+        this.setState({ userRef: ref });
+
         this.setState({
-          loggedIn: false,
-          openSnackbar: true,
-          snackbarMessage: error.message,
+          loggedIn: true,
+          email: user.email,
+          currentUser: user,
+          displayName: user.displayName,
+          openLoginDialog: false,
         });
-      });
-    }
-  }
-  handleSnackbarClose = () => {
-    this.setState({
-      openSnackbar: false
+      }
+      else {
+        this.setState({
+          loggedIn: false
+        });
+      }
     });
   }
 
-  handleDrawerToggle = () => this.setState({drawerOpen: !this.state.drawerOpen});
-
-
-componentDidMount() {
-  // simulates an async action, and hides the spinner
-  setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
-
-  // real-time authentication listener
-  app.auth().onAuthStateChanged(firebaseUser => {
-    console.log('auth state changed', firebaseUser);;;
-    if (firebaseUser) {
-      this.setState({
-        loggedIn: true,
-        email: firebaseUser.email,
-      });
-    }
-    else {
-      this.setState({
-        loggedIn: false
-      });
-    }
-  });
-}
+  componentWillUnmount() {
+    // stop listening for authentication state changes
+    // and stop listening for value change events
+    this.authUnListen();
+    this.state.userRef.off('value', this.valueListener);
+  }
 
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <AppBarTop 
+          <AppBarTop
             loggedIn={this.state.loggedIn}
-            email={this.state.email}
+            displayName={this.state.displayName}
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
             drawerOpen={this.state.drawerOpen}
             handleDrawerToggle={this.handleDrawerToggle}
           />
           <Switch>
-            <Route path="/signup" component={SignUp}/>
-            <Route path="/employee" component={Employee}/>
-            <Route path="/manager" component={Manager}/>
-            <Route path="/blah" component={Blah}/>
-            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading}/>}/>
+            <Route path="/signup" component={SignUp} />
+            <Route path="/employee" component={Employee} />
+            <Route path="/manager" component={Manager} />
+            <Route path="/blah" component={Blah} />
+            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading} />} />
           </Switch>
-          <LoginDialog 
-            onClose={this.handleLoginClose}
-            open={this.state.openLoginDialog}
-          />
-          <Snackbar 
-            autoHideDuration={3000}
-            message={this.state.snackbarMessage}
-            onRequestClose={this.handleSnackbarClose}
-            open={this.state.openSnackbar}
-          />
+          {
+            !this.state.loggedIn
+              ?
+              <LoginDialog
+                onClose={this.handleLoginClose}
+                open={this.state.openLoginDialog}
+              />
+              :
+              undefined
+          }
         </div>
       </MuiThemeProvider>
     );

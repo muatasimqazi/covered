@@ -14,7 +14,7 @@ class HomePage extends React.Component {
         {
           loading
             ?
-            <Spinner />
+            <Spinner size={80} style={{top: 200}}/>
             :
             authenticated
               ?
