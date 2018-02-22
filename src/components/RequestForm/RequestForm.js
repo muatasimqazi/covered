@@ -59,12 +59,12 @@ class RequestForm extends React.Component {
 
   handleDropDownVal(event, index, value) {
     this.setState({ dropDownVal: value });
-    console.log(dataStore.currentUser);
   }
 
 
   handleSelection(evt) {
     this.setState({ requestAction: evt.target.value });
+    console.log(dataStore.usersObj);
   }
 
   submitChanges() {
