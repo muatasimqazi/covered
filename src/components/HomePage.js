@@ -4,6 +4,7 @@ import Features from './Features';
 import Calendar from './Calendar';
 import Spinner from './Spinner';
 import PaperCard from './PaperCard';
+import RequestForm from './RequestForm/RequestForm';
 import { Container, Row, Col } from 'react-grid-system'
 import FontIcon from 'material-ui/FontIcon';
 import TableCard from './TableCard';
@@ -37,6 +38,15 @@ class HomePage extends React.Component {
                           <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
                         </div>
                         <h4>A Sample Card</h4>
+                        <h4>Request a Change</h4>
+                        <RequestForm />
+                      </PaperCard>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={9}>
+                      <PaperCard>
+                        <h4>Notifications</h4>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                       </PaperCard>
 

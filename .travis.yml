@@ -20,6 +20,11 @@ branches:
   
 env:
   - REACT_APP_FIREBASE_KEY="AIzaSyBoyJl9hCFNUTwkBIZHmXxtzq-Um9wW0uU"
+  - REACT_APP_FIREBASE_DOMAIN="covered-d3bfe.firebaseapp.com"
+  - REACT_APP_FIREBASE_DATABASE_URL="https://covered-d3bfe.firebaseio.com"
+  - REACT_APP_FIREBASE_PROJECT_ID="covered-d3bfe"
+  - REACT_APP_FIREBASE_STORAGE_BUCKET="covered-d3bfe.appspot.com"
+  - REACT_APP_FIREBASE_SENDER_ID="682513218120"
 
 script:
   - echo $REACT_APP_FIREBASE_KEY
