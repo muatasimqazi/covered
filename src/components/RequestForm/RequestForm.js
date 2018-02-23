@@ -64,7 +64,6 @@ function formatDate(date) {
 
   handleSelection(evt) {
     this.setState({ requestAction: evt.target.value });
-    console.log(dataStore.employeesArray);
   }
 
   submitChanges() {
@@ -77,7 +76,8 @@ function formatDate(date) {
   }
 
   render() {
-    const isSupervisor = this.state.userRole === 'supervisor';
+    // todo - fix this so that it works on login
+    const isSupervisor = isSupervisor && dataStore.currentUser.role === 'supervisor';
     let teamRoster;
     if (isSupervisor) {
       teamRoster = <TeamRosterDropdown />;

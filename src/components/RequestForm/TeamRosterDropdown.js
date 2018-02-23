@@ -13,10 +13,6 @@ const styles = {
     }
 }
 
-// const rosterList = dataStore.employeesArray.map((employee, index) => 
-//     <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} /> 
-// ); 
-
 class TeamRosterDropdown extends React.Component {
   constructor(props) {
     super(props);

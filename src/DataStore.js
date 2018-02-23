@@ -32,6 +32,22 @@ class DataStore {
   @computed get supervisorsArray() {
     return this.usersArray.filter(u => u.role === 'supervisor');
   }
+
+  @computed get formatTargetDate() {
+    let day = this.targetDate.getDate();
+    let month = this.targetDate.getMonth()+1;
+    let year = this.targetDate.getFullYear();
+
+    if(day < 10) {
+      day = '0' + day;
+    }
+  
+    if(month < 10) {
+      month = '0' + month;
+    }
+
+    return `${year}${month}${day}`;
+  }
   constructor() {
     // real-time listeners
     auth.onAuthStateChanged(firebaseUser => {

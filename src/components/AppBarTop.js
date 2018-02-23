@@ -48,8 +48,8 @@ class AppBarTop extends React.Component {
         <Drawer open={this.state.open}
           onRequestChange={open => this.setState({ open: open })}
         >
-          <MenuItem onClick={this.handleToggle}>Menu Item 1</MenuItem>
-          <MenuItem onClick={this.handleToggle}>Menu Item 2</MenuItem>
+          <MenuItem onClick={this.handleToggle}>Team Roster</MenuItem>
+          <MenuItem onClick={this.handleToggle}>Add Shifts</MenuItem>
         </Drawer>
         <div style={{height: 64}}/>
       </div>

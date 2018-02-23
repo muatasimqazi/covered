@@ -23,7 +23,7 @@ function getCurrDate() {
   }
 
   if(month < 10) {
-    month = '0'+month;
+    month = '0' + month;
   }
 
   return `${year},${month},${day}`;
