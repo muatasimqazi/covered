@@ -24,7 +24,6 @@ const styles = {
 class Hero extends React.Component {
     render() {
         return (
-            <div>
                 <div style={styles.hero} className={'hero'}>
                     <div style={styles.heroTitle} className={'hero-title'}>
                         <h1>Covered</h1>
@@ -33,7 +32,6 @@ class Hero extends React.Component {
                     </div>
                     <div style={styles.heroImage} className={'hero-img'}></div>
                 </div>
-            </div>
         )
     }
 }

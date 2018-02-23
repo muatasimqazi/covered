@@ -102,7 +102,7 @@ function formatDate(date) {
           style={styles.dropDown}
           autoWidth={false}
         >
-          <MenuItem value={1} primaryText="List of currently working" />
+          <MenuItem key={1} value={1} primaryText="List of currently working" />
         </DropDownMenu>
 
       </div>;

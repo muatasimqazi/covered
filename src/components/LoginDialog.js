@@ -5,8 +5,9 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Spinner from './Spinner';
 import Snackbar from 'material-ui/Snackbar';
-import { app } from '../base';
-
+import { dataStore } from '../DataStore';
+import { observer } from 'mobx-react';
+@observer
 class LoginDialog extends React.Component {
   constructor(props) {
     super(props);
@@ -27,29 +28,18 @@ class LoginDialog extends React.Component {
   }
 
   handleSignUp() {
-    this.setState({ loading: true });
     let email = this.state.email;
     let password = this.state.password;
-    app.auth().createUserWithEmailAndPassword(email, password)
-      .then(user => user.updateProfile({
-        displayName: this.state.displayName
-      }))
-      .catch(err => this.setState({ fbError: err}))
-      .then(() => this.setState({ loading: false}))
-
+    dataStore.logIn(email, password)
   }
 
   handleSignIn() {
-    this.setState({ loading: true });
     let email = this.state.email;
     let password = this.state.password;
-    app.auth().signInWithEmailAndPassword(email, password)
-      .catch(err => this.setState({ fbError: err}))
-      .then(() => this.setState({ loading: false}));
+    dataStore.logIn(email, password);
   }
 
   render() {
-    const loading = this.state.loading;
     const openSnackbar = this.state.fbError ? true : false;
     const actions = [
       <FlatButton
@@ -76,7 +66,7 @@ class LoginDialog extends React.Component {
         title='Log In'
       >
         {
-          loading
+          dataStore.isBusy
             ?
             <Spinner size={80} style={{ top: 0 }} />
             :
@@ -109,14 +99,12 @@ class LoginDialog extends React.Component {
                     open={openSnackbar}
                     message={this.state.fbError.message}
                     autoHideDuration={4000}
-                    style={{top: 0}}
+                    style={{ top: 0 }}
                   />
                   :
                   undefined
               }
-
             </div>
-
         }
       </Dialog>
     );
