@@ -2,20 +2,8 @@ import React from 'react';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import firebase from 'firebase';
+import { dataStore } from '../../DataStore';
 
-
-// TODO: Learn how to query the db to get roster
-// function getTeamRoster() {
-//     // TODO: team is hardcoded, query team value somewhere and reference
-//     const teamRef = firebase.database().ref('teams/teamId0001/employees');
-
-//     teamRef.on('value', function(snapshot) {
-//         // console.log(snapshot.val());
-//         for(let employee in snapshot.val()) {
-//             console.log(employee);
-//         }
-//     });
-// }
 
 const styles = {
     dropDown: {
@@ -25,10 +13,15 @@ const styles = {
     }
 }
 
+// const rosterList = dataStore.employeesArray.map((employee, index) => 
+//     <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} /> 
+// ); 
+
 class TeamRosterDropdown extends React.Component {
   constructor(props) {
     super(props);
     this.handleDropDownVal2 = this.handleDropDownVal2.bind(this);
+    this.createRosterList = this.createRosterList.bind(this);
 
     this.state = {
         dropDownVal2: 1
@@ -39,6 +32,12 @@ class TeamRosterDropdown extends React.Component {
     this.setState({ dropDownVal2: value });
   }
 
+    createRosterList() {
+        return dataStore.employeesArray.map((employee, index) => 
+            <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
+        );
+    }
+
   render() {
 
     return (
@@ -48,7 +47,7 @@ class TeamRosterDropdown extends React.Component {
         style={styles.dropDown}
         autoWidth={false}
         >
-            <MenuItem value={1} primaryText="List of Employees" />
+            {this.createRosterList()}
         </DropDownMenu>
     );
   }

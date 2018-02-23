@@ -5,6 +5,9 @@ import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PaperCard from './PaperCard';
+import { dataStore } from './../DataStore';
+
+
 moment.locale('en-GB');
 BigCalendar.momentLocalizer(moment);
 
@@ -26,6 +29,15 @@ function getCurrDate() {
   return `${year},${month},${day}`;
 }
 
+function verifyDate(date) {
+  let currDate = new Date();
+  if (date >= currDate) {
+    return date;
+  }  else {
+    return dataStore.targetDate;
+  }
+}
+
 const style = {
   height: '80vh',
   cursor: 'pointer'
@@ -37,7 +49,7 @@ const Calendar = () => (
     events={events}
     step={60}
     views={['month']}
-    onSelectSlot={event => console.log(event.slots[0])}
+    onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
     defaultDate={new Date(getCurrDate())}
   />
 

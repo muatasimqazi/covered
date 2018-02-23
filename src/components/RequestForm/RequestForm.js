@@ -6,6 +6,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import TeamRosterDropdown from './TeamRosterDropdown';
 import firebase from 'firebase';
+import {observer} from 'mobx-react';
 import { dataStore } from '../../DataStore';
 
 const styles = {
@@ -26,11 +27,10 @@ const styles = {
   }
 };
 
-function getCurrDate() {
-  const today = new Date();
-  let day = today.getDate();
-  let month = today.getMonth()+1;
-  let year = today.getFullYear();
+function formatDate(date) {
+  let day = date.getDate();
+  let month = date.getMonth()+1;
+  let year = date.getFullYear();
 
   if(day < 10) {
     day = day;
@@ -43,7 +43,7 @@ function getCurrDate() {
   return `${month}/${day}/${year}`;
 }
 
-class RequestForm extends React.Component {
+@observer class RequestForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleSelection = this.handleSelection.bind(this);
@@ -64,7 +64,7 @@ class RequestForm extends React.Component {
 
   handleSelection(evt) {
     this.setState({ requestAction: evt.target.value });
-    console.log(dataStore.usersObj);
+    console.log(dataStore.employeesArray);
   }
 
   submitChanges() {
@@ -111,7 +111,7 @@ class RequestForm extends React.Component {
 
     return (
     <div>
-      <div>Date: {getCurrDate()}</div>
+      <div>Date: {formatDate(dataStore.targetDate)}</div>
       {teamRoster}
       <div>
       <RadioButtonGroup name="requestTypes" defaultSelected="add">

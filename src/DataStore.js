@@ -4,12 +4,16 @@ import { computed, observable } from 'mobx';
 const auth = app.auth();
 let db = app.database();
 
+const date = new Date();
+
 class DataStore {
+
   @observable isLoggedIn = false;
   @observable isBusy = true;
   @observable currentUser = null;
   @observable usersObj = {};
   @observable teamsObj = {};
+  @observable targetDate = date;
   
   @computed get currentTeamName() {
     const team = this.teamsObj[this.currentUser.teamId];
@@ -117,7 +121,8 @@ class DataStore {
       phone: user.phone,
       email: user.email,
       role: user.role,
-      teamId: user.teamId
+      teamId: user.teamId,
+      shift: user.shifts
     });
   }
   logIn(email, password) {
