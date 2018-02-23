@@ -5,5 +5,7 @@ export const ROUTES = {
     signUp: '/signup',
     employee: '/employee',
     manager: '/manager',
-    blah: '/blah'
+    blah: '/blah',
+    roster: '/roster',
+    shifts: '/shifts',
 }

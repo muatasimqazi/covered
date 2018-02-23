@@ -14,6 +14,7 @@ class DataStore {
   @observable usersObj = {};
   @observable teamsObj = {};
   @observable targetDate = date;
+  @observable isOpenDialog = true;
   
   @computed get currentTeamName() {
     const team = this.teamsObj[this.currentUser.teamId];
@@ -133,10 +134,12 @@ class DataStore {
       this.loggedIn = false;
       this.email = '';
       console.log('Error', error.message);
-    });
+    })
+    .then(() => this.isOpenDialog = false);
   }
   logOut() {
     auth.signOut()
+    .then(() => this.isOpenDialog = true)
     .catch(error => {
       console.log('Error', error.message);
     });
