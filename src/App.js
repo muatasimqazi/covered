@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+//@ts-check
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -14,6 +15,10 @@ import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
 import { ROUTES } from './constants';
+import Roster from './components/Roster';
+import ShiftManager from './components/ShiftManager';
+import { dataStore } from './DataStore';
+import { observer } from 'mobx-react';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -25,25 +30,15 @@ const muiTheme = getMuiTheme({
     alternateTextColor: '#FFF',
   }
 });
-
+@observer
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
       drawerOpen: false,
-      loggedIn: false,
-      displayName: '',
       openLoginDialog: false,
-      openSignupDialog: false,
-      openSnackbar: false,
-      snackbarMessage: '',
-      currentUser: undefined,
-      userRef: undefined,
-      userSnap: undefined,
     }
 
-    // this.handleLoginClose = this.handleLoginClose.bind(this)
   }
   handleLoginClick = (e) => {
     this.setState({
@@ -51,7 +46,10 @@ class App extends Component {
     });
   }
   handleLogoutClick = () => {
-    app.auth().signOut()
+    dataStore.logOut();
+    this.setState({
+      openLoginDialog: false,
+    });
   }
   handleLoginClose = () => {
     this.setState({
@@ -60,67 +58,50 @@ class App extends Component {
   }
 
   handleDrawerToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
 
   componentDidMount() {
     // simulates an async action, and hides the spinner
     setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
-
-    // real-time authentication listener
-    this.authUnListen = app.auth().onAuthStateChanged(user => {
-      if (user) {
-        let userID = user.uid;
-        let ref = app.database().ref(`${userID}/stores`);
-        this.valueListener = ref.on('value', snapshot => this.setState({ userSnap: snapshot }))
-        this.setState({ userRef: ref });
-
-        this.setState({
-          loggedIn: true,
-          email: user.email,
-          currentUser: user,
-          displayName: user.displayName,
-          openLoginDialog: false,
-        });
-      }
-      else {
-        this.setState({
-          loggedIn: false
-        });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    // stop listening for authentication state changes
-    // and stop listening for value change events
-    this.authUnListen();
-    this.state.userRef.off('value', this.valueListener);
   }
 
   render() {
+    const contentStyle = { transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)' };
+
+    if (this.state.drawerOpen) {
+      contentStyle.marginLeft = 256;
+    }
+
+    const openLoginDialog = this.state.openLoginDialog && dataStore.isOpenDialog;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div>
+        <div style={contentStyle}>
           <AppBarTop
-            loggedIn={this.state.loggedIn}
+            loggedIn={dataStore.isLoggedIn}
             displayName={this.state.displayName}
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
-            drawerOpen={this.state.drawerOpen}
+            onLeftIconButtonClick={this.handleDrawerToggle}
             handleDrawerToggle={this.handleDrawerToggle}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerOverlay={this.handleDrawerOverlay}
           />
+
           <Switch>
             <Route path={ROUTES.signUp} component={SignUp} />
-            <Route path={ROUTES.employee}component={Employee} />
+            <Route path={ROUTES.employee} component={Employee} />
             <Route path={ROUTES.manager} component={Manager} />
             <Route path={ROUTES.blah} component={Blah} />
-            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading} />} />
+            <Route path={ROUTES.roster} component={Roster} />
+            <Route path={ROUTES.shifts} component={ShiftManager} />
+            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
           </Switch>
           {
-            !this.state.loggedIn
+            openLoginDialog
               ?
               <LoginDialog
                 onClose={this.handleLoginClose}
-                open={this.state.openLoginDialog}
+                open={openLoginDialog}
               />
               :
               undefined
