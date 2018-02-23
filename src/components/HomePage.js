@@ -4,6 +4,10 @@ import Features from './Features';
 import Calendar from './Calendar';
 import Spinner from './Spinner';
 import PaperCard from './PaperCard';
+<<<<<<< HEAD
+=======
+import RequestForm from './RequestForm/RequestForm';
+>>>>>>> request-form
 import { Container, Row, Col } from 'react-grid-system'
 class HomePage extends React.Component {
   render() {
@@ -28,7 +32,15 @@ class HomePage extends React.Component {
                     </Col>
                     <Col sm={3}>
                       <PaperCard>
-                        <h4>A Sample Card</h4>
+                        <h4>Request a Change</h4>
+                        <RequestForm />
+                      </PaperCard>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={9}>
+                      <PaperCard>
+                        <h4>Notifications</h4>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                       </PaperCard>
                     </Col>
