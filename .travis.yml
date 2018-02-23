@@ -7,8 +7,6 @@ notifications:
   email:
     - thatmichaelpark@gmail.com
 
-warnings_are_errors: false
-
 cache:
   directories:
   - node_modules
