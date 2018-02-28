@@ -5,6 +5,7 @@ import TimePicker from 'material-ui/TimePicker';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import TeamRosterDropdown from './TeamRosterDropdown';
+import CurrentlyWorkingDropdown from './CurrentlyWorkingDropdown';
 import firebase from 'firebase';
 import {observer} from 'mobx-react';
 import { dataStore } from '../../DataStore';
@@ -63,6 +64,7 @@ function formatDate(date) {
 
 
   handleSelection(evt) {
+    console.log(dataStore.employeesNotWorking);
     this.setState({ requestAction: evt.target.value });
   }
 
@@ -77,7 +79,7 @@ function formatDate(date) {
 
   render() {
     // todo - fix this so that it works on login
-    const isSupervisor = isSupervisor && dataStore.currentUser.role === 'supervisor';
+    const isSupervisor = true;
     let teamRoster;
     if (isSupervisor) {
       teamRoster = <TeamRosterDropdown />;
@@ -94,17 +96,7 @@ function formatDate(date) {
         </div>;
       } else if (whichAction === 'trade') {
         actionInput = 
-        <div>
-          <DropDownMenu
-          value={this.state.dropDownVal}
-          onChange={this.handleDropDownVal}
-          style={styles.dropDown}
-          autoWidth={false}
-        >
-          <MenuItem value={1} primaryText="List of currently working" />
-        </DropDownMenu>
-
-      </div>;
+        <CurrentlyWorkingDropdown />
       } else {
         actionInput = <div></div>
       }

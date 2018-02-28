@@ -48,6 +48,19 @@ class DataStore {
 
     return `${year}${month}${day}`;
   }
+  
+  @computed get employeesWorking() {
+    return this.employeesArray.filter( employee => 
+      employee.shifts[this.formatTargetDate] !== undefined
+    );
+  }
+
+  @computed get employeesNotWorking() {
+    return this.employeesArray.filter( employee => 
+      employee.shifts[this.formatTargetDate] === undefined
+    );
+  }
+  
   constructor() {
     // real-time listeners
     auth.onAuthStateChanged(firebaseUser => {

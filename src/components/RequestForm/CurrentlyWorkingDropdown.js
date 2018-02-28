@@ -12,23 +12,23 @@ const styles = {
     }
 }
 
-class TeamRosterDropdown extends React.Component {
+class CurrentlyWorkingDropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.handleDropDownVal2 = this.handleDropDownVal2.bind(this);
-    this.createRosterList = this.createRosterList.bind(this);
+    this.handleDropDownVal3 = this.handleDropDownVal3.bind(this);
+    this.createCurrWorkingList = this.createCurrWorkingList.bind(this);
 
     this.state = {
-        dropDownVal2: 1
+        dropDownVal3: 1
     }
   }
 
-  handleDropDownVal2(event, index, value) {
-    this.setState({ dropDownVal2: value });
+  handleDropDownVal3(event, index, value) {
+    this.setState({ dropDownVal3: value });
   }
 
-    createRosterList() {
-        return dataStore.employeesArray.map((employee, index) => 
+    createCurrWorkingList() {
+        return dataStore.employeesWorking.map((employee, index) => 
             <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
         );
     }
@@ -37,16 +37,16 @@ class TeamRosterDropdown extends React.Component {
 
     return (
         <DropDownMenu
-        value={this.state.dropDownVal2}
-        onChange={this.handleDropDownVal2}
+        value={this.state.dropDownVal3}
+        onChange={this.handleDropDownVal3}
         style={styles.dropDown}
         autoWidth={false}
         >
-            {this.createRosterList()}
+            {this.createCurrWorkingList()}
         </DropDownMenu>
     );
   }
 }
 
 
-export default TeamRosterDropdown;
+export default CurrentlyWorkingDropdown;
