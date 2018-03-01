@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import events from './events';
-import BigCalendar from 'react-big-calendar';
+import BigCalendar from './MyLittleCalendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PaperCard from './PaperCard';
@@ -9,7 +9,7 @@ import { dataStore } from './../DataStore';
 
 
 moment.locale('en-GB');
-BigCalendar.momentLocalizer(moment);
+// BigCalendar.momentLocalizer(moment);
 
 // provides today's date to the calendar 
 function getCurrDate() {
@@ -50,7 +50,7 @@ const Calendar = () => (
     step={60}
     views={['month']}
     onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
-    defaultDate={new Date(getCurrDate())}
+    defaultDate={new Date()}
   />
 
 );
