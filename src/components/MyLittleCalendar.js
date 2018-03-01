@@ -96,6 +96,19 @@ export default class MyLittleCalendar extends React.Component {
                     </div>
                   )}
                 </div>
+                <div className="rbc-row-content">
+                  <div className="rbc-row">
+                    {week.map(day =>
+                      <div className='rbc-row-segment' style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+                        {day.date % 2 === true &&
+                          <div className="rbc-event rbc-event-allday">
+                            <div className="rbc-event-content" title="Long event">Long event</div>
+                          </div>
+                        }
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}

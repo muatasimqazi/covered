@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import events from './events';
-import BigCalendar from './MyLittleCalendar';
+import BigCalendar from './MyLittleCalendar';// 'react-big-calendar';//
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PaperCard from './PaperCard';
