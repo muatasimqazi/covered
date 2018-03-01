@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+//@ts-check
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -13,6 +14,12 @@ import LoginDialog from './components/LoginDialog';
 import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
+import { ROUTES } from './constants';
+import Roster from './components/Roster';
+import ShiftManager from './components/ShiftManager';
+import { dataStore } from './DataStore';
+import { observer } from 'mobx-react';
+import { Container } from 'react-grid-system';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -21,23 +28,18 @@ const muiTheme = getMuiTheme({
     primaryTextColor: '#FFF',
     secondaryTextColor: '#000',
     accent1TextColor: '#000',
-    alternateTextColor: '#FFF'
+    alternateTextColor: '#FFF',
   }
 });
-
+@observer
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
       drawerOpen: false,
-      loggedIn: false,
-      email: '',
       openLoginDialog: false,
-      openSignupDialog: false,
-      openSnackbar: false,
-      snackbarMessage: '',
     }
+
   }
   handleLoginClick = (e) => {
     this.setState({
@@ -45,90 +47,67 @@ class App extends Component {
     });
   }
   handleLogoutClick = () => {
-    app.auth().signOut()
-    .catch(error => {
-      this.setState({
-        openSnackbar: true,
-        snackbarMessage: error.message,
-      });
-    });
-  }
-  handleLoginClose = (loginInfo) => {
+    dataStore.logOut();
     this.setState({
-      openLoginDialog: false
+      openLoginDialog: false,
     });
-    if (loginInfo) {
-      // use loginInfo.email, loginInfo.password to log in
-      app.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
-      .catch(error => {
-        // Handle Errors here.
-        this.setState({
-          loggedIn: false,
-          openSnackbar: true,
-          snackbarMessage: error.message,
-        });
-      });
-    }
   }
-  handleSnackbarClose = () => {
+  handleLoginClose = () => {
     this.setState({
-      openSnackbar: false
-    });
+      openLoginDialog: false,
+    })
   }
 
-  handleDrawerToggle = () => this.setState({drawerOpen: !this.state.drawerOpen});
+  handleDrawerToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
 
-
-componentDidMount() {
-  // simulates an async action, and hides the spinner
-  setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
-
-  // real-time authentication listener
-  // app.auth().onAuthStateChanged(firebaseUser => {
-  //   console.log('auth state changed', firebaseUser);;;
-  //   if (firebaseUser) {
-  //     this.setState({
-  //       loggedIn: true,
-  //       email: firebaseUser.email,
-  //     });
-  //   }
-  //   else {
-  //     this.setState({
-  //       loggedIn: false
-  //     });
-  //   }
-  // });
-}
+  componentDidMount() {
+    // simulates an async action, and hides the spinner
+    setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
+  }
 
   render() {
+    const contentStyle = { transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)' };
+
+    if (this.state.drawerOpen) {
+      contentStyle.marginLeft = 256;
+    }
+
+    const openLoginDialog = this.state.openLoginDialog && dataStore.isOpenDialog;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div>
-          <AppBarTop 
-            loggedIn={this.state.loggedIn}
-            email={this.state.email}
+        <div style={contentStyle}>
+          <AppBarTop
+            loggedIn={dataStore.isLoggedIn}
+            displayName={this.state.displayName}
             onLoginClick={this.handleLoginClick}
             onLogoutClick={this.handleLogoutClick}
-            drawerOpen={this.state.drawerOpen}
+            onLeftIconButtonClick={this.handleDrawerToggle}
             handleDrawerToggle={this.handleDrawerToggle}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerOverlay={this.handleDrawerOverlay}
           />
+          <Container fluid style={!dataStore.isLoggedIn ? {paddingLeft: 0, paddingRight: 0} : undefined}>
           <Switch>
-            <Route path="/signup" component={SignUp}/>
-            <Route path="/employee" component={Employee}/>
-            <Route path="/manager" component={Manager}/>
-            <Route path="/blah" component={Blah}/>
-            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} loading={this.state.loading}/>}/>
+            <Route path={ROUTES.signUp} component={SignUp} />
+            <Route path={ROUTES.employee} component={Employee} />
+            <Route path={ROUTES.manager} component={Manager} />
+            <Route path={ROUTES.blah} component={Blah} />
+            <Route path={ROUTES.roster} component={Roster} />
+            <Route path={ROUTES.shifts} component={ShiftManager} />
+            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
           </Switch>
-          <LoginDialog 
-            onClose={this.handleLoginClose}
-            open={this.state.openLoginDialog}
-          />
-          <Snackbar 
-            autoHideDuration={3000}
-            message={this.state.snackbarMessage}
-            onRequestClose={this.handleSnackbarClose}
-            open={this.state.openSnackbar}
-          />
+          {
+            openLoginDialog
+              ?
+              <LoginDialog
+                onClose={this.handleLoginClose}
+                open={openLoginDialog}
+              />
+              :
+              undefined
+          }
+          </Container>
         </div>
       </MuiThemeProvider>
     );

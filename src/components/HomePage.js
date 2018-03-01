@@ -1,39 +1,58 @@
+/* eslint-disable no-unused-vars */
+//@ts-check
 import React from 'react';
+import { observer } from 'mobx-react';
+import { dataStore } from '../DataStore'
+import { Row, Col } from 'react-grid-system'
 import Hero from './Hero';
 import Features from './Features';
-import Calendar from './Calendar';
 import Spinner from './Spinner';
 import PaperCard from './PaperCard';
-import { Container, Row, Col } from 'react-grid-system'
+import TableCard from './TableCard';
+import NotificationMessages from './NotificationMessages';
+import Dashboard from './Dashboards/Dashboard';
+
+@observer
 class HomePage extends React.Component {
   render() {
-    const loading = this.props.loading;
-    const authenticated = this.props.authenticated;
     return (
       <div>
         {
-          loading
+          dataStore.isBusy
             ?
-            <Spinner />
+            <Spinner size={80} style={{ top: 200 }} />
             :
-            authenticated
+            dataStore.isLoggedIn
               ?
               <div>
-                <Container fluid>
+                  <Dashboard />
                   <Row>
-                    <Col sm={9}>
-                      <PaperCard>
-                        <Calendar />
-                      </PaperCard>
-                    </Col>
-                    <Col sm={3}>
-                      <PaperCard>
-                        <h4>A Sample Card</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <Col sm={12}>
+                      <PaperCard
+                        slug="New Requests"
+                        titl="Notifications">
+                        <NotificationMessages />
                       </PaperCard>
                     </Col>
                   </Row>
-                </Container>
+                  <Row>
+                    <Col sm={6}>
+                      <PaperCard
+                        slug="Card Category"
+                        title="Sample Card"
+                      >
+                        <TableCard showCheck={false} />
+                      </PaperCard>
+                    </Col>
+                    <Col sm={6}>
+                      <PaperCard
+                        slug="Tables"
+                        title="New Card"
+                      >
+                        <TableCard id={true} />
+                      </PaperCard>
+                    </Col>
+                  </Row>
               </div>
               :
               <div>

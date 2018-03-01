@@ -17,9 +17,6 @@ branches:
   only:
   - master
   - develop
-  
-env:
-  - REACT_APP_FIREBASE_KEY="AIzaSyBoyJl9hCFNUTwkBIZHmXxtzq-Um9wW0uU"
 
 script:
   - echo $REACT_APP_FIREBASE_KEY

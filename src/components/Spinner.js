@@ -5,11 +5,11 @@ const style = {
     top: 200,
     marginLeft: '50%'
 };
-const Spinner = () => (
+const Spinner = (props) => (
     <div>
         <CircularProgress
-            style={style}
-            size={80}
+            style={{...style, ...props.style}}
+            size={props.size}
             thickness={5}
         />
     </div>

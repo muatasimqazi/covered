@@ -5,7 +5,10 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import { Menu, MenuItem } from 'material-ui';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+import { Divider } from 'material-ui';
+import { ROUTES } from '../constants';
 
 const styles = {
   appBar: {
@@ -13,6 +16,9 @@ const styles = {
     position: 'fixed',
     top: 0,
     zIndex: 999,
+  },
+  icons: {
+    color: '#9a9a9a'
   }
 };
 
@@ -21,10 +27,10 @@ class AppBarTop extends React.Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.state = {
-      open: false,
+      drawerOpen: false,
     }
   }
-  handleToggle = () => this.setState({ open: !this.state.open });
+  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
   handleClick(e) {
     e.preventDefault();
     this.props.history.push('/')
@@ -38,21 +44,42 @@ class AppBarTop extends React.Component {
           titleStyle={{ cursor: 'pointer' }}
           zDepth={0}
           onTitleClick={this.handleClick}
-          onLeftIconButtonClick={this.handleToggle}
+          onLeftIconButtonClick={this.props.handleDrawerToggle}
           showMenuIconButton={true}
           iconElementRight={this.props.loggedIn ?
-            <FlatButton label={"Log Out " + this.props.email} onClick={this.props.onLogoutClick} /> :
+            <FlatButton label={"Log Out " + this.props.displayName} onClick={this.props.onLogoutClick} /> :
             <FlatButton label="Log In" onClick={this.props.onLoginClick} />
           }
         />
-        <Drawer open={this.state.open}
-          onRequestChange={open => this.setState({ open: open })}
+        <Drawer
+          docked={false}
+          open={this.props.drawerOpen}
+          onRequestChange={(open) => this.props.handleDrawerOverlay(open)}
+          swipeAreaWidth={100}
+          overlayStyle={{ background: undefined }}
+
         >
-          <MenuItem onClick={this.handleToggle}>Menu Item 1</MenuItem>
-          <MenuItem onClick={this.handleToggle}>Menu Item 2</MenuItem>
+          <Menu>
+            <MenuItem
+              onClick={this.props.handleDrawerToggle}
+              primaryText="Employee Roster"
+              leftIcon={<FontIcon className="material-icons" style={styles.icons}>people</FontIcon>
+              }
+              containerElement={<Link to={ROUTES.roster} />}
+            />
+            <Divider />
+            <MenuItem
+              onClick={this.props.handleDrawerToggle}
+              primaryText="Manage Shifts"
+              leftIcon={<FontIcon className="material-icons" style={styles.icons}>access_time</FontIcon>
+              }
+              containerElement={<Link to={ROUTES.shifts} />}
+            />
+          </Menu>
         </Drawer>
-        <div style={{height: 64}}/>
+        <div style={{ height: 64 }} />
       </div>
+
     );
   }
 }
