@@ -8,6 +8,7 @@ import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
 import HomePage from './components/HomePage';
 import SignUp from './components/SignUp';
+import signIn from './components/SignIn';
 import Employee from './components/Employee';
 import Manager from './components/Manager';
 import LoginDialog from './components/LoginDialog';
@@ -42,9 +43,7 @@ class App extends Component {
 
   }
   handleLoginClick = (e) => {
-    this.setState({
-      openLoginDialog: true
-    });
+    this.props.history.push(ROUTES.signIn)
   }
   handleLogoutClick = () => {
     dataStore.logOut();
@@ -90,6 +89,7 @@ class App extends Component {
           <Container fluid style={!dataStore.isLoggedIn ? {paddingLeft: 0, paddingRight: 0} : undefined}>
           <Switch>
             <Route path={ROUTES.signUp} component={SignUp} />
+            <Route path={ROUTES.signIn} component={signIn} />
             <Route path={ROUTES.employee} component={Employee} />
             <Route path={ROUTES.manager} component={Manager} />
             <Route path={ROUTES.blah} component={Blah} />
