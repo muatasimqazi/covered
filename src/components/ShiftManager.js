@@ -9,8 +9,8 @@ export default class ShiftManager extends React.Component {
                 <Row>
                     <Col sm={9}>
                         <PaperCard
-                            slug={<Link to='/'>Home</Link>}
-                            title="Manage Shifts"
+                            slug={<Link to='/'>Return to home</Link>}
+                            title="Quick Add Shifts"
                         >
                         </PaperCard>
                     </Col>
@@ -18,6 +18,14 @@ export default class ShiftManager extends React.Component {
                         <PaperCard
                             slug={<Link to='/'>Home</Link>}
                             title="Shifts?"
+                        >
+                        </PaperCard>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col cm={12}>
+                        <PaperCard
+                            title="Words"
                         >
                         </PaperCard>
                     </Col>

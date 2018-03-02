@@ -1,5 +1,5 @@
 import { app } from './base';
-import { computed, observable, action } from 'mobx';
+import { computed, observable } from 'mobx';
 
 const auth = app.auth();
 let db = app.database();
