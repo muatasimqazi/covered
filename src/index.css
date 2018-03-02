@@ -53,14 +53,57 @@ h5 {
 /*.rbc-event {
 	background: #588c1d !important;
 }*/
+
+/* make date-cell transparent */
+div.rbc-date-cell {
+	background-color: rgba(0, 0, 0, 0);
+}
+
+/* colored days */
+div.rbc-day-bg.rbc-red {
+  background-color: #fbb;
+}
+div.rbc-day-bg.rbc-yellow {
+  background-color: #ffb;
+}
+div.rbc-day-bg.rbc-green {
+  background-color: #bfb;
+}
+div.rbc-day-bg.rbc-blue {
+  background-color: #bbf;
+}
+
+/* colored off-range (not current month) days */
+div.rbc-day-bg.rbc-off-range-bg.rbc-red {
+  background-color: #fdd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-yellow {
+  background-color: #ffd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-green {
+  background-color: #dfd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-blue {
+  background-color: #ddf;
+}
+
+/* border around today */
+div.rbc-day-bg.rbc-today {
+  border: 2px solid #aaa;
+}
+
+/* colored events */
 div.rbc-event.rbc-event-allday.rbc-red {
-  background-color: red;
+  background-color: #faa;
 }
 div.rbc-event.rbc-event-allday.rbc-yellow {
-  background-color: yellow;
+  background-color: #dd8;
 }
 div.rbc-event.rbc-event-allday.rbc-green {
-  background-color: #588c1d;
+  background-color: #9e9;
+}
+div.rbc-event.rbc-event-allday.rbc-blue {
+  background-color: #99e;
 }
 
 @media(min-width: 780px) {
