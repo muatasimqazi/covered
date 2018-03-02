@@ -1,7 +1,6 @@
 import React from 'react';
 import { dataStore } from '../DataStore';
 import { observer } from 'mobx-react';
-import './MyLittleCalendar.css';
 
 @observer
 class MyLittleCalendar extends React.Component {
@@ -73,6 +72,17 @@ class MyLittleCalendar extends React.Component {
     return weeks;
   }
   render() {
+    function addColors(classes, day) {
+      if (day.nScheduled < day.nNeeded * 0.50) {
+        classes.push('rbc-red');
+      } else if (day.nScheduled < day.nNeeded) {
+        classes.push('rbc-yellow');
+      } else if (day.nScheduled === day.nNeeded) {
+        classes.push('rbc-green');
+      } else {
+        classes.push('rbc-blue');
+      }
+    }
     const rowBgClass = (day) => {
       const result = ['rbc-day-bg'];
       if (day.isOffRange) {
@@ -81,21 +91,16 @@ class MyLittleCalendar extends React.Component {
       if (day.isToday) {
         result.push('rbc-today');
       }
+      addColors(result, day);
       return result.join(' ');
     }
     const rbcEventClass = (day) => {
       const result = ['rbc-event', 'rbc-event-allday'];
-      if (day.nScheduled < day.nNeeded * 0.50) {
-        result.push('rbc-red');
-      } else if (day.nScheduled < day.nNeeded) {
-        result.push('rbc-yellow');
-      } else if (day.nScheduled === day.nNeeded) {
-        result.push('rbc-green');
-      }
+      addColors(result, day);
       return result.join(' ');
     }
     const dayText = (day) => {
-      return day.nScheduled + '/' + day.nNeeded;
+      return `${Math.round(day.nScheduled / day.nNeeded * 100)}% coverage`;
     }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
