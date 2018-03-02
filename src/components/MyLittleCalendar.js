@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import './MyLittleCalendar.css';
 
 @observer
-export default class MyLittleCalendar extends React.Component {
+class MyLittleCalendar extends React.Component {
   constructor(props) {
     super(props);
     const today = new Date();
@@ -156,3 +156,4 @@ export default class MyLittleCalendar extends React.Component {
   }
 }
 
+export default MyLittleCalendar;

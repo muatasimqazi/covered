@@ -6,7 +6,7 @@ import BigCalendar from './MyLittleCalendar';// 'react-big-calendar';//
 import moment from 'moment';
 import PaperCard from './PaperCard';
 import { dataStore } from './../DataStore';
-
+import { observer } from 'mobx-react';
 
 moment.locale('en-GB');
 // BigCalendar.momentLocalizer(moment);
@@ -42,17 +42,21 @@ const style = {
   height: '80vh',
   cursor: 'pointer'
 }
-const Calendar = () => (
-  <BigCalendar
-    selectable
-    style={style}
-    events={events}
-    step={60}
-    views={['month']}
-    onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
-    defaultDate={new Date()}
-  />
-
-);
+@observer
+class Calendar extends React.Component {
+  render() {
+    return (
+      <BigCalendar
+        selectable
+        style={style}
+        events={events}
+        step={60}
+        views={['month']}
+        onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
+        defaultDate={new Date()}
+      />
+    );
+  }
+}
 
 export default Calendar;
