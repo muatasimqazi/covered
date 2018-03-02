@@ -24,12 +24,14 @@ class TeamRosterDropdown extends React.Component {
   }
 
   handleDropDownVal2(event, index, value) {
+    dataStore.currUserViaSupervisor = dataStore.employeesArray[value - 1];
     this.setState({ dropDownVal2: value });
   }
 
     createRosterList() {
+        if(!dataStore.currUserViaSupervisor) dataStore.employeesArray[0];
         return dataStore.employeesArray.map((employee, index) => 
-            <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
+            <MenuItem key={employee.id} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
         );
     }
 

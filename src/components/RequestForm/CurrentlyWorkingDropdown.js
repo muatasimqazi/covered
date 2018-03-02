@@ -28,9 +28,14 @@ class CurrentlyWorkingDropdown extends React.Component {
   }
 
     createCurrWorkingList() {
-        return dataStore.employeesWorking.map((employee, index) => 
-            <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
+        let currWorkingList = dataStore.employeesWorking.filter( employee => 
+            employee.id !== dataStore.currentUser.id
         );
+
+        return currWorkingList.map((employee, index) => {
+            if (employee.id !== dataStore.currentUser.id)
+                return <MenuItem key={employee.id} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
+        });
     }
 
   render() {
@@ -42,7 +47,12 @@ class CurrentlyWorkingDropdown extends React.Component {
         style={styles.dropDown}
         autoWidth={false}
         >
-            {this.createCurrWorkingList()}
+            {console.log(dataStore.employeesWorking)}
+
+            {   dataStore.employeesWorking.length === 0 || (dataStore.employeesWorking.length === 1 && dataStore.employeesWorking[0].id === dataStore.currentUser.id)
+                ? <MenuItem value={1} primaryText={'No workers available'} />
+                : this.createCurrWorkingList()
+            }
         </DropDownMenu>
     );
   }
