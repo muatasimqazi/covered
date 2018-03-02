@@ -1,3 +1,22 @@
+/*
+
+MyLittleCalendar is a very barebones calendar component that bears a superficial
+resemblance to react-big-calendar but has almost none of the functionality.
+
+The one advantage of MLC over rbc is that we can color the day squares.
+
+The main data structure is the weeks array, which is an array of 4 or 5
+(depending on the month) week arrays. Each week array is an array of 7
+days. Each day contains its date (year, month, date), the number of
+employees scheduled to work that day, and the number of employees needed
+that day. From those two numbers are determined the color of the day's
+square on the calendar and the text in the square.
+
+N.B. Although JavaScript date functions treat months as 0-based, I store
+all month information as 1-based (i.e., 1 = January).
+
+*/
+
 import React from 'react';
 import { dataStore } from '../DataStore';
 import { observer } from 'mobx-react';
@@ -43,13 +62,15 @@ class MyLittleCalendar extends React.Component {
     while (currentDay < firstOfNextMonth) {
       const week = [];
       for (let i = 0; i < 7; ++i) {
+        const year = currentDay.getFullYear();
+        const month = currentDay.getMonth() + 1;
         const date = currentDay.getDate();
         const isOffRange = currentDay < firstOfMonth || currentDay >= firstOfNextMonth;
-        const isToday = currentDay.getFullYear() === today.getFullYear()
-                      && currentDay.getMonth() === today.getMonth()
-                      && currentDay.getDate() === today.getDate()
+        const isToday = year === today.getFullYear()
+                      && month === today.getMonth() + 1
+                      && date === today.getDate()
                       && !isOffRange;
-        const yyyymmdd = (currentDay.getFullYear() * 10000 + (currentDay.getMonth() + 1 ) * 100 + currentDay.getDate()).toString();
+        const yyyymmdd = (year * 10000 + month * 100 + date).toString();
 
         let nScheduled = 0;
         dataStore.employeesArray.forEach(emp => {
@@ -57,19 +78,32 @@ class MyLittleCalendar extends React.Component {
             ++nScheduled;
           }
         });
-        week.push({ 
-          date,
-          yyyymmdd,
-          isOffRange,
+        
+        const nNeeded = i === 0 || i === 6 ? 2 : 3 // num of emps needed for this day
+        const text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
+
+        week.push({
+          year,
+          month,
+          date,                          
+          isOffRange,                   
           isToday,
           nScheduled,
-          nNeeded: i === 0 || i === 6 ? 2 : 2
+          nNeeded,                      
+          text
         });
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate() + 1);
       }
       weeks.push(week);
     }
     return weeks;
+  }
+  handleCalendarClick = (day) => {
+    // Here we fake the onSelectSlot event of react-big-calendar
+    const slots = [];
+
+    slots.push(new Date(day.year, day.month - 1, day.date));
+    this.props.onSelectSlot({ slots });
   }
   render() {
     function addColors(classes, day) {
@@ -99,11 +133,10 @@ class MyLittleCalendar extends React.Component {
       addColors(result, day);
       return result.join(' ');
     }
-    const dayText = (day) => {
-      return `${Math.round(day.nScheduled / day.nNeeded * 100)}% coverage`;
-    }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const stylin = {flexBasis: "14.2857%", maxWidth: '14.2857%'};
+    
     return (
       <div className="rbc-calendar" style={{height: '80vh', cursor: 'pointer'}}>
         <div className="rbc-toolbar">
@@ -118,7 +151,7 @@ class MyLittleCalendar extends React.Component {
         <div className="rbc-month-view">
           <div className="rbc-row rbc-month-header">
             {dayNames.map(dayName =>
-              <div className="rbc-header" style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+              <div className="rbc-header" style={stylin}>
                 <span>{dayName}</span>
               </div>
             )}
@@ -127,14 +160,22 @@ class MyLittleCalendar extends React.Component {
             <div className="rbc-month-row">
               <div className="rbc-row-bg">
                 {week.map(day =>
-                  <div className={rowBgClass(day)} style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+                  <div 
+                    className={rowBgClass(day)} 
+                    onClick={() => this.handleCalendarClick(day)}
+                    style={stylin}
+                  >
                   </div>
                 )}
               </div>
               <div className="rbc-row-content">
                 <div className="rbc-row">
                   {week.map(day =>
-                    <div className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`} style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+                    <div 
+                      className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`} 
+                      onClick={() => this.handleCalendarClick(day)}
+                      style={stylin}
+                    >
                       <a>{day.date}</a>
                     </div>
                   )}
@@ -142,10 +183,14 @@ class MyLittleCalendar extends React.Component {
                 <div className="rbc-row-content">
                   <div className="rbc-row">
                     {week.map(day =>
-                      <div className='rbc-row-segment' style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+                      <div 
+                        className='rbc-row-segment' 
+                        onClick={() => this.handleCalendarClick(day)}
+                        style={stylin}
+                      >
                         {day.nNeeded > 0 &&
                           <div className={rbcEventClass(day)}>
-                            <div className="rbc-event-content" title="">{dayText(day)}</div>
+                            <div className="rbc-event-content" title="">{day.text }</div>
                           </div>
                         }
                       </div>
