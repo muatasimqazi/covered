@@ -12,7 +12,6 @@ import { dataStore } from '../../DataStore';
 Known Issues
 -- Radio Button Coloring (issue related to RadioButtonGroup)
 -- Input areas don't update when date changes
--- dataStore initialization (lifecycle methods?)
 -- Shift information doesn't update after change (need to add visual change)
 -- Trade will not work without access to the second drop down (the person whose shift is being traded)
 
@@ -81,45 +80,46 @@ function formatTime(timeEntry) {
     super(props);
     this.handleSelection = this.handleSelection.bind(this);
     this.submitRequest = this.submitRequest.bind(this);
-    // this.createActionOptions = this.createActionOptions.bind(this);
+    this.createActionOptions = this.createActionOptions.bind(this);
     this.handleTimePickerStart = this.handleTimePickerStart.bind(this);
     this.handleTimePickerEnd = this.handleTimePickerEnd.bind(this);
 
     this.state = {
+      requestAction: null,
       requestTimeStart: null,
       requestTimeEnd: null
     }
   }
 
-  // createActionOptions() {
-  //   return dataStore.requestActions.map( (entry, index) => {
-  //     if (entry === 'add') {
-  //       return <RadioButton 
-  //         key={index}
-  //         value="add"
-  //         label="Add Shift"
-  //         style={styles.mainRadioButton}
-  //         onClick={this.handleSelection}
-  //       />
-  //     } else if (entry === 'remove') {
-  //       return <RadioButton
-  //         key={index}
-  //         value="remove"
-  //         label="Remove Shift"
-  //         style={styles.mainRadioButton}
-  //         onClick={this.handleSelection}
-  //       />
-  //     } else {
-  //       return <RadioButton
-  //         key={index}
-  //         value="trade"
-  //         label="Trade Shift"
-  //         style={styles.mainRadioButton}
-  //         onClick={this.handleSelection}
-  //     />
-  //     }
-  //   });
-  // }
+  createActionOptions() {
+    return dataStore.requestActions.map( (entry, index) => {
+      if (entry === 'add') {
+        return <RadioButton 
+          key={index}
+          value="add"
+          label="Add Shift"
+          style={styles.mainRadioButton}
+          onClick={this.handleSelection}
+        />
+      } else if (entry === 'remove') {
+        return <RadioButton
+          key={index}
+          value="remove"
+          label="Remove Shift"
+          style={styles.mainRadioButton}
+          onClick={this.handleSelection}
+        />
+      } else {
+        return <RadioButton
+          key={index}
+          value="trade"
+          label="Trade Shift"
+          style={styles.mainRadioButton}
+          onClick={this.handleSelection}
+      />
+      }
+    });
+  }
 
   handleSelection(evt) {
     this.setState({ requestAction: evt.target.value });
@@ -163,11 +163,13 @@ function formatTime(timeEntry) {
     return `${hours}:${minutes}:00`;
   }
 
-  // componentDidMount() {
-  //   if(dataStore.currentUser) {
-  //     this.setState({ requestAction: dataStore.requestActions[0] });
-  //   }
-  // }
+  componentWillMount() {
+    if (dataStore.currentUser.role === 'supervisor') {
+      if (!dataStore.currUserViaSupervisor) {
+        dataStore.currUserViaSupervisor = dataStore.employeesArray[0];
+      }
+    }
+  }
 
 
   render() {
@@ -180,22 +182,20 @@ function formatTime(timeEntry) {
       teamRoster = <TeamRosterDropdown />;
     }
 
-    let actionInput = null;
-
     // Action Inputs - based on which action option is selected, show input options
-    // const whichAction = this.state.requestAction;
-    // let actionInput = null;
-    //   if(whichAction === 'add') {
-    //     actionInput = 
-    //     <div>
-    //       <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
-    //       <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
-    //     </div>;
-    //   } else if (whichAction === 'trade') {
-    //     actionInput = <CurrentlyWorkingDropdown  />
-    //   } else {
-    //     actionInput = <div></div>
-    //   }
+    const whichAction = this.state.requestAction;
+    let actionInput = null;
+      if(whichAction === 'add') {
+        actionInput = 
+        <div>
+          <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
+          <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
+        </div>;
+      } else if (whichAction === 'trade') {
+        actionInput = <CurrentlyWorkingDropdown  />
+      } else {
+        actionInput = <div></div>
+      }
 
     // Current Shift - based on user or targeted user (if supervisor logged in)
     let currShift = null;
@@ -216,21 +216,29 @@ function formatTime(timeEntry) {
     }
 
     return (
-    <div>
-      <div>Date: {formatDate(dataStore.targetDate)}</div>
-      {teamRoster}
-      <div>Shift: {currShift}</div>
       <div>
-        {/* {this.createActionOptions()} */}
-      </div>
-      {actionInput}
+      {
+        !dataStore.currentUser
+        ? 
+        <div>Loading...</div>
+        :
+        <div>
+          <div>Date: {formatDate(dataStore.targetDate)}</div>
+          {teamRoster}
+          <div>Shift: {currShift}</div>
+          <div>
+            { this.createActionOptions() }
+          </div>
+          {actionInput}
 
-      <RaisedButton 
-        label="Submit Changes"
-        onClick={this.submitRequest}
-        style={styles.submitButton}
-      />
-    </div>
+          <RaisedButton 
+            label="Submit Changes"
+            onClick={this.submitRequest}
+            style={styles.submitButton}
+          />
+        </div> 
+      }
+      </div>
     );
   }
 }

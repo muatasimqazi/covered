@@ -63,22 +63,24 @@ class DataStore {
     );
   }
 
-  // @computed get requestActions() {
-  //   let actionOptions = [];
-  //   if(this.currentUser.role === 'supervisor') {      
-  //     if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
-  //       actionOptions.push('remove');
-  //     } else {
-  //       actionOptions.push('add');
-  //     }
-  //   } else if (this.currentUser.shifts[this.formatTargetDate]) {
-  //     actionOptions.push('remove');
-  //     actionOptions.push('trade');
-  //   } else {
-  //     actionOptions.push('add');
-  //   }
-  //   return actionOptions;
-  // }
+  @computed get requestActions() {
+    let actionOptions = [];
+    if(this.currentUser.role === 'supervisor') {  
+      if(!this.currUserViaSupervisor) {
+
+      } else if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+        actionOptions.push('remove');
+      } else {
+        actionOptions.push('add');
+      }
+    } else if (this.currentUser.shifts[this.formatTargetDate]) {
+      actionOptions.push('remove');
+      actionOptions.push('trade');
+    } else {
+      actionOptions.push('add');
+    }
+    return actionOptions;
+  }
   
   constructor() {
     // real-time listeners
@@ -195,9 +197,6 @@ class DataStore {
     db.ref(`test/users/${employee.id}/shifts/${yyyymmddDate}`).set(info);
   }
 
-  // removeShift(employee, yyyymmddDate) {
-  //   db.ref(`test/users/${employee.id}/shifts`).remove(yyyymmddDate);
-  // }
   resetDb() {
     db.ref('test').set(null);
     const team1Id = db.ref(`test/teams`).push({ teamName: 'Loss Leaders'}).key;
