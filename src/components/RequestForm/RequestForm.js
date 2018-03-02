@@ -3,12 +3,21 @@ import React from 'react';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TimePicker from 'material-ui/TimePicker';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
 import TeamRosterDropdown from './TeamRosterDropdown';
-import firebase from 'firebase';
-import {observer} from 'mobx-react';
+import CurrentlyWorkingDropdown from './CurrentlyWorkingDropdown';
+import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
+/*
+
+Known Issues
+-- Radio Button Coloring (issue related to RadioButtonGroup)
+-- Input areas don't update when date changes
+-- dataStore initialization (lifecycle methods?)
+-- Shift information doesn't update after change (need to add visual change)
+-- Trade will not work without access to the second drop down (the person whose shift is being traded)
+
+*/
+
 
 const styles = {
   mainRadioButton: {
@@ -25,6 +34,12 @@ const styles = {
     margin: 0,
     padding: 0,
     width: 200
+  },
+  radioButtonChecked: {
+    color: '#F44336'
+  },
+  radioButtonUnChecked: {
+    color: 'white'
   }
 };
 
@@ -44,109 +59,176 @@ function formatDate(date) {
   return `${month}/${day}/${year}`;
 }
 
+function formatTime(timeEntry) {
+  let entryArr = timeEntry.split(":");
+  // format hour as number in order to use comparison operators
+  entryArr[0] = +entryArr[0];
+
+  if (entryArr[0] === 0) {
+    return `${12}:${entryArr[1]}am`;
+  } else if(entryArr[0] <= 11) {
+    return `${entryArr[0]}:${entryArr[1]}am`;
+  } else if (entryArr[0] === 12) {
+    return `${entryArr[0]}:${entryArr[1]}pm`
+  } else {
+    return `${entryArr[0] - 12}:${entryArr[1]}pm`;
+  }
+  
+}
+
 @observer class RequestForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleSelection = this.handleSelection.bind(this);
-    this.submitChanges = this.submitChanges.bind(this);
-    this.handleDropDownVal = this.handleDropDownVal.bind(this);
+    this.submitRequest = this.submitRequest.bind(this);
+    this.createActionOptions = this.createActionOptions.bind(this);
+    this.handleTimePickerStart = this.handleTimePickerStart.bind(this);
+    this.handleTimePickerEnd = this.handleTimePickerEnd.bind(this);
 
     this.state = {
-      requestAction: 'add',
-      userRole: 'supervisor',
-      dropDownVal: 1
+      requestAction: dataStore.requestActions[0],
+      requestTimeStart: null,
+      requestTimeEnd: null
     }
   }
 
-  handleDropDownVal(event, index, value) {
-    this.setState({ dropDownVal: value });
-  }
-
-
-  handleSelection(evt) {
-    this.setState({ requestAction: evt.target.value });
-    console.log(dataStore.employeesArray);
-  }
-
-  submitChanges() {
-    // do data validation
-    // if not valid, respond with an error
-    // if valid, respond with success
-    // send request to firebase notifications object
-
-    console.log('submit changes');
-  }
-
-  render() {
-    const isSupervisor = this.state.userRole === 'supervisor';
-    let teamRoster;
-    if (isSupervisor) {
-      teamRoster = <TeamRosterDropdown />;
-    }
-
-    // changes input type based on current radio selection
-    const whichAction = this.state.requestAction;
-    let actionInput = null;
-      if(whichAction === 'add' || whichAction === 'remove') {
-        actionInput = 
-        <div>
-          <TimePicker style={styles.timePicker} hintText="From"/>
-          <TimePicker style={styles.timePicker} hintText="To"/>
-        </div>;
-      } else if (whichAction === 'trade') {
-        actionInput = 
-        <div>
-          <DropDownMenu
-          value={this.state.dropDownVal}
-          onChange={this.handleDropDownVal}
-          style={styles.dropDown}
-          autoWidth={false}
-        >
-          <MenuItem key={1} value={1} primaryText="List of currently working" />
-        </DropDownMenu>
-
-      </div>;
-      } else {
-        actionInput = <div></div>
-      }
-
-    return (
-    <div>
-      <div>Date: {formatDate(dataStore.targetDate)}</div>
-      {teamRoster}
-      <div>
-      <RadioButtonGroup name="requestTypes" defaultSelected="add">
-        <RadioButton
+  createActionOptions() {
+    return dataStore.requestActions.map( (entry, index) => {
+      if (entry === 'add') {
+        return <RadioButton 
+          key={index}
           value="add"
           label="Add Shift"
           style={styles.mainRadioButton}
           onClick={this.handleSelection}
         />
-        <RadioButton
+      } else if (entry === 'remove') {
+        return <RadioButton
+          key={index}
           value="remove"
           label="Remove Shift"
           style={styles.mainRadioButton}
           onClick={this.handleSelection}
         />
-        <RadioButton
+      } else {
+        return <RadioButton
+          key={index}
           value="trade"
           label="Trade Shift"
           style={styles.mainRadioButton}
           onClick={this.handleSelection}
-        />
-      </RadioButtonGroup>
-      </div>
-        {actionInput}
+      />
+      }
+    });
+  }
 
-        <RaisedButton 
-          label="Submit Changes"
-          onClick={this.submitChanges}
-          style={styles.submitButton}
-        />
+  handleSelection(evt) {
+    this.setState({ requestAction: evt.target.value });
+  }
+
+  submitRequest() {
+    let currUser = dataStore.currentUser.role === 'employee' ? dataStore.currentUser : dataStore.currUserViaSupervisor;
+
+    if (this.state.requestAction === 'add') {
+      if(this.state.requestTimeStart > this.state.requestTimeEnd) {
+        console.log('error');
+        return;
+      } else {
+        dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: this.formatShiftTime(this.state.requestTimeStart), shiftEnd: this.formatShiftTime(this.state.requestTimeEnd)});
+      }
+    } else if (this.state.requestAction === 'remove') {
+        dataStore.setShift(currUser, dataStore.formatTargetDate, null)
+    } else if (this.state.requestAction === 'trade') {
+      console.log('Sara needs to capture the second drop down value in order to process this request.')
+    }
+  }
+
+  handleTimePickerStart(evt, date) {
+    this.setState({requestTimeStart: date})
+  }
+
+  handleTimePickerEnd(evt, date) {
+    this.setState({requestTimeEnd: date})
+  }
+
+  formatShiftTime(date){
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+
+    if(hours < 10) {
+      '0' + hours;
+    } else if (minutes < 10) {
+      '0' + minutes;
+    }
+
+    return `${hours}:${minutes}:00`;
+  }
+
+
+
+
+  render() {
+
+    /* CONDITIONAL RENDERING */
+    // Team Roster - if supervisor is logged in, list their team 
+    const isSupervisor = dataStore.currentUser.role === 'supervisor';
+    let teamRoster = null;
+    if (isSupervisor) {
+      teamRoster = <TeamRosterDropdown />;
+    }
+
+
+    // Action Inputs - based on which action option is selected, show input options
+    const whichAction = this.state.requestAction;
+    let actionInput = null;
+      if(whichAction === 'add') {
+        actionInput = 
+        <div>
+          <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
+          <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
+        </div>;
+      } else if (whichAction === 'trade') {
+        actionInput = <CurrentlyWorkingDropdown  />
+      } else {
+        actionInput = <div></div>
+      }
+
+    // Current Shift - based on user or targeted user (if supervisor logged in)
+    let currShift = null;
+    if(dataStore.currentUser.role === 'employee') {
+      if (dataStore.currentUser.shifts[dataStore.formatTargetDate]){
+        currShift = formatTime(dataStore.currentUser.shifts[dataStore.formatTargetDate].shiftStart) + ' - ' + formatTime(dataStore.currentUser.shifts[dataStore.formatTargetDate].shiftEnd);
+      } else {
+        currShift = 'Not scheduled';
+      }
+    } else if (dataStore.currUserViaSupervisor) {
+      if (dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate]){
+        currShift = formatTime(dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate].shiftStart) + ' - ' + formatTime(dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate].shiftEnd);
+      } else {
+        currShift = 'Not scheduled';
+      }    
+    } else {
+      currShift = '';
+    }
+
+    return (
+    <div>
+      <div>Date: {formatDate(dataStore.targetDate)}</div>
+      {teamRoster}
+      <div>Shift: {currShift}</div>
+      <div>
+        {this.createActionOptions()}
+      </div>
+      {actionInput}
+
+      <RaisedButton 
+        label="Submit Changes"
+        onClick={this.submitRequest}
+        style={styles.submitButton}
+      />
     </div>
     );
   }
 }
-
 
 export default RequestForm;

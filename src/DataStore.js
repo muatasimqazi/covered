@@ -1,5 +1,5 @@
 import { app } from './base';
-import { computed, observable } from 'mobx';
+import { computed, observable, action } from 'mobx';
 
 const auth = app.auth();
 let db = app.database();
@@ -15,6 +15,7 @@ class DataStore {
   @observable teamsObj = {};
   @observable targetDate = date;
   @observable isOpenDialog = true;
+  @observable currUserViaSupervisor = null;
   
   @computed get currentTeamName() {
     const team = this.teamsObj[this.currentUser.teamId];
@@ -33,6 +34,54 @@ class DataStore {
   @computed get supervisorsArray() {
     return this.usersArray.filter(u => u.role === 'supervisor');
   }
+
+  @computed get formatTargetDate() {
+    let day = this.targetDate.getDate();
+    let month = this.targetDate.getMonth()+1;
+    let year = this.targetDate.getFullYear();
+
+    if(day < 10) {
+      day = '0' + day;
+    }
+  
+    if(month < 10) {
+      month = '0' + month;
+    }
+
+    return `${year}${month}${day}`;
+  }
+  
+  @computed get employeesWorking() {
+    return this.employeesArray.filter( employee => 
+      employee.shifts[this.formatTargetDate] !== undefined
+    );
+  }
+
+  @computed get employeesNotWorking() {
+    return this.employeesArray.filter( employee => 
+      employee.shifts[this.formatTargetDate] === undefined
+    );
+  }
+
+  @computed get requestActions() {
+    let actionOptions = [];
+    if(this.currentUser.role === 'supervisor') {
+      if(!this.currUserViaSupervisor) { this.currUserViaSupervisor = this.employeesArray[0] };
+      
+      if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+        actionOptions.push('remove');
+      } else {
+        actionOptions.push('add');
+      }
+    } else if (this.currentUser.shifts[this.formatTargetDate]) {
+      actionOptions.push('remove');
+      actionOptions.push('trade');
+    } else {
+      actionOptions.push('add');
+    }
+    return actionOptions;
+  }
+  
   constructor() {
     // real-time listeners
     auth.onAuthStateChanged(firebaseUser => {
@@ -147,6 +196,10 @@ class DataStore {
   setShift(employee, yyyymmddDate, info) {
     db.ref(`test/users/${employee.id}/shifts/${yyyymmddDate}`).set(info);
   }
+
+  // removeShift(employee, yyyymmddDate) {
+  //   db.ref(`test/users/${employee.id}/shifts`).remove(yyyymmddDate);
+  // }
   resetDb() {
     db.ref('test').set(null);
     const team1Id = db.ref(`test/teams`).push({ teamName: 'Loss Leaders'}).key;

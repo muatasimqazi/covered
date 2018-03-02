@@ -2,7 +2,6 @@
 import React from 'react';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import firebase from 'firebase';
 import { dataStore } from '../../DataStore';
 
 
@@ -13,10 +12,6 @@ const styles = {
         width: 200
     }
 }
-
-// const rosterList = dataStore.employeesArray.map((employee, index) => 
-//     <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} /> 
-// ); 
 
 class TeamRosterDropdown extends React.Component {
   constructor(props) {
@@ -30,12 +25,14 @@ class TeamRosterDropdown extends React.Component {
   }
 
   handleDropDownVal2(event, index, value) {
+    dataStore.currUserViaSupervisor = dataStore.employeesArray[value - 1];
     this.setState({ dropDownVal2: value });
   }
 
     createRosterList() {
+        if(!dataStore.currUserViaSupervisor) dataStore.employeesArray[0];
         return dataStore.employeesArray.map((employee, index) => 
-            <MenuItem key={employee.uid} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
+            <MenuItem key={employee.id} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
         );
     }
 
