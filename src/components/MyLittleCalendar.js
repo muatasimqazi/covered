@@ -100,7 +100,7 @@ class MyLittleCalendar extends React.Component {
       return result.join(' ');
     }
     const dayText = (day) => {
-      return day.nScheduled + '/' + day.nNeeded;
+      return `${Math.round(day.nScheduled / day.nNeeded * 100)}% coverage`;
     }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
