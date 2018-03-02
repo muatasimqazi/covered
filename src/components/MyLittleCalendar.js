@@ -1,5 +1,9 @@
 import React from 'react';
+import { dataStore } from '../DataStore';
+import { observer } from 'mobx-react';
+import './MyLittleCalendar.css';
 
+@observer
 export default class MyLittleCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -46,11 +50,21 @@ export default class MyLittleCalendar extends React.Component {
                       && currentDay.getMonth() === today.getMonth()
                       && currentDay.getDate() === today.getDate()
                       && !isOffRange;
+        const yyyymmdd = (currentDay.getFullYear() * 10000 + (currentDay.getMonth() + 1 ) * 100 + currentDay.getDate()).toString();
 
+        let nScheduled = 0;
+        dataStore.employeesArray.forEach(emp => {
+          if (emp.shifts[yyyymmdd]) {
+            ++nScheduled;
+          }
+        });
         week.push({ 
           date,
+          yyyymmdd,
           isOffRange,
-          isToday
+          isToday,
+          nScheduled,
+          nNeeded: i === 0 || i === 6 ? 2 : 2
         });
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate() + 1);
       }
@@ -59,6 +73,30 @@ export default class MyLittleCalendar extends React.Component {
     return weeks;
   }
   render() {
+    const rowBgClass = (day) => {
+      const result = ['rbc-day-bg'];
+      if (day.isOffRange) {
+        result.push('rbc-off-range-bg');
+      }
+      if (day.isToday) {
+        result.push('rbc-today');
+      }
+      return result.join(' ');
+    }
+    const rbcEventClass = (day) => {
+      const result = ['rbc-event', 'rbc-event-allday'];
+      if (day.nScheduled < day.nNeeded * 0.50) {
+        result.push('rbc-red');
+      } else if (day.nScheduled < day.nNeeded) {
+        result.push('rbc-yellow');
+      } else if (day.nScheduled === day.nNeeded) {
+        result.push('rbc-green');
+      }
+      return result.join(' ');
+    }
+    const dayText = (day) => {
+      return day.nScheduled + '/' + day.nNeeded;
+    }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     return (
@@ -84,7 +122,7 @@ export default class MyLittleCalendar extends React.Component {
             <div className="rbc-month-row">
               <div className="rbc-row-bg">
                 {week.map(day =>
-                  <div className={`rbc-day-bg ${day.isOffRange ? 'rbc-off-range-bg' : ''}  ${day.isToday ? 'rbc-today' : ''}`} style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
+                  <div className={rowBgClass(day)} style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
                   </div>
                 )}
               </div>
@@ -100,9 +138,9 @@ export default class MyLittleCalendar extends React.Component {
                   <div className="rbc-row">
                     {week.map(day =>
                       <div className='rbc-row-segment' style={{flexBasis: "14.2857%", maxWidth: '14.2857%'}}>
-                        {day.date % 2 === true &&
-                          <div className="rbc-event rbc-event-allday">
-                            <div className="rbc-event-content" title="Long event">Long event</div>
+                        {day.nNeeded > 0 &&
+                          <div className={rbcEventClass(day)}>
+                            <div className="rbc-event-content" title="">{dayText(day)}</div>
                           </div>
                         }
                       </div>

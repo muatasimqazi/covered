@@ -50,9 +50,9 @@ h5 {
 	font-weight: 400;
 }
 
-.rbc-event {
+/*.rbc-event {
 	background: #588c1d !important;
-}
+}*/
 
 @media(min-width: 780px) {
 	.hero {
