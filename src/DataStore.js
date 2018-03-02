@@ -63,24 +63,22 @@ class DataStore {
     );
   }
 
-  @computed get requestActions() {
-    let actionOptions = [];
-    if(this.currentUser.role === 'supervisor') {
-      if(!this.currUserViaSupervisor) { this.currUserViaSupervisor = this.employeesArray[0] };
-      
-      if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
-        actionOptions.push('remove');
-      } else {
-        actionOptions.push('add');
-      }
-    } else if (this.currentUser.shifts[this.formatTargetDate]) {
-      actionOptions.push('remove');
-      actionOptions.push('trade');
-    } else {
-      actionOptions.push('add');
-    }
-    return actionOptions;
-  }
+  // @computed get requestActions() {
+  //   let actionOptions = [];
+  //   if(this.currentUser.role === 'supervisor') {      
+  //     if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+  //       actionOptions.push('remove');
+  //     } else {
+  //       actionOptions.push('add');
+  //     }
+  //   } else if (this.currentUser.shifts[this.formatTargetDate]) {
+  //     actionOptions.push('remove');
+  //     actionOptions.push('trade');
+  //   } else {
+  //     actionOptions.push('add');
+  //   }
+  //   return actionOptions;
+  // }
   
   constructor() {
     // real-time listeners

@@ -81,46 +81,45 @@ function formatTime(timeEntry) {
     super(props);
     this.handleSelection = this.handleSelection.bind(this);
     this.submitRequest = this.submitRequest.bind(this);
-    this.createActionOptions = this.createActionOptions.bind(this);
+    // this.createActionOptions = this.createActionOptions.bind(this);
     this.handleTimePickerStart = this.handleTimePickerStart.bind(this);
     this.handleTimePickerEnd = this.handleTimePickerEnd.bind(this);
 
     this.state = {
-      requestAction: dataStore.requestActions[0],
       requestTimeStart: null,
       requestTimeEnd: null
     }
   }
 
-  createActionOptions() {
-    return dataStore.requestActions.map( (entry, index) => {
-      if (entry === 'add') {
-        return <RadioButton 
-          key={index}
-          value="add"
-          label="Add Shift"
-          style={styles.mainRadioButton}
-          onClick={this.handleSelection}
-        />
-      } else if (entry === 'remove') {
-        return <RadioButton
-          key={index}
-          value="remove"
-          label="Remove Shift"
-          style={styles.mainRadioButton}
-          onClick={this.handleSelection}
-        />
-      } else {
-        return <RadioButton
-          key={index}
-          value="trade"
-          label="Trade Shift"
-          style={styles.mainRadioButton}
-          onClick={this.handleSelection}
-      />
-      }
-    });
-  }
+  // createActionOptions() {
+  //   return dataStore.requestActions.map( (entry, index) => {
+  //     if (entry === 'add') {
+  //       return <RadioButton 
+  //         key={index}
+  //         value="add"
+  //         label="Add Shift"
+  //         style={styles.mainRadioButton}
+  //         onClick={this.handleSelection}
+  //       />
+  //     } else if (entry === 'remove') {
+  //       return <RadioButton
+  //         key={index}
+  //         value="remove"
+  //         label="Remove Shift"
+  //         style={styles.mainRadioButton}
+  //         onClick={this.handleSelection}
+  //       />
+  //     } else {
+  //       return <RadioButton
+  //         key={index}
+  //         value="trade"
+  //         label="Trade Shift"
+  //         style={styles.mainRadioButton}
+  //         onClick={this.handleSelection}
+  //     />
+  //     }
+  //   });
+  // }
 
   handleSelection(evt) {
     this.setState({ requestAction: evt.target.value });
@@ -164,34 +163,39 @@ function formatTime(timeEntry) {
     return `${hours}:${minutes}:00`;
   }
 
-
+  // componentDidMount() {
+  //   if(dataStore.currentUser) {
+  //     this.setState({ requestAction: dataStore.requestActions[0] });
+  //   }
+  // }
 
 
   render() {
 
     /* CONDITIONAL RENDERING */
     // Team Roster - if supervisor is logged in, list their team 
-    const isSupervisor = dataStore.currentUser.role === 'supervisor';
+    const isSupervisor = true;
     let teamRoster = null;
     if (isSupervisor) {
       teamRoster = <TeamRosterDropdown />;
     }
 
+    let actionInput = null;
 
     // Action Inputs - based on which action option is selected, show input options
-    const whichAction = this.state.requestAction;
-    let actionInput = null;
-      if(whichAction === 'add') {
-        actionInput = 
-        <div>
-          <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
-          <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
-        </div>;
-      } else if (whichAction === 'trade') {
-        actionInput = <CurrentlyWorkingDropdown  />
-      } else {
-        actionInput = <div></div>
-      }
+    // const whichAction = this.state.requestAction;
+    // let actionInput = null;
+    //   if(whichAction === 'add') {
+    //     actionInput = 
+    //     <div>
+    //       <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
+    //       <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
+    //     </div>;
+    //   } else if (whichAction === 'trade') {
+    //     actionInput = <CurrentlyWorkingDropdown  />
+    //   } else {
+    //     actionInput = <div></div>
+    //   }
 
     // Current Shift - based on user or targeted user (if supervisor logged in)
     let currShift = null;
@@ -217,7 +221,7 @@ function formatTime(timeEntry) {
       {teamRoster}
       <div>Shift: {currShift}</div>
       <div>
-        {this.createActionOptions()}
+        {/* {this.createActionOptions()} */}
       </div>
       {actionInput}
 
