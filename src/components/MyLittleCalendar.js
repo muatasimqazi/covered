@@ -1,7 +1,6 @@
 import React from 'react';
 import { dataStore } from '../DataStore';
 import { observer } from 'mobx-react';
-import './MyLittleCalendar.css';
 
 @observer
 class MyLittleCalendar extends React.Component {

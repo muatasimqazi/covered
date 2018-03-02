@@ -53,6 +53,15 @@ h5 {
 /*.rbc-event {
 	background: #588c1d !important;
 }*/
+div.rbc-event.rbc-event-allday.rbc-red {
+  background-color: red;
+}
+div.rbc-event.rbc-event-allday.rbc-yellow {
+  background-color: yellow;
+}
+div.rbc-event.rbc-event-allday.rbc-green {
+  background-color: #588c1d;
+}
 
 @media(min-width: 780px) {
 	.hero {
