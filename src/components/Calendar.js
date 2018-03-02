@@ -51,6 +51,9 @@ const Calendar = () => (
     views={['month']}
     onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
     defaultDate={new Date(getCurrDate())}
+    action="click"
+    onSelectEvent={() => alert()}
+    eventBackgroundColor="#f00"
   />
 
 );

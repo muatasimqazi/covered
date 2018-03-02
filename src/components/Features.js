@@ -6,7 +6,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: 'flex-start',
-        flexFlow: 'row wrap',
+        // flexFlow: 'row wrap',
         height: '300px',
         textAlign: 'center',
     },
@@ -15,8 +15,8 @@ const styles = {
     },
     circle: {
         backgroundColor: '#34485d',
-        width: '140px',
-        height: '140px',
+        width: '130px',
+        height: '130px',
         borderRadius: '50%',
         textAlign: 'center',
         margin: '0 auto',
@@ -24,7 +24,7 @@ const styles = {
     icon: {
         fontSize: '4rem',
         color: '#FFF',
-        padding: '40px'
+        padding: '30px'
     },
     desc: {
         marginTop: '50px'
