@@ -1,5 +1,6 @@
 import { app } from './base';
 import { computed, observable } from 'mobx';
+import md5 from "blueimp-md5"; // for gravatar email hash
 
 const auth = app.auth();
 let db = app.database();
@@ -17,6 +18,8 @@ class DataStore {
   @observable isOpenDialog = true;
   @observable currUserViaSupervisor = null;
   @observable selectedEmployee = {};
+  @observable isSuccess = false;
+  @observable error = '';
 
   @computed get currentTeamName() {
     const team = this.teamsObj[this.currentUser.teamId];
@@ -66,10 +69,10 @@ class DataStore {
 
   @computed get requestActions() {
     let actionOptions = [];
-    if(this.currentUser.role === 'supervisor') {  
-      if(!this.currUserViaSupervisor) {
+    if (this.currentUser.role === 'supervisor') {
+      if (!this.currUserViaSupervisor) {
 
-      } else if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+      } else if (this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
         actionOptions.push('remove');
       } else {
         actionOptions.push('add');
@@ -128,6 +131,32 @@ class DataStore {
       }
     });
   }
+  // test employee account creating using a different method
+  // when called from roster view
+  // -- MUATASIM
+  createEmployeeAccountFromRoster(employee) {
+    this.isBusy = true;
+    this.isSuccess = false;
+    let photoURLHash = md5(employee.email.toLowerCase().trim());
+    auth.createUserWithEmailAndPassword(employee.email, employee.password)
+      .then(user => {
+        employee.id = user.uid;
+        employee.teamId = '-L5qib7e0L-KIEqqScID'; // needs to come from fb db
+        user.updateProfile({
+          displayName: `{${employee.firstName} ${employee.lastName}}`,
+          photoURL: `https://www.gravatar.com/avatar/${photoURLHash}`,
+        })
+      })
+      .catch(err => {
+        this.error = err.message;
+        console.log(err.message)
+      })
+      .then(() =>  db.ref(`test/users/${employee.id}`).set(employee))
+      .then(() => {
+        this.isBusy = false;
+        this.isSuccess = true;
+      })
+  }
   createEmployeeAccount(email, password) {
     auth.createUserWithEmailAndPassword(email, password)
       .then(stuff => {
@@ -183,7 +212,7 @@ class DataStore {
   }
   getEmployee(id) {
     let ref = db.ref(`test/users/${id}`)
-    ref.once('value').then((snapshot) => { 
+    ref.once('value').then((snapshot) => {
       // console.log(snapshot.val())
       this.selectedEmployee = snapshot.val();
     });

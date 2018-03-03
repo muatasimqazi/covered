@@ -32,7 +32,7 @@ export default class SingleEmployee extends React.Component {
         return (
             <TableRow striped={this.props.index % 2 === 0} hoverable={true}>
 
-                <TableRowColumn style={{ width: 20 }}><Avatar size={20} src="http://www.material-ui.com/images/uxceo-128.jpg" /></TableRowColumn>
+                <TableRowColumn style={{ width: 20 }}><Avatar size={20} src={employee.photoURL ? employee.photoURL : "http://www.material-ui.com/images/uxceo-128.jpg"} /></TableRowColumn>
 
 
                 <TableRowColumn>{employee.firstName} {employee.lastName}</TableRowColumn>

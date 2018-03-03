@@ -4,6 +4,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import FullRoster from './FullRoster';
 import EmployeeEditForm from './EmployeeEditForm';
 import { ROUTES } from '../../constants';
+import AddNewEmployeeForm from './AddNewEmployee';
 
 class Roster extends React.Component {
   render() {
@@ -11,7 +12,8 @@ class Roster extends React.Component {
       <div>
         <Switch>
           <Route exact path={ROUTES.roster} component={FullRoster} />
-          <Route path="/roster/:id" component={EmployeeEditForm} />
+          <Route path={ROUTES.addEmployee} component={AddNewEmployeeForm} />
+          <Route path={ROUTES.employeeEdit} component={EmployeeEditForm} />
         </Switch>
       </div>
     );

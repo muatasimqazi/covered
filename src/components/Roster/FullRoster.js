@@ -1,8 +1,9 @@
 //@ts-check
 /* eslint-disable no-unused-vars */
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PaperCard from '../PaperCard';
-import { Row, Col, Hidden } from 'react-grid-system'
+import { Row, Col, Hidden } from 'react-grid-system';
 import {
     Table,
     TableBody,
@@ -11,12 +12,19 @@ import {
     TableRow,
 } from 'material-ui/Table';
 import SingleEmployee from './SingleEmployee';
+import AddNewEmployeeForm from './AddNewEmployee';
+
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
+import { RaisedButton } from 'material-ui';
+import { ROUTES } from '../../constants';
 const styles = {
     table: {
         overflowX: 'auto',
     },
+    button: {
+        marginTop: 20,
+    }
 }
 @observer
 export default class FullRoster extends React.Component {
@@ -64,6 +72,17 @@ export default class FullRoster extends React.Component {
                                     {employees}
                                 </TableBody>
                             </Table>
+                            <div align="right">
+                            <RaisedButton
+                            label="Add New Employee"
+                            align="right"
+                            primary={true}
+                            style={{ color: '#B71C1C', ...styles.button }}
+                            containerElement={<Link to={`${ROUTES.addEmployee}`} />}
+                            
+                        />
+                        </div>
+                            
                         </PaperCard>
                     </Col>
                 </Row>
