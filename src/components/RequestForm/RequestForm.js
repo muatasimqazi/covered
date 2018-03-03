@@ -12,7 +12,6 @@ import { dataStore } from '../../DataStore';
 Known Issues
 -- Radio Button Coloring (issue related to RadioButtonGroup)
 -- Input areas don't update when date changes
--- dataStore initialization (lifecycle methods?)
 -- Shift information doesn't update after change (need to add visual change)
 -- Trade will not work without access to the second drop down (the person whose shift is being traded)
 
@@ -86,7 +85,7 @@ function formatTime(timeEntry) {
     this.handleTimePickerEnd = this.handleTimePickerEnd.bind(this);
 
     this.state = {
-      requestAction: dataStore.requestActions[0],
+      requestAction: null,
       requestTimeStart: null,
       requestTimeEnd: null
     }
@@ -164,19 +163,24 @@ function formatTime(timeEntry) {
     return `${hours}:${minutes}:00`;
   }
 
-
+  componentWillMount() {
+    if (dataStore.currentUser.role === 'supervisor') {
+      if (!dataStore.currUserViaSupervisor) {
+        dataStore.currUserViaSupervisor = dataStore.employeesArray[0];
+      }
+    }
+  }
 
 
   render() {
 
     /* CONDITIONAL RENDERING */
     // Team Roster - if supervisor is logged in, list their team 
-    const isSupervisor = dataStore.currentUser.role === 'supervisor';
+    const isSupervisor = true;
     let teamRoster = null;
     if (isSupervisor) {
       teamRoster = <TeamRosterDropdown />;
     }
-
 
     // Action Inputs - based on which action option is selected, show input options
     const whichAction = this.state.requestAction;
@@ -212,21 +216,29 @@ function formatTime(timeEntry) {
     }
 
     return (
-    <div>
-      <div>Date: {formatDate(dataStore.targetDate)}</div>
-      {teamRoster}
-      <div>Shift: {currShift}</div>
       <div>
-        {this.createActionOptions()}
-      </div>
-      {actionInput}
+      {
+        !dataStore.currentUser
+        ? 
+        <div>Loading...</div>
+        :
+        <div>
+          <div>Date: {formatDate(dataStore.targetDate)}</div>
+          {teamRoster}
+          <div>Shift: {currShift}</div>
+          <div>
+            { this.createActionOptions() }
+          </div>
+          {actionInput}
 
-      <RaisedButton 
-        label="Submit Changes"
-        onClick={this.submitRequest}
-        style={styles.submitButton}
-      />
-    </div>
+          <RaisedButton 
+            label="Submit Changes"
+            onClick={this.submitRequest}
+            style={styles.submitButton}
+          />
+        </div> 
+      }
+      </div>
     );
   }
 }

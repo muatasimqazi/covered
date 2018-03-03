@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import events from './events';
-import BigCalendar from 'react-big-calendar';
-import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import BigCalendar from './MyLittleCalendar';// 'react-big-calendar';//
+import moment from 'moment';
 import PaperCard from './PaperCard';
 import { dataStore } from './../DataStore';
-
+import { observer } from 'mobx-react';
 
 moment.locale('en-GB');
-BigCalendar.momentLocalizer(moment);
+// BigCalendar.momentLocalizer(moment);
 
 // provides today's date to the calendar 
 function getCurrDate() {
@@ -42,20 +42,21 @@ const style = {
   height: '80vh',
   cursor: 'pointer'
 }
-const Calendar = () => (
-  <BigCalendar
-    selectable
-    style={style}
-    events={events}
-    step={60}
-    views={['month']}
-    onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
-    defaultDate={new Date(getCurrDate())}
-    action="click"
-    onSelectEvent={() => alert()}
-    eventBackgroundColor="#f00"
-  />
-
-);
+@observer
+class Calendar extends React.Component {
+  render() {
+    return (
+      <BigCalendar
+        selectable
+        style={style}
+        events={events}
+        step={60}
+        views={['month']}
+        onSelectSlot={ event => dataStore.targetDate = verifyDate(event.slots[0])}
+        defaultDate={new Date()}
+      />
+    );
+  }
+}
 
 export default Calendar;

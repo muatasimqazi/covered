@@ -9,17 +9,20 @@ import Employee from './Employee';
 class Dashboard extends React.Component {
 
     render() {
-        const isSupervisor = dataStore.currentUser.role === 'supervisor';
         return (
             <div>
-            {
-                isSupervisor
-                  ?
-                  <Supervisor />
-                  :
-                  <Employee />
+              {
+                dataStore.currentUser ? (
+                  dataStore.currentUser.role === 'supervisor' ? (
+                    <Supervisor />
+                  ) : (
+                    <Employee />                      
+                  )
+                ) : (
+                  <div>Loading...</div>
+                )
               }
-              </div>
+            </div>
         );
     }
 }

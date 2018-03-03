@@ -4,23 +4,16 @@ import { computed, observable } from 'mobx';
 const auth = app.auth();
 let db = app.database();
 
-const date = new Date();
-
-class DataStore {
-
+class Covfefe {
   @observable isLoggedIn = false;
   @observable isBusy = true;
   @observable currentUser = null;
   @observable usersObj = {};
   @observable teamsObj = {};
-  @observable targetDate = date;
-  @observable isOpenDialog = true;
-  @observable currUserViaSupervisor = null;
-  @observable selectedEmployee = {};
-
+  
   @computed get currentTeamName() {
     const team = this.teamsObj[this.currentUser.teamId];
-    return team ? team.teamName : '???';
+    return team ? team.teamName: '???';
   }
   @computed get usersArray() {
     const result = [];
@@ -35,54 +28,6 @@ class DataStore {
   @computed get supervisorsArray() {
     return this.usersArray.filter(u => u.role === 'supervisor');
   }
-
-  @computed get formatTargetDate() {
-    let day = this.targetDate.getDate();
-    let month = this.targetDate.getMonth() + 1;
-    let year = this.targetDate.getFullYear();
-
-    if (day < 10) {
-      day = '0' + day;
-    }
-
-    if (month < 10) {
-      month = '0' + month;
-    }
-
-    return `${year}${month}${day}`;
-  }
-
-  @computed get employeesWorking() {
-    return this.employeesArray.filter(employee =>
-      employee.shifts[this.formatTargetDate] !== undefined
-    );
-  }
-
-  @computed get employeesNotWorking() {
-    return this.employeesArray.filter(employee =>
-      employee.shifts[this.formatTargetDate] === undefined
-    );
-  }
-
-  @computed get requestActions() {
-    let actionOptions = [];
-    if(this.currentUser.role === 'supervisor') {  
-      if(!this.currUserViaSupervisor) {
-
-      } else if(this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
-        actionOptions.push('remove');
-      } else {
-        actionOptions.push('add');
-      }
-    } else if (this.currentUser.shifts[this.formatTargetDate]) {
-      actionOptions.push('remove');
-      actionOptions.push('trade');
-    } else {
-      actionOptions.push('add');
-    }
-    return actionOptions;
-  }
-
   constructor() {
     // real-time listeners
     auth.onAuthStateChanged(firebaseUser => {
@@ -90,30 +35,30 @@ class DataStore {
       if (firebaseUser) {
         this.email = firebaseUser.email;
         this.uid = firebaseUser.uid;
-
+        
         // Find user by email:
         db.ref('test/users').orderByChild('email').equalTo(this.email)
-          .once('value', (snapshot, error) => {
-            if (error) {
-              return console.log('Error:', error.message);
-            }
-            const obj = snapshot.val();
-            this.currentUser = obj && obj[Object.keys(obj)[0]];
-            // Now load users on same team:
-            if (this.currentUser) {
-              db.ref('test/users').orderByChild('teamId').equalTo(this.currentUser.teamId)
-                .on('value', (snapshot, error) => {
-                  if (error) {
-                    return console.log('Error:', error.message);
-                  }
-                  this.usersObj = snapshot.val() || {};
-                });
-            }
-            else {
-              this.usersObj = {};
-            }
-            this.isLoggedIn = true;
-          });
+        .once('value', (snapshot, error) => {
+          if (error) {
+            return console.log('Error:', error.message);
+          }
+          const obj = snapshot.val();
+          this.currentUser = obj && obj[Object.keys(obj)[0]];
+          // Now load users on same team:
+          if (this.currentUser) {
+            db.ref('test/users').orderByChild('teamId').equalTo(this.currentUser.teamId)
+            .on('value', (snapshot, error) => {
+              if (error) {
+                return console.log('Error:', error.message);
+              }
+              this.usersObj = snapshot.val() || {};
+            });
+          }
+          else {
+            this.usersObj = {};
+          }
+          this.isLoggedIn = true;
+        });
         db.ref('test/teams').on('value', (snapshot, error) => {
           if (error) {
             console.log('Error:', error);
@@ -130,38 +75,38 @@ class DataStore {
   }
   createEmployeeAccount(email, password) {
     auth.createUserWithEmailAndPassword(email, password)
-      .then(stuff => {
-        db.ref('test/users').orderByChild('email').equalTo(email)
-          .once('value', (snapshot, error) => {
-            if (error) {
-              return console.log(error.message);
-            }
-            db.ref(`test/users/${Object.keys(snapshot.val())[0]}`).update({ uid: stuff.uid });
-          });
-      })
-      .catch(error => {
-        console.log(error.message);
+    .then(stuff => {
+      db.ref('test/users').orderByChild('email').equalTo(email)
+      .once('value', (snapshot, error) => {
+        if (error) {
+          return console.log(error.message);
+        }
+        db.ref(`test/users/${Object.keys(snapshot.val())[0]}`).update({ uid: stuff.uid });
       });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
   }
   createSupervisorAccount(user, password, teamName) {
     auth.createUserWithEmailAndPassword(user.email, password)
-      .then(stuff => {
-        const teamId = db.ref('test/teams').push({ teamName }).key;
-        const id = db.ref(`test/users`).push().key;
-        db.ref(`test/users/${id}`).set({
-          id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          phone: user.phone,
-          email: user.email,
-          role: user.role,
-          teamId,
-          uid: stuff.uid
-        });
-      })
-      .catch(error => {
-        console.log(error.message);
+    .then(stuff => {
+      const teamId = db.ref('test/teams').push({ teamName }).key;
+      const id = db.ref(`test/users`).push().key;
+      db.ref(`test/users/${id}`).set({
+        id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        email: user.email,
+        role: user.role,
+        teamId,
+        uid: stuff.uid
       });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
   }
   addEmployee(user) {
     const id = db.ref(`test/users`).push().key;
@@ -172,49 +117,32 @@ class DataStore {
       phone: user.phone,
       email: user.email,
       role: user.role,
-      teamId: user.teamId,
-      shift: user.shifts
+      teamId: user.teamId
     });
-  }
-  deleteEmployee(user) {
-    const emp = db.ref(`test/users/${user.id}`)
-    emp.remove();
-
-  }
-  getEmployee(id) {
-    let ref = db.ref(`test/users/${id}`)
-    ref.once('value').then((snapshot) => { 
-      // console.log(snapshot.val())
-      this.selectedEmployee = snapshot.val();
-    });
-
   }
   logIn(email, password) {
     this.isBusy = true;
     auth.signInWithEmailAndPassword(email, password)
-      .catch(error => {
-        this.isBusy = false;
-        this.loggedIn = false;
-        this.email = '';
-        console.log('Error', error.message);
-      })
-      .then(() => this.isOpenDialog = false);
+    .catch(error => {
+      this.isBusy = false;
+      this.loggedIn = false;
+      this.email = '';
+      console.log('Error', error.message);
+    });
   }
   logOut() {
     auth.signOut()
-      .then(() => this.isOpenDialog = true)
-      .catch(error => {
-        console.log('Error', error.message);
-      });
+    .catch(error => {
+      console.log('Error', error.message);
+    });
   }
   setShift(employee, yyyymmddDate, info) {
     db.ref(`test/users/${employee.id}/shifts/${yyyymmddDate}`).set(info);
   }
-
   resetDb() {
     db.ref('test').set(null);
-    const team1Id = db.ref(`test/teams`).push({ teamName: 'Loss Leaders' }).key;
-    const team2Id = db.ref(`test/teams`).push({ teamName: 'Money Makers' }).key;
+    const team1Id = db.ref(`test/teams`).push({ teamName: 'Loss Leaders'}).key;
+    const team2Id = db.ref(`test/teams`).push({ teamName: 'Money Makers'}).key;
     const employees = [{
       "email": "lars@levine.com",
       "firstName": "Lars",
@@ -293,5 +221,5 @@ class DataStore {
   }
 }
 
-const dataStore = new DataStore();
-export { dataStore };
+const covfefe = new Covfefe();
+export { covfefe };
