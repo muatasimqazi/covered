@@ -131,30 +131,34 @@ class DataStore {
       }
     });
   }
-  // test employee account creating using a different method
-  // when called from roster view
+  // TEST function: create employee account using a different method
+  // called from roster view
   // -- MUATASIM
   createEmployeeAccountFromRoster(employee) {
     this.isBusy = true;
     this.isSuccess = false;
     let photoURLHash = md5(employee.email.toLowerCase().trim());
+    let employeePhotoUrl = `https://www.gravatar.com/avatar/${photoURLHash}`;
     auth.createUserWithEmailAndPassword(employee.email, employee.password)
       .then(user => {
         employee.id = user.uid;
         employee.teamId = '-L5qib7e0L-KIEqqScID'; // needs to come from fb db
+        employee.photoURL = employeePhotoUrl;
         user.updateProfile({
           displayName: `{${employee.firstName} ${employee.lastName}}`,
-          photoURL: `https://www.gravatar.com/avatar/${photoURLHash}`,
+          photoURL: employeePhotoUrl,
         })
       })
       .catch(err => {
         this.error = err.message;
         console.log(err.message)
       })
-      .then(() =>  db.ref(`test/users/${employee.id}`).set(employee))
+      .then(() => {
+        db.ref(`test/users/${employee.id}`).set(employee)
+      })
       .then(() => {
         this.isBusy = false;
-        this.isSuccess = true;
+
       })
   }
   createEmployeeAccount(email, password) {
@@ -210,10 +214,12 @@ class DataStore {
     emp.remove();
 
   }
+  editEmployee(id, newEmployeeValues) {
+    db.ref(`test/users/${id}`).update(newEmployeeValues)
+  }
   getEmployee(id) {
     let ref = db.ref(`test/users/${id}`)
     ref.once('value').then((snapshot) => {
-      // console.log(snapshot.val())
       this.selectedEmployee = snapshot.val();
     });
 

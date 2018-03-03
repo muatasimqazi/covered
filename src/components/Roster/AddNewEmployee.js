@@ -58,6 +58,7 @@ class AddNewEmployeeForm extends Component {
     handleSumbit(evt) {
         evt.preventDefault();
         dataStore.createEmployeeAccountFromRoster(this.state.employee);
+        this.props.history.push(ROUTES.roster);
         
     }
     render() {

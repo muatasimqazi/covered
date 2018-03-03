@@ -21,21 +21,30 @@ const styles = {
 class EmployeeEditForm extends React.Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
             value: 'Property Value',
             employee: dataStore.selectedEmployee,
         };
     }
     componentDidMount() {
-        console.log(dataStore.getEmployee(this.props.match.params.id))
+        dataStore.getEmployee(this.props.match.params.id);
+        this.setState({
+            employee: dataStore.selectedEmployee
+        });
     }
 
-    handleChange = (event) => {
-        this.setState({
-            value: event.target.value,
-        });
+    handleChange = (evt) => {
+        
+        let employee = { ...this.state.employee, [evt.target.name]: evt.target.value, }
+        this.setState({ employee });
     };
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+        dataStore.editEmployee(this.props.match.params.id, this.state.employee);
+        this.props.history.push(ROUTES.roster);
+    }
     render() {
         let employee = dataStore.selectedEmployee;
         return (
@@ -46,49 +55,51 @@ class EmployeeEditForm extends React.Component {
                         title={`${employee.firstName} ${employee.lastName}`}
                     >
                         <div>
-                            <TextField
-                                id="text-field-controlled"
-                                floatingLabelText="First Name"
-                                value={this.state.value}
-                                style={styles.textField}
-                                onChange={this.handleChange}
-                            />
-                            <TextField
-                                id="text-field-controlled"
-                                floatingLabelText="Email"
-                                value={this.state.value}
-                                style={styles.textField}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-                            <TextField
-                                id="text-field-controlled"
-                                floatingLabelText="Last Name"
-                                value={this.state.value}
-                                style={styles.textField}
-                                onChange={this.handleChange}
-                            />
-                            <TextField
-                                id="text-field-controlled"
-                                floatingLabelText="Phone Number"
-                                value={this.state.value}
-                                style={styles.textField}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-                            <div align="right">
-                                <RaisedButton
-                                    label="Back"
-                                    style={styles.button}
-                                    onClick={() => this.props.history.push(ROUTES.roster)}
+                            <form onSubmit={(evt) => this.handleSubmit(evt)}>
+                                <TextField
+                                    name="firstName"
+                                    floatingLabelText="First Name"
+                                    value={this.state.employee.firstName || ''}
+                                    style={styles.textField}
+                                    onChange={this.handleChange}
                                 />
-                                <RaisedButton
-                                    primary={true}
-                                    label="Save"
-                                    style={styles.button}
-                                    onClick={() => alert()}
+                                <TextField
+                                    name="email"
+                                    floatingLabelText="Email"
+                                    value={this.state.employee.email || ''}
+                                    style={styles.textField}
+                                    onChange={this.handleChange}
                                 />
-                            </div>
+                                <br />
+                                <TextField
+                                    name="lastName"
+                                    floatingLabelText="Last Name"
+                                    value={this.state.employee.lastName || ''}
+                                    style={styles.textField}
+                                    onChange={this.handleChange}
+                                />
+                                <TextField
+                                    name="phone"
+                                    floatingLabelText="Phone Number"
+                                    value={this.state.employee.phone || ''}
+                                    style={styles.textField}
+                                    onChange={this.handleChange}
+                                />
+                                <br />
+                                <div align="right">
+                                    <RaisedButton
+                                        label="Back"
+                                        style={styles.button}
+                                        onClick={() => this.props.history.push(ROUTES.roster)}
+                                    />
+                                    <RaisedButton
+                                        primary={true}
+                                        label="Save"
+                                        style={styles.button}
+                                        type="submit"
+                                    />
+                                </div>
+                            </form>
                         </div>
                     </PaperCard>
                 </Col>
