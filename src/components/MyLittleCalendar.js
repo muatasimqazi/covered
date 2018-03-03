@@ -9,8 +9,9 @@ The main data structure is the weeks array, which is an array of 4 or 5
 (depending on the month) week arrays. Each week array is an array of 7
 days. Each day contains its date (year, month, date), the number of
 employees scheduled to work that day, and the number of employees needed
-that day. From those two numbers are determined the color of the day's
-square on the calendar and the text in the square.
+that day. Those two numbers determine the color of the day's
+square on the calendar. The text in the square depends on whether
+the current user is an employee or a supervisor.
 
 N.B. Although JavaScript date functions treat months as 0-based, I store
 all month information as 1-based (i.e., 1 = January).
@@ -80,7 +81,35 @@ class MyLittleCalendar extends React.Component {
         });
 
         const nNeeded = i === 0 || i === 6 ? 2 : 3 // num of emps needed for this day
-        const text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
+        const userIsSupervisor = dataStore.currentUser.role === 'supervisor';
+        let text = '';
+        
+        if (userIsSupervisor) {
+          text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
+        }
+        else {
+          const shift = dataStore.currentUser.shifts[yyyymmdd];
+          if (shift) {
+            function formatTime(timeEntry) {
+              let entryArr = timeEntry.split(":");
+              // format hour as number in order to use comparison operators
+              entryArr[0] = +entryArr[0];
+
+              if (entryArr[0] === 0) {
+                return `${12}:${entryArr[1]}am`;
+              } else if(entryArr[0] <= 11) {
+                return `${entryArr[0]}:${entryArr[1]}am`;
+              } else if (entryArr[0] === 12) {
+                return `${entryArr[0]}:${entryArr[1]}pm`
+              } else {
+                return `${entryArr[0] - 12}:${entryArr[1]}pm`;
+              }
+              
+            }
+
+            text = `${formatTime(shift.shiftStart)} - ${formatTime(shift.shiftEnd)}`;
+          }
+        }
 
         week.push({
           year,
@@ -89,8 +118,9 @@ class MyLittleCalendar extends React.Component {
           isOffRange,
           isToday,
           nScheduled,
-          nNeeded,
-          text
+          nNeeded,                      
+          text,
+          userIsSupervisor
         });
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate() + 1);
       }
@@ -130,7 +160,9 @@ class MyLittleCalendar extends React.Component {
     }
     const rbcEventClass = (day) => {
       const result = ['rbc-event', 'rbc-event-allday'];
-      addColors(result, day);
+      if (day.userIsSupervisor) {
+        addColors(result, day);
+      } 
       return result.join(' ');
     }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -191,9 +223,9 @@ class MyLittleCalendar extends React.Component {
                         onClick={() => this.handleCalendarClick(day)}
                         style={stylin}
                       >
-                        {day.nNeeded > 0 &&
+                        {day.text &&
                           <div className={rbcEventClass(day)}>
-                            <div className="rbc-event-content" title="">{day.text}</div>
+                            <div className="rbc-event-content" title={day.text}>{day.text }</div>
                           </div>
                         }
                       </div>
