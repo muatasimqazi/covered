@@ -9,4 +9,6 @@ export const ROUTES = {
     blah: '/blah',
     roster: '/roster',
     shifts: '/shifts',
+    employeeEdit: '/roster/:empId', // wildCard'
+
 }

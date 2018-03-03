@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 //@ts-check
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
@@ -16,7 +16,7 @@ import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
 import { ROUTES } from './constants';
-import Roster from './components/Roster';
+import Roster from './components/Roster/Roster';
 import ShiftManager from './components/ShiftManager';
 import { dataStore } from './DataStore';
 import { observer } from 'mobx-react';
@@ -86,27 +86,32 @@ class App extends Component {
             drawerOpen={this.state.drawerOpen}
             handleDrawerOverlay={this.handleDrawerOverlay}
           />
-          <Container fluid style={!dataStore.isLoggedIn ? {paddingLeft: 0, paddingRight: 0} : undefined}>
-          <Switch>
-            <Route path={ROUTES.signUp} component={SignUp} />
-            <Route path={ROUTES.signIn} component={signIn} />
-            <Route path={ROUTES.employee} component={Employee} />
-            <Route path={ROUTES.manager} component={Manager} />
-            <Route path={ROUTES.blah} component={Blah} />
-            <Route path={ROUTES.roster} component={Roster} />
-            <Route path={ROUTES.shifts} component={ShiftManager} />
-            <Route path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
-          </Switch>
-          {
-            openLoginDialog
-              ?
-              <LoginDialog
-                onClose={this.handleLoginClose}
-                open={openLoginDialog}
-              />
-              :
-              undefined
-          }
+          <Container fluid style={!dataStore.isLoggedIn ? { paddingLeft: 0, paddingRight: 0 } : undefined}>
+
+            <Switch>
+              <Route path={ROUTES.signUp} component={SignUp} />
+              <Route path={ROUTES.signIn} component={signIn} />
+              <Route path={ROUTES.employee} component={Employee} />
+              <Route path={ROUTES.manager} component={Manager} />
+              <Route path={ROUTES.blah} component={Blah} />
+              <Route path="/roster" component={Roster} />
+              <Route path={ROUTES.shifts} component={ShiftManager} />
+              
+              <Route exact path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
+              <Redirect to="/" />
+            </Switch>
+
+
+            {
+              openLoginDialog
+                ?
+                <LoginDialog
+                  onClose={this.handleLoginClose}
+                  open={openLoginDialog}
+                />
+                :
+                undefined
+            }
           </Container>
         </div>
       </MuiThemeProvider>
