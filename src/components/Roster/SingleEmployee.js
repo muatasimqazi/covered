@@ -1,31 +1,28 @@
 //@ts-check
+/* eslint-disable no-used-var */
 import React from 'react';
-import { TableRow, TableRowColumn, RaisedButton } from 'material-ui';
+import { TableRow, TableRowColumn, FlatButton, Avatar } from 'material-ui';
 import Spinner from '../Spinner';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
 import { ROUTES } from '../../constants';
 import { Link } from 'react-router-dom';
 
-const style = {
-    margin: 12,
-};
 
+const styles = {
+    button: {
+        margin: 5,
+    }
+};
 @observer
 export default class SingleEmployee extends React.Component {
     constructor(props) {
         super(props);
-        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
-
-    handleEdit() {
-        this.props.history.push(ROUTES.signIn)
-        //    let employeeRef = window.employeeRef = this.props.employee;
-
-        //    dataStore.deleteEmployee(this.props.employee);
-        //    console.log(employeeRef)
-
+    handleDelete() {
+        dataStore.deleteEmployee(this.props.employee);
     }
     render() {
         let employee = this.props.employee;
@@ -33,18 +30,28 @@ export default class SingleEmployee extends React.Component {
             return <Spinner size={80} style={{ top: 200 }} />
         }
         return (
-            <TableRow key={this.props.employeeID} striped={this.props.employeeID % 2 == 0}>
-                <TableRowColumn style={{ width: 20 }}>{this.props.employeeID + 1}</TableRowColumn>
+            <TableRow striped={this.props.index % 2 === 0} hoverable={true}>
+
+                <TableRowColumn style={{ width: 20 }}><Avatar size={20} src="http://www.material-ui.com/images/uxceo-128.jpg" /></TableRowColumn>
+
+
                 <TableRowColumn>{employee.firstName} {employee.lastName}</TableRowColumn>
                 <TableRowColumn>{employee.phone}</TableRowColumn>
                 <TableRowColumn>{employee.email}</TableRowColumn>
                 <TableRowColumn>{new Date().toLocaleTimeString()}</TableRowColumn>
                 <TableRowColumn>
-                    <RaisedButton
-                        label="Edit"
-                        style={style}
-                        containerElement={<Link to={`${ROUTES.roster}/${employee.id}`}/>}
-                    />
+                    <div style={{ display: 'flex' }}>
+                        <FlatButton
+                            label="Edit"
+                            style={styles.button}
+                            containerElement={<Link to={`${ROUTES.roster}/${employee.id}`} />}
+                        />
+                        <FlatButton
+                            label="Delete"
+                            style={{ color: '#B71C1C', ...styles.button }}
+                            onClick={this.handleDelete}
+                        />
+                    </div>
                 </TableRowColumn>
             </TableRow>
 

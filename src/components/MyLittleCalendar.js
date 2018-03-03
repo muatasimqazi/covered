@@ -58,7 +58,7 @@ class MyLittleCalendar extends React.Component {
     const startOfMonth = new Date(year, month - 1, 1 - firstOfMonth.getDay());
     // startOfMonth is the first day shown on the calendar
     let currentDay = startOfMonth;
-    
+
     while (currentDay < firstOfNextMonth) {
       const week = [];
       for (let i = 0; i < 7; ++i) {
@@ -67,9 +67,9 @@ class MyLittleCalendar extends React.Component {
         const date = currentDay.getDate();
         const isOffRange = currentDay < firstOfMonth || currentDay >= firstOfNextMonth;
         const isToday = year === today.getFullYear()
-                      && month === today.getMonth() + 1
-                      && date === today.getDate()
-                      && !isOffRange;
+          && month === today.getMonth() + 1
+          && date === today.getDate()
+          && !isOffRange;
         const yyyymmdd = (year * 10000 + month * 100 + date).toString();
 
         let nScheduled = 0;
@@ -78,18 +78,18 @@ class MyLittleCalendar extends React.Component {
             ++nScheduled;
           }
         });
-        
+
         const nNeeded = i === 0 || i === 6 ? 2 : 3 // num of emps needed for this day
         const text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
 
         week.push({
           year,
           month,
-          date,                          
-          isOffRange,                   
+          date,
+          isOffRange,
           isToday,
           nScheduled,
-          nNeeded,                      
+          nNeeded,
           text
         });
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate() + 1);
@@ -135,10 +135,10 @@ class MyLittleCalendar extends React.Component {
     }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const stylin = {flexBasis: "14.2857%", maxWidth: '14.2857%'};
-    
+    const stylin = { flexBasis: "14.2857%", maxWidth: '14.2857%' };
+
     return (
-      <div className="rbc-calendar" style={{height: '80vh', cursor: 'pointer'}}>
+      <div className="rbc-calendar" style={{ height: '80vh', cursor: 'pointer' }}>
         <div className="rbc-toolbar">
           <span className="rbc-btn-group">
             <button name="today" onClick={this.handleClick} type="button">Today</button>
@@ -150,18 +150,19 @@ class MyLittleCalendar extends React.Component {
         </div>
         <div className="rbc-month-view">
           <div className="rbc-row rbc-month-header">
-            {dayNames.map(dayName =>
-              <div className="rbc-header" style={stylin}>
+            {dayNames.map((dayName, i) =>
+              <div key={i} className="rbc-header" style={stylin}>
                 <span>{dayName}</span>
               </div>
             )}
           </div>
-          {this.state.weeks.map(week => 
-            <div className="rbc-month-row">
+          {this.state.weeks.map((week, i) =>
+            <div className="rbc-month-row" key={i}>
               <div className="rbc-row-bg">
-                {week.map(day =>
-                  <div 
-                    className={rowBgClass(day)} 
+                {week.map((day, i) =>
+                  <div
+                    key={i}
+                    className={rowBgClass(day)}
                     onClick={() => this.handleCalendarClick(day)}
                     style={stylin}
                   >
@@ -170,9 +171,10 @@ class MyLittleCalendar extends React.Component {
               </div>
               <div className="rbc-row-content">
                 <div className="rbc-row">
-                  {week.map(day =>
-                    <div 
-                      className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`} 
+                  {week.map((day, i) =>
+                    <div
+                      key={i}
+                      className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`}
                       onClick={() => this.handleCalendarClick(day)}
                       style={stylin}
                     >
@@ -182,15 +184,16 @@ class MyLittleCalendar extends React.Component {
                 </div>
                 <div className="rbc-row-content">
                   <div className="rbc-row">
-                    {week.map(day =>
-                      <div 
-                        className='rbc-row-segment' 
+                    {week.map((day, i) =>
+                      <div
+                        key={i}
+                        className='rbc-row-segment'
                         onClick={() => this.handleCalendarClick(day)}
                         style={stylin}
                       >
                         {day.nNeeded > 0 &&
                           <div className={rbcEventClass(day)}>
-                            <div className="rbc-event-content" title="">{day.text }</div>
+                            <div className="rbc-event-content" title="">{day.text}</div>
                           </div>
                         }
                       </div>
@@ -201,7 +204,7 @@ class MyLittleCalendar extends React.Component {
             </div>
           )}
         </div>
-      </div>      
+      </div>
     );
   }
 }

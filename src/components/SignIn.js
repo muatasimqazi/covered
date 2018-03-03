@@ -2,10 +2,6 @@ import React from 'react';
 import { ROUTES } from '../constants';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import { app } from '../base';
-import PaperCard from './PaperCard';
 import { Row, Col } from 'react-grid-system'
 import Paper from 'material-ui/Paper';
 import { observer } from 'mobx-react';

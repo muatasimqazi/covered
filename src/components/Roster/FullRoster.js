@@ -1,22 +1,23 @@
-
 //@ts-check
+/* eslint-disable no-unused-vars */
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PaperCard from '../PaperCard';
-import TableCard from '../TableCard';
-import { Row, Col } from 'react-grid-system'
+import { Row, Col, Hidden } from 'react-grid-system'
 import {
     Table,
     TableBody,
     TableHeader,
     TableHeaderColumn,
     TableRow,
-    TableRowColumn,
 } from 'material-ui/Table';
 import SingleEmployee from './SingleEmployee';
 import { observer } from 'mobx-react';
-
 import { dataStore } from '../../DataStore';
+const styles = {
+    table: {
+        overflowX: 'auto',
+    },
+}
 @observer
 export default class FullRoster extends React.Component {
     constructor(props) {
@@ -25,48 +26,41 @@ export default class FullRoster extends React.Component {
         }
     }
 
-    componentDidMount() {
-    }
-
     render() {
+        let colHeader = ["Name", "Phone", "Email", "Latest Shift", "Edit Employee"]
         let employees = [];
-        let num = [1, 2, 3, 4, 5, 6]
-        /*this.props.employeesSnap*/ // use forEach for snap
-        dataStore.employeesArray.map((employee, index) => {
-            console.log(index)
+        dataStore.employeesArray.forEach((employee, index) => {
             employees.push(
-                <SingleEmployee employeeID={index} employee={employee} />
+                <SingleEmployee key={index} employee={employee} index={index} />
             )
         })
-        console.log(employees)
         return (
             <div>
                 <Row>
                     <Col>
                         <PaperCard
-                            slug="Store Employees"
-                            title="Roster"
+                            slug="Manage Employees"
+                            title="Employees Roster"
                         >
-                            <Table>
+                            <Table style={styles.table}>
                                 <TableHeader
                                     displaySelectAll={false}
                                     adjustForCheckbox={false}
                                 >
-                                    <TableRow>
-                                        <TableHeaderColumn style={{ width: 20 }}>ID</TableHeaderColumn>
-                                        <TableHeaderColumn>Name</TableHeaderColumn>
-                                        <TableHeaderColumn>Phone</TableHeaderColumn>
-                                        <TableHeaderColumn>Email</TableHeaderColumn>
-                                        <TableHeaderColumn>Lastest Shift</TableHeaderColumn>
-                                        <TableHeaderColumn>Edit Shift</TableHeaderColumn>
+                                    <TableRow
+                                        hoverable={true}>
+                                        <Hidden xs sm>
+                                            <TableHeaderColumn style={{ width: 20, align: 'center' }}></TableHeaderColumn>
+                                        </Hidden>
+                                        {
+                                            colHeader.map((header, index) => {
+                                                return <TableHeaderColumn key={index}>{header}</TableHeaderColumn>
+                                            })
+                                        }
+
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody
-                                    displayRowCheckbox={false}
-                                    deselectOnClickaway={true}
-                                    showRowHover={true}
-                                    stripedRows={true}
-                                >
+                                <TableBody>
                                     {employees}
                                 </TableBody>
                             </Table>

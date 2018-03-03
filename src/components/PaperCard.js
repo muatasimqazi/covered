@@ -19,9 +19,9 @@ class PaperCard extends React.Component {
       >
         <div style={{ display: 'flex' }}>
           <h5 style={{ flex: 1 }}> {this.props.slug}</h5>
-          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>settings</FontIcon>
+          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>more_vert</FontIcon>
         </div>
-        <h4>{this.props.title}</h4>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{this.props.image}<h4>{this.props.title}</h4></div>
         {this.props.children}
 
       </Paper>

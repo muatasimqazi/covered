@@ -1,4 +1,5 @@
 //@ts-check
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';

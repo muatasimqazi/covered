@@ -1,4 +1,5 @@
 //@ts-check
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import PaperCard from '../PaperCard';
 import RequestForm from '../RequestForm/RequestForm';
@@ -24,7 +25,7 @@ class Supervisor extends React.Component {
                     <Col sm={3}>
                         <PaperCard>
                             <h4>Request a Change</h4>
-                            {/* <RequestForm /> */}
+                            <RequestForm />
                         </PaperCard>
                     </Col>
                 </Row>
