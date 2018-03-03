@@ -25,34 +25,7 @@ class HomePage extends React.Component {
             dataStore.isLoggedIn
               ?
               <div>
-                  <Dashboard />
-                  <Row>
-                    <Col sm={12}>
-                      <PaperCard
-                        slug="New Requests"
-                        titl="Notifications">
-                        <NotificationMessages />
-                      </PaperCard>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col sm={6}>
-                      <PaperCard
-                        slug="Card Category"
-                        title="Sample Card"
-                      >
-                        <TableCard showCheck={false} />
-                      </PaperCard>
-                    </Col>
-                    <Col sm={6}>
-                      <PaperCard
-                        slug="Tables"
-                        title="New Card"
-                      >
-                        <TableCard id={true} />
-                      </PaperCard>
-                    </Col>
-                  </Row>
+                <Dashboard />
               </div>
               :
               <div>

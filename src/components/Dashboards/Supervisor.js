@@ -6,6 +6,7 @@ import RequestForm from '../RequestForm/RequestForm';
 import Calendar from '../Calendar';
 import { Row, Col } from 'react-grid-system';
 import { observer } from 'mobx-react';
+import NotificationMessages from '../NotificationMessages';
 
 @observer
 class Supervisor extends React.Component {
@@ -26,6 +27,11 @@ class Supervisor extends React.Component {
                         <PaperCard>
                             <h4>Request a Change</h4>
                             <RequestForm />
+                        </PaperCard>
+                        <PaperCard
+                            slug="New Requests"
+                            titl="Notifications">
+                            <NotificationMessages />
                         </PaperCard>
                     </Col>
                 </Row>
