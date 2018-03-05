@@ -29,9 +29,9 @@ class MyLittleCalendar extends React.Component {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
-    const weeks = this.generateWeeks(year, month);
     this.state = {
-      weeks, month, year
+      month, 
+      year
     };
   }
   handleClick = (e) => {
@@ -46,9 +46,8 @@ class MyLittleCalendar extends React.Component {
     const year = d.getFullYear();
     const month = d.getMonth() + 1;
     this.setState({
-      year,
       month,
-      weeks: this.generateWeeks(year, month)
+      year
     });
   }
   generateWeeks(year, month) {
@@ -176,12 +175,16 @@ class MyLittleCalendar extends React.Component {
       }
       return result.join(' ');
     }
+    const weeks = this.generateWeeks(this.state.year, this.state.month);
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const stylin = { flexBasis: "14.2857%", maxWidth: '14.2857%' };
 
     return (
       <div className="rbc-calendar" style={{ height: '80vh', cursor: 'pointer' }}>
+        <div>
+          {dataStore.employeesArray.length}
+        </div>
         <div className="rbc-toolbar">
           <span className="rbc-btn-group">
             <button name="today" onClick={this.handleClick} type="button">Today</button>
@@ -199,7 +202,7 @@ class MyLittleCalendar extends React.Component {
               </div>
             )}
           </div>
-          {this.state.weeks.map((week, i) =>
+          {weeks.map((week, i) =>
             <div className="rbc-month-row" key={i}>
               <div className="rbc-row-bg">
                 {week.map((day, i) =>
