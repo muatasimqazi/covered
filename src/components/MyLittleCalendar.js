@@ -147,7 +147,7 @@ class MyLittleCalendar extends React.Component {
         classes.push('rbc-blue');
       }
     }
-    const rowBgClass = (day) => {
+    const rbcDayBgClass = (day) => {
       const result = ['rbc-day-bg'];
       if (day.isOffRange) {
         result.push('rbc-off-range-bg');
@@ -163,6 +163,17 @@ class MyLittleCalendar extends React.Component {
       if (day.userIsSupervisor) {
         addColors(result, day);
       } 
+      return result.join(' ');
+    }
+    const rbcDateCellClass = (day) => {
+      const result = ['rbc-date-cell'];
+      if (day.isOffRange) {
+        result.push('rbc-off-range-bg');
+      }
+      if (day.isToday) {
+        result.push('rbc-now');  
+        result.push('rbc-current');  
+      }
       return result.join(' ');
     }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -194,7 +205,7 @@ class MyLittleCalendar extends React.Component {
                 {week.map((day, i) =>
                   <div
                     key={i}
-                    className={rowBgClass(day)}
+                    className={rbcDayBgClass(day)}
                     onClick={() => this.handleCalendarClick(day)}
                     style={stylin}
                   >
@@ -206,7 +217,7 @@ class MyLittleCalendar extends React.Component {
                   {week.map((day, i) =>
                     <div
                       key={i}
-                      className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`}
+                      className={rbcDateCellClass(day)}
                       onClick={() => this.handleCalendarClick(day)}
                       style={stylin}
                     >
