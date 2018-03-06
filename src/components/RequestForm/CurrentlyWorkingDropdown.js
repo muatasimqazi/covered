@@ -2,6 +2,7 @@
 import React from 'react';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
+import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
 
 
@@ -13,7 +14,7 @@ const styles = {
     }
 }
 
-class CurrentlyWorkingDropdown extends React.Component {
+@observer class CurrentlyWorkingDropdown extends React.Component {
   constructor(props) {
     super(props);
     this.handleDropDownVal3 = this.handleDropDownVal3.bind(this);

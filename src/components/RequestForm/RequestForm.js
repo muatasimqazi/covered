@@ -223,13 +223,13 @@ function formatTime(timeEntry) {
         <div>Loading...</div>
         :
         <div>
-          <div>Date: {formatDate(dataStore.targetDate)}</div>
+          <div>Date: { formatDate(dataStore.targetDate) }</div>
           {teamRoster}
-          <div>Shift: {currShift}</div>
+          <div>Shift: { currShift}</div>
           <div>
             { this.createActionOptions() }
           </div>
-          {actionInput}
+          { actionInput }
 
           <RaisedButton 
             label="Submit Changes"

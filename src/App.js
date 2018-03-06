@@ -17,7 +17,7 @@ import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
 import { ROUTES } from './constants';
 import Roster from './components/Roster/Roster';
-import ShiftManager from './components/ShiftManager';
+import ShiftManager from './components/ShiftManager/ShiftManager';
 import { dataStore } from './DataStore';
 import { observer } from 'mobx-react';
 import { Container } from 'react-grid-system';

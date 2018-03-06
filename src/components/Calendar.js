@@ -11,24 +11,6 @@ import { observer } from 'mobx-react';
 moment.locale('en-GB');
 // BigCalendar.momentLocalizer(moment);
 
-// provides today's date to the calendar 
-function getCurrDate() {
-  const today = new Date();
-  let day = today.getDate();
-  let month = today.getMonth()+1;
-  let year = today.getFullYear();
-
-  if(day < 10) {
-    day = '0' + day;
-  }
-
-  if(month < 10) {
-    month = '0' + month;
-  }
-
-  return `${year},${month},${day}`;
-}
-
 function verifyDate(date) {
   let currDate = new Date();
   if (date >= currDate) {
