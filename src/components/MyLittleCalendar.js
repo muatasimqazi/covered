@@ -182,9 +182,6 @@ class MyLittleCalendar extends React.Component {
 
     return (
       <div className="rbc-calendar" style={{ height: '80vh', cursor: 'pointer' }}>
-        <div>
-          {dataStore.employeesArray.length}
-        </div>
         <div className="rbc-toolbar">
           <span className="rbc-btn-group">
             <button name="today" onClick={this.handleClick} type="button">Today</button>
