@@ -39,6 +39,10 @@ class MyLittleCalendar extends React.Component {
     if (e.target.name === 'today') {
       d = new Date();
     } else if (e.target.name === 'prev') {
+      const today = new Date();
+      if (today.getFullYear() === this.state.year && today.getMonth() + 1 === this.state.month) {
+        return; // If displaying the present month, ignore 'prev' click.
+      }
       d = new Date(this.state.year, this.state.month - 2, 1);
     } else if (e.target.name === 'next') {
       d = new Date(this.state.year, this.state.month + 0, 1);
