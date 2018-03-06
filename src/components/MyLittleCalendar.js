@@ -31,7 +31,8 @@ class MyLittleCalendar extends React.Component {
     const month = today.getMonth() + 1;
     this.state = {
       month, 
-      year
+      year,
+      clickedYyyymmdd: ''
     };
   }
   handleClick = (e) => {
@@ -123,6 +124,7 @@ class MyLittleCalendar extends React.Component {
           year,
           month,
           date,
+          yyyymmdd,
           isOffRange,
           isToday,
           isBeforeToday,
@@ -138,6 +140,13 @@ class MyLittleCalendar extends React.Component {
     return weeks;
   }
   handleCalendarClick = (day) => {
+    if (day.isBeforeToday) {
+      return;
+    }
+    this.setState({
+      clickedYyyymmdd: day.yyyymmdd
+    });
+    
     // Here we fake the onSelectSlot event of react-big-calendar
     const slots = [];
 
@@ -165,6 +174,9 @@ class MyLittleCalendar extends React.Component {
       }
       if (day.isToday) {
         result.push('rbc-today');
+      }
+      if (day.yyyymmdd === this.state.clickedYyyymmdd) {
+        result.push('rbc-clicked');
       }
       addColors(result, day);
       return result.join(' ');
