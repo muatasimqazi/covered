@@ -89,7 +89,12 @@ div.rbc-day-bg.rbc-off-range-bg.rbc-blue {
 
 /* border around today */
 div.rbc-day-bg.rbc-today {
-  border: 2px solid #aaa;
+  border: 1px solid #888;
+}
+
+/* border around clicked day */
+div.rbc-day-bg.rbc-clicked {
+  border: 1px solid #d66;
 }
 
 /* colored events */

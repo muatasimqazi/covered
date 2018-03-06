@@ -29,9 +29,10 @@ class MyLittleCalendar extends React.Component {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
-    const weeks = this.generateWeeks(year, month);
     this.state = {
-      weeks, month, year
+      month, 
+      year,
+      clickedYyyymmdd: ''
     };
   }
   handleClick = (e) => {
@@ -39,6 +40,10 @@ class MyLittleCalendar extends React.Component {
     if (e.target.name === 'today') {
       d = new Date();
     } else if (e.target.name === 'prev') {
+      const today = new Date();
+      if (today.getFullYear() === this.state.year && today.getMonth() + 1 === this.state.month) {
+        return; // If displaying the present month, ignore 'prev' click.
+      }
       d = new Date(this.state.year, this.state.month - 2, 1);
     } else if (e.target.name === 'next') {
       d = new Date(this.state.year, this.state.month + 0, 1);
@@ -46,9 +51,8 @@ class MyLittleCalendar extends React.Component {
     const year = d.getFullYear();
     const month = d.getMonth() + 1;
     this.setState({
-      year,
       month,
-      weeks: this.generateWeeks(year, month)
+      year
     });
   }
   generateWeeks(year, month) {
@@ -75,7 +79,7 @@ class MyLittleCalendar extends React.Component {
 
         let nScheduled = 0;
         dataStore.employeesArray.forEach(emp => {
-          if (emp.shifts[yyyymmdd]) {
+          if (emp.shifts && emp.shifts[yyyymmdd]) {
             ++nScheduled;
           }
         });
@@ -88,7 +92,7 @@ class MyLittleCalendar extends React.Component {
           text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
         }
         else {
-          const shift = dataStore.currentUser.shifts[yyyymmdd];
+          const shift = dataStore.currentUser.shifts &&  dataStore.currentUser.shifts[yyyymmdd];
           if (shift) {
             function formatTime(timeEntry) {
               let entryArr = timeEntry.split(":");
@@ -111,12 +115,19 @@ class MyLittleCalendar extends React.Component {
           }
         }
 
+        const isBeforeToday = yyyymmdd < (today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate()).toString();
+
+        if (isBeforeToday) {
+          text = '';
+        }
         week.push({
           year,
           month,
           date,
+          yyyymmdd,
           isOffRange,
           isToday,
+          isBeforeToday,
           nScheduled,
           nNeeded,                      
           text,
@@ -129,6 +140,13 @@ class MyLittleCalendar extends React.Component {
     return weeks;
   }
   handleCalendarClick = (day) => {
+    if (day.isBeforeToday) {
+      return;
+    }
+    this.setState({
+      clickedYyyymmdd: day.yyyymmdd
+    });
+    
     // Here we fake the onSelectSlot event of react-big-calendar
     const slots = [];
 
@@ -137,7 +155,9 @@ class MyLittleCalendar extends React.Component {
   }
   render() {
     function addColors(classes, day) {
-      if (day.nScheduled < day.nNeeded * 0.50) {
+      if (day.isBeforeToday) {
+        // no color
+      } else if (day.nScheduled < day.nNeeded * 0.50) {
         classes.push('rbc-red');
       } else if (day.nScheduled < day.nNeeded) {
         classes.push('rbc-yellow');
@@ -147,13 +167,16 @@ class MyLittleCalendar extends React.Component {
         classes.push('rbc-blue');
       }
     }
-    const rowBgClass = (day) => {
+    const rbcDayBgClass = (day) => {
       const result = ['rbc-day-bg'];
       if (day.isOffRange) {
         result.push('rbc-off-range-bg');
       }
       if (day.isToday) {
         result.push('rbc-today');
+      }
+      if (day.yyyymmdd === this.state.clickedYyyymmdd) {
+        result.push('rbc-clicked');
       }
       addColors(result, day);
       return result.join(' ');
@@ -165,6 +188,18 @@ class MyLittleCalendar extends React.Component {
       } 
       return result.join(' ');
     }
+    const rbcDateCellClass = (day) => {
+      const result = ['rbc-date-cell'];
+      if (day.isOffRange) {
+        result.push('rbc-off-range-bg');
+      }
+      if (day.isToday) {
+        result.push('rbc-now');  
+        result.push('rbc-current');  
+      }
+      return result.join(' ');
+    }
+    const weeks = this.generateWeeks(this.state.year, this.state.month);
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const stylin = { flexBasis: "14.2857%", maxWidth: '14.2857%' };
@@ -188,13 +223,13 @@ class MyLittleCalendar extends React.Component {
               </div>
             )}
           </div>
-          {this.state.weeks.map((week, i) =>
+          {weeks.map((week, i) =>
             <div className="rbc-month-row" key={i}>
               <div className="rbc-row-bg">
                 {week.map((day, i) =>
                   <div
                     key={i}
-                    className={rowBgClass(day)}
+                    className={rbcDayBgClass(day)}
                     onClick={() => this.handleCalendarClick(day)}
                     style={stylin}
                   >
@@ -206,7 +241,7 @@ class MyLittleCalendar extends React.Component {
                   {week.map((day, i) =>
                     <div
                       key={i}
-                      className={`rbc-date-cell ${day.isOffRange ? 'rbc-off-range-bg' : ''} ${day.isToday ? 'rbc-now rbc-current' : ''}`}
+                      className={rbcDateCellClass(day)}
                       onClick={() => this.handleCalendarClick(day)}
                       style={stylin}
                     >
