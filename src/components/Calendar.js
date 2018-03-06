@@ -30,7 +30,11 @@ function getCurrDate() {
 }
 
 function verifyDate(date) {
-  let currDate = new Date();
+  // date is date of calendar square being clicked. It is midnight on that date.
+  const now = new Date();
+  const currDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // currDate is midnight of today's date
+  
   if (date >= currDate) {
     return date;
   }  else {

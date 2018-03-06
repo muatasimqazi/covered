@@ -114,12 +114,18 @@ class MyLittleCalendar extends React.Component {
           }
         }
 
+        const isBeforeToday = yyyymmdd < (today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate()).toString();
+
+        if (isBeforeToday) {
+          text = '';
+        }
         week.push({
           year,
           month,
           date,
           isOffRange,
           isToday,
+          isBeforeToday,
           nScheduled,
           nNeeded,                      
           text,
@@ -140,7 +146,9 @@ class MyLittleCalendar extends React.Component {
   }
   render() {
     function addColors(classes, day) {
-      if (day.nScheduled < day.nNeeded * 0.50) {
+      if (day.isBeforeToday) {
+        // no color
+      } else if (day.nScheduled < day.nNeeded * 0.50) {
         classes.push('rbc-red');
       } else if (day.nScheduled < day.nNeeded) {
         classes.push('rbc-yellow');
