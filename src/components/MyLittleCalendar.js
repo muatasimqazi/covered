@@ -74,7 +74,7 @@ class MyLittleCalendar extends React.Component {
 
         let nScheduled = 0;
         dataStore.employeesArray.forEach(emp => {
-          if (emp.shifts[yyyymmdd]) {
+          if (emp.shifts && emp.shifts[yyyymmdd]) {
             ++nScheduled;
           }
         });
@@ -87,7 +87,7 @@ class MyLittleCalendar extends React.Component {
           text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
         }
         else {
-          const shift = dataStore.currentUser.shifts[yyyymmdd];
+          const shift = dataStore.currentUser.shifts &&  dataStore.currentUser.shifts[yyyymmdd];
           if (shift) {
             function formatTime(timeEntry) {
               let entryArr = timeEntry.split(":");
