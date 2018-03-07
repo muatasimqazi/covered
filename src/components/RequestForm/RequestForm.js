@@ -11,8 +11,7 @@ import { dataStore } from '../../DataStore';
 
 Known Issues
 -- Radio Button Coloring (issue related to RadioButtonGroup)
--- Input areas don't update when date changes
--- Shift information doesn't update after change (need to add visual change)
+-- Shift information doesn't update after change (add visual success change)
 -- Trade will not work without access to the second drop down (the person whose shift is being traded)
 
 */
@@ -182,21 +181,6 @@ function formatTime(timeEntry) {
       teamRoster = <TeamRosterDropdown />;
     }
 
-    // Action Inputs - based on which action option is selected, show input options
-    const whichAction = this.state.requestAction;
-    let actionInput = null;
-      if(whichAction === 'add') {
-        actionInput = 
-        <div>
-          <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
-          <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
-        </div>;
-      } else if (whichAction === 'trade') {
-        actionInput = <CurrentlyWorkingDropdown  />
-      } else {
-        actionInput = <div></div>
-      }
-
     // Current Shift - based on user or targeted user (if supervisor logged in)
     let currShift = null;
     if(dataStore.currentUser.role === 'employee') {
@@ -229,7 +213,22 @@ function formatTime(timeEntry) {
           <div>
             { this.createActionOptions() }
           </div>
-          { actionInput }
+          { 
+            dataStore.requestActions[0] === 'add'
+            ? <div>
+                <TimePicker style={styles.timePicker} value={this.requestTimeStart} onChange={this.handleTimePickerStart} hintText="From"/>
+                <TimePicker style={styles.timePicker} value={this.requestTimeEnd} onChange={this.handleTimePickerEnd} hintText="To"/>
+              </div>
+            : <div></div>
+           }
+
+          { 
+            dataStore.requestActions[1] === 'trade'
+            ? <div>
+                <CurrentlyWorkingDropdown  />
+              </div>
+            : <div></div>
+           }
 
           <RaisedButton 
             label="Submit Changes"
