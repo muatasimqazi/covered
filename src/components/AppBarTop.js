@@ -9,6 +9,8 @@ import { Menu, MenuItem } from 'material-ui';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { Divider } from 'material-ui';
 import { ROUTES } from '../constants';
+import { observer } from 'mobx-react';
+import { dataStore } from '../DataStore';
 
 const styles = {
   appBar: {

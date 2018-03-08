@@ -35,6 +35,7 @@ export default class FullRoster extends React.Component {
     }
 
     render() {
+        console.log(dataStore.currentUser);
         let colHeader = ["Name", "Phone", "Email", "Latest Shift", "Edit Employee"]
         let employees = [];
         dataStore.employeesArray.forEach((employee, index) => {

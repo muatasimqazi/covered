@@ -22,28 +22,6 @@ class AddNewEmployeeForm extends Component {
             employee: {
                 password: 'covered',
                 role: 'employee',
-                "shifts": {
-                    "20180301": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180302": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180305": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180308": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180309": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    }
-                },
             },
             open: false,
 

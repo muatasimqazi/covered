@@ -130,9 +130,7 @@ class DataStore {
       }
     });
   }
-  // TEST function: create employee account using a different method
-  // called from roster view
-  // -- MUATASIM
+
   createEmployeeAccountFromRoster(employee, cb) {
     this.isBusy = true;
     this.isSuccess = false;
@@ -142,7 +140,7 @@ class DataStore {
     auth.createUserWithEmailAndPassword(employee.email, employee.password)
       .then(user => {
         employee.id = user.uid;
-        employee.teamId = '-L5qib7e0L-KIEqqScID'; // needs to come from fb db
+        employee.teamId = this.currentUser.teamId;
         employee.photoURL = employeePhotoUrl;
         user.updateProfile({
           displayName: `{${employee.firstName} ${employee.lastName}}`,
@@ -150,7 +148,7 @@ class DataStore {
         })
       })
       .then(() => {
-        db.ref(`test/users/${employee.id}`).set(employee)
+        db.ref(`test/users/${employee.id}`).set(employee);
       })
       .then(() => {
         this.isBusy = false;
