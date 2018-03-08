@@ -51,15 +51,20 @@ class AddNewEmployeeForm extends Component {
     }
 
     handleChange = (evt) => {
+        dataStore.error = '';
         let employee = { ...this.state.employee, [evt.target.name]: evt.target.value, }
         this.setState({ employee });
     };
 
     handleSumbit(evt) {
         evt.preventDefault();
-        dataStore.createEmployeeAccountFromRoster(this.state.employee);
-        this.props.history.push(ROUTES.roster);
-        
+        dataStore.createEmployeeAccountFromRoster(this.state.employee, () => {
+            console.log('...', dataStore.error)
+            if (!dataStore.error) {
+                this.props.history.push(ROUTES.roster);
+            }
+            });
+
     }
     render() {
         return (
