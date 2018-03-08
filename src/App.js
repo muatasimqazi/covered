@@ -32,6 +32,7 @@ const muiTheme = getMuiTheme({
     alternateTextColor: '#FFF',
   }
 });
+  
 @observer
 class App extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ class App extends Component {
     })
   }
 
-  handleDrawerToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen });
   handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
 
   componentDidMount() {
