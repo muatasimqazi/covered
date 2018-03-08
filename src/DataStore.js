@@ -79,7 +79,6 @@ class DataStore {
       }
     } else if (this.currentUser.shifts[this.formatTargetDate]) {
       actionOptions.push('remove');
-      actionOptions.push('trade');
     } else {
       actionOptions.push('add');
     }
