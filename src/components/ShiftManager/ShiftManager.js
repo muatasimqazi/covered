@@ -134,7 +134,8 @@ function formatAs24Hr(time, isPM) {
 }
 
 function isDateAfterToday(date) {
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     if (date >= today) {
         return true;
     }
@@ -237,31 +238,33 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
             return;
         } 
 
+
         if (!isDateAfterToday(weekDatesArr[dateIndex - 1])){
             let today = new Date();
             this.setState({errorText: `Selected shifts must be after today, ${formatDate(today)}` });
             return;
         }
 
-        if (dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]){
-            dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex - 1]), null);
-        } else {
+        if (!dataStore.employeesArray[userIndex].shifts || !dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]) {
+            console.log('hi');
             if (!isTimeValid(this.state.shiftStartTime, this.state.shiftEndTime, this.state.startShiftDropdown, this.state.endShiftDropdown)){
                 this.setState({errorText: `Shifts need to be in the format - hh:mm`});
             } else {
                 this.setState({errorText: null});
                 dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex -1]), {shiftStart: formatAs24Hr(this.state.shiftStartTime, this.state.startShiftDropdown), shiftEnd: formatAs24Hr(this.state.shiftEndTime, this.state.endShiftDropdown)});
             }
+        } else if (dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]){
+            dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex - 1]), null);
         }
     }
 
     render() {
 
-        /* Shift error handler text */
-
         let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)]
         let employeeRows = dataStore.employeesArray.map((employee, index) => {
-            return <TableRow
+            const employeeShifts = employee.shifts; 
+            return employeeShifts 
+            ? <TableRow
                 key={index}>
                 <TableRowColumn style={styles.tableEmployee}>{employee.firstName} {employee.lastName}</TableRowColumn>
                 <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[0])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftEnd)} ` : '---'}</TableRowColumn>
@@ -271,6 +274,17 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
                 <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[4])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftEnd)} ` : '---'}</TableRowColumn>
                 <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[5])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftEnd)} ` : '---'}</TableRowColumn>
                 <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[6])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftEnd)} ` : '---'}</TableRowColumn>
+            </TableRow>
+            : <TableRow
+                key={index}>
+                <TableRowColumn style={styles.tableEmployee}>{employee.firstName} {employee.lastName}</TableRowColumn>
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>                
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>                
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>                
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>                
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>                
+                <TableRowColumn style={styles.shiftCell}>---</TableRowColumn>            
             </TableRow>
         });
 

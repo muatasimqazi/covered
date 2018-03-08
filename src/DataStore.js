@@ -72,15 +72,17 @@ class DataStore {
     if (this.currentUser.role === 'supervisor') {
       if (!this.currUserViaSupervisor) {
 
+      } else if (!this.currUserViaSupervisor.shifts || !this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+        actionOptions.push('add');
       } else if (this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
         actionOptions.push('remove');
-      } else {
-        actionOptions.push('add');
-      }
-    } else if (this.currentUser.shifts[this.formatTargetDate]) {
-      actionOptions.push('remove');
+      } 
     } else {
-      actionOptions.push('add');
+      if(!this.currentUser.shifts || this.currentUser.shifts[this.formatTargetDate]) {
+        actionOptions.push('add');
+      } if (this.currentUser.shifts[this.formatTargetDate]) {
+        actionOptions.push('remove');
+      }
     }
     return actionOptions;
   }
