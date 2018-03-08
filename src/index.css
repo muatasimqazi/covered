@@ -1,41 +1,135 @@
 * {
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
 }
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+	background: #ebecf1;
+	color: #2c2c2c;
+	line-height: 1.5;
 }
+
 .hero {
-  height: 50vh;
+	height: 50vh;
 }
-.hero-img { 
-  display: none;
+
+.hero-img {
+	display: none;
 }
+
 .feature-item {
-  display: block;
-  margin: 50px auto;
+	display: block;
+	margin: 20px auto;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+	font-family: Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h4 {
+	margin-top: 10px;
+	margin-bottom: 0;
+	font-size: 1.714em;
+	line-height: 1.45em;
+	font-weight: 400;
+	color: inherit;
+}
+
+h5 {
+	color: #9a9a9a;
+	font-size: 1em;
+	margin-top: 0;
+	margin-bottom: 5px;
+	font-weight: 400;
+}
+
+/*.rbc-event {
+	background: #588c1d !important;
+}*/
+
+/* make date-cell transparent */
+div.rbc-date-cell {
+	background-color: rgba(0, 0, 0, 0);
+}
+
+/* colored days */
+div.rbc-day-bg.rbc-red {
+  background-color: #fbb;
+}
+div.rbc-day-bg.rbc-yellow {
+  background-color: #ffb;
+}
+div.rbc-day-bg.rbc-green {
+  background-color: #bfb;
+}
+div.rbc-day-bg.rbc-blue {
+  background-color: #bbf;
+}
+
+/* colored off-range (not current month) days */
+div.rbc-day-bg.rbc-off-range-bg.rbc-red {
+  background-color: #fdd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-yellow {
+  background-color: #ffd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-green {
+  background-color: #dfd;
+}
+div.rbc-day-bg.rbc-off-range-bg.rbc-blue {
+  background-color: #ddf;
+}
+
+/* border around today */
+div.rbc-day-bg.rbc-today {
+  border: 1px solid #888;
+}
+
+/* border around clicked day */
+div.rbc-day-bg.rbc-clicked {
+  border: 1px solid #d66;
+}
+
+/* colored events */
+div.rbc-event.rbc-event-allday.rbc-red {
+  background-color: #faa;
+}
+div.rbc-event.rbc-event-allday.rbc-yellow {
+  background-color: #dd8;
+}
+div.rbc-event.rbc-event-allday.rbc-green {
+  background-color: #9e9;
+}
+div.rbc-event.rbc-event-allday.rbc-blue {
+  background-color: #99e;
 }
 
 @media(min-width: 780px) {
-  .hero {
-    height: 60vh;
-  }
-  .hero-title {
-    align-self: flex-start;
-    margin-top: 15vh;
-  }
-  .hero-img {
-    display: inline-block;
-    flex: 2;
-    background-position: center;
-    background-size: 40vh;
-    background-repeat: no-repeat;
-    height: 50vh;
-  }
-  .feature {
-    display: flex;
-    margin: 5vh;
-  }
+	.hero {
+		height: 65vh;
+	}
+	.hero-title {
+		align-self: flex-start;
+		margin-top: 15vh;
+	}
+	.hero-img {
+		display: inline-block;
+		flex: 2;
+		background-position: center;
+		background-size: 40vh;
+		background-repeat: no-repeat;
+		height: 50vh;
+	}
+	.feature {
+		display: flex;
+		margin: 5vh;
+	}
 }
+

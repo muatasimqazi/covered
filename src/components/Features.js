@@ -6,24 +6,25 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: 'flex-start',
-        flexFlow: 'row wrap',
+        // flexFlow: 'row wrap',
         height: '300px',
+        textAlign: 'center',
     },
     item: {
-       height: 300,
+        height: 300,
     },
     circle: {
         backgroundColor: '#34485d',
-        width: '200px',
-        height: '200px',
+        width: '130px',
+        height: '130px',
         borderRadius: '50%',
         textAlign: 'center',
         margin: '0 auto',
     },
     icon: {
-        fontSize: '6rem',
+        fontSize: '4rem',
         color: '#FFF',
-        padding: '40px'
+        padding: '30px'
     },
     desc: {
         marginTop: '50px'
@@ -32,36 +33,47 @@ const styles = {
         color: '#6d7986',
     }
 }
-  
+
+const icons = [
+    {
+        icon: 'add_location',
+        title: 'Add Location',
+        desc: 'Some text that explains the feature offered'
+    },
+    {
+        icon: 'group',
+        title: 'Create Teams',
+        desc: 'Some text that explains the feature offered'
+    },
+    {
+        icon: 'schedule',
+        title: 'Track Shifts',
+        desc: 'Some text that explains the feature offered'
+    },
+    {
+        icon: 'notifications',
+        title: 'Stay Updated',
+        desc: 'Some text that explains the feature offered'
+    },
+]
+
 const Features = () => (
     <div style={styles.features} className={'feature'}>
-        <div style={styles.item} className={'feature-item'}>
-            <div style={styles.circle}>
-                <FontIcon style={styles.icon} className="material-icons">add_location</FontIcon>
-                <div style={styles.desc}>
-                    <h2>Add Location</h2>
-                    <p style={styles.descInfo}>Some text that explains the feature offered</p>
-                </div>
-            </div>
-        </div>
-        <div style={styles.item} className={'feature-item'}>
-            <div style={styles.circle}>
-                <FontIcon style={styles.icon} className="material-icons">group</FontIcon>
-                <div style={styles.desc}>
-                    <h2>Create Teams</h2>
-                    <p style={styles.descInfo}>Some text that explains the feature offered</p>
-                </div>
-            </div>
-        </div>
-        <div style={styles.item} className={'feature-item'}>
-            <div style={styles.circle}>
-                <FontIcon style={styles.icon} className="material-icons">schedule</FontIcon>
-                <div style={styles.desc}>
-                    <h2>Track Shifts</h2>
-                    <p style={styles.descInfo}>Some text that explains the feature offered</p>
-                </div>
-            </div>
-        </div>
+        {
+            icons.map((item, index) => {
+                return (
+                    <div style={styles.item} className={'feature-item'} key={index}>
+                        <div style={styles.circle}>
+                            <FontIcon style={styles.icon} className="material-icons">{item.icon}</FontIcon>
+                        </div>
+                        <div style={styles.desc}>
+                            <h2>{item.title}</h2>
+                            <p style={styles.descInfo}>{item.desc}</p>
+                        </div>
+                    </div>
+                )
+            })
+        }
     </div>
 );
 

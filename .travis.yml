@@ -17,8 +17,9 @@ branches:
   only:
   - master
   - develop
-  
+
 script:
+  - echo $REACT_APP_FIREBASE_KEY
   - npm run build
 
 deploy:
