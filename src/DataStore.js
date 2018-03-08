@@ -130,34 +130,35 @@ class DataStore {
       }
     });
   }
-  // TEST function: create employee account using a different method
-  // called from roster view
-  // -- MUATASIM
-  createEmployeeAccountFromRoster(employee) {
+
+  createEmployeeAccountFromRoster(employee, cb) {
     this.isBusy = true;
     this.isSuccess = false;
+    this.error = '';
     let photoURLHash = md5(employee.email.toLowerCase().trim());
     let employeePhotoUrl = `https://www.gravatar.com/avatar/${photoURLHash}`;
     auth.createUserWithEmailAndPassword(employee.email, employee.password)
       .then(user => {
         employee.id = user.uid;
-        employee.teamId = '-L5qib7e0L-KIEqqScID'; // needs to come from fb db
+        employee.teamId = this.currentUser.teamId;
         employee.photoURL = employeePhotoUrl;
         user.updateProfile({
           displayName: `{${employee.firstName} ${employee.lastName}}`,
           photoURL: employeePhotoUrl,
         })
       })
-      .catch(err => {
-        this.error = err.message;
-        console.log(err.message)
-      })
       .then(() => {
-        db.ref(`test/users/${employee.id}`).set(employee)
+        db.ref(`test/users/${employee.id}`).set(employee);
       })
       .then(() => {
         this.isBusy = false;
-
+        cb && cb();
+      })
+      .catch(err => {
+        this.error = err.message;
+        this.isBusy = false;
+        console.log(err.message);
+        cb && cb();
       })
   }
   createEmployeeAccount(email, password) {

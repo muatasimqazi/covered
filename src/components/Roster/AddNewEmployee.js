@@ -22,28 +22,6 @@ class AddNewEmployeeForm extends Component {
             employee: {
                 password: 'covered',
                 role: 'employee',
-                "shifts": {
-                    "20180301": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180302": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180305": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180308": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    },
-                    "20180309": {
-                        "shiftEnd": "17:00:00",
-                        "shiftStart": "08:00:00"
-                    }
-                },
             },
             open: false,
 
@@ -51,15 +29,20 @@ class AddNewEmployeeForm extends Component {
     }
 
     handleChange = (evt) => {
+        dataStore.error = '';
         let employee = { ...this.state.employee, [evt.target.name]: evt.target.value, }
         this.setState({ employee });
     };
 
     handleSumbit(evt) {
         evt.preventDefault();
-        dataStore.createEmployeeAccountFromRoster(this.state.employee);
-        this.props.history.push(ROUTES.roster);
-        
+        dataStore.createEmployeeAccountFromRoster(this.state.employee, () => {
+            console.log('...', dataStore.error)
+            if (!dataStore.error) {
+                this.props.history.push(ROUTES.roster);
+            }
+            });
+
     }
     render() {
         return (

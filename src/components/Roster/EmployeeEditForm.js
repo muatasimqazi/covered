@@ -24,25 +24,25 @@ class EmployeeEditForm extends React.Component {
         
         this.state = {
             value: 'Property Value',
-            employee: dataStore.selectedEmployee,
+            
         };
     }
     componentDidMount() {
         dataStore.getEmployee(this.props.match.params.id);
         this.setState({
-            employee: dataStore.selectedEmployee
+            
         });
     }
 
     handleChange = (evt) => {
         
-        let employee = { ...this.state.employee, [evt.target.name]: evt.target.value, }
-        this.setState({ employee });
+        dataStore.selectedEmployee[evt.target.name] = evt.target.value;
     };
 
     handleSubmit(evt) {
         evt.preventDefault();
-        dataStore.editEmployee(this.props.match.params.id, this.state.employee);
+        let employee = dataStore.selectedEmployee;
+        dataStore.editEmployee(this.props.match.params.id, employee);
         this.props.history.push(ROUTES.roster);
     }
     render() {
@@ -59,14 +59,14 @@ class EmployeeEditForm extends React.Component {
                                 <TextField
                                     name="firstName"
                                     floatingLabelText="First Name"
-                                    value={this.state.employee.firstName || ''}
+                                    value={employee.firstName || ''}
                                     style={styles.textField}
                                     onChange={this.handleChange}
                                 />
                                 <TextField
                                     name="email"
                                     floatingLabelText="Email"
-                                    value={this.state.employee.email || ''}
+                                    value={employee.email || ''}
                                     style={styles.textField}
                                     onChange={this.handleChange}
                                 />
@@ -74,14 +74,14 @@ class EmployeeEditForm extends React.Component {
                                 <TextField
                                     name="lastName"
                                     floatingLabelText="Last Name"
-                                    value={this.state.employee.lastName || ''}
+                                    value={employee.lastName || ''}
                                     style={styles.textField}
                                     onChange={this.handleChange}
                                 />
                                 <TextField
                                     name="phone"
                                     floatingLabelText="Phone Number"
-                                    value={this.state.employee.phone || ''}
+                                    value={employee.phone || ''}
                                     style={styles.textField}
                                     onChange={this.handleChange}
                                 />
