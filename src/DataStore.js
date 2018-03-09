@@ -140,7 +140,7 @@ class DataStore {
     auth.createUserWithEmailAndPassword(employee.email, employee.password)
       .then(user => {
         employee.id = user.uid;
-        employee.teamId = this.currentUser.teamId;
+        employee.teamId = employee.teamId || this.currentUser.teamId;
         employee.photoURL = employeePhotoUrl;
         user.updateProfile({
           displayName: `{${employee.firstName} ${employee.lastName}}`,
@@ -161,10 +161,10 @@ class DataStore {
         cb && cb();
       })
   }
-  createEmployeeAccount(email, password) {
-    auth.createUserWithEmailAndPassword(email, password)
+  createEmployeeAccount(user) {
+    auth.createUserWithEmailAndPassword(user.email, user.password)
       .then(stuff => {
-        db.ref('test/users').orderByChild('email').equalTo(email)
+        db.ref('test/users').orderByChild('email').equalTo(user.email)
           .once('value', (snapshot, error) => {
             if (error) {
               return console.log(error.message);
@@ -173,11 +173,12 @@ class DataStore {
           });
       })
       .catch(error => {
+        this.error = error.message;
         console.log(error.message);
       });
   }
-  createSupervisorAccount(user, password, teamName) {
-    auth.createUserWithEmailAndPassword(user.email, password)
+  createSupervisorAccount(user, teamName) {
+    auth.createUserWithEmailAndPassword(user.email, user.password)
       .then(stuff => {
         const teamId = db.ref('test/teams').push({ teamName }).key;
         const id = db.ref(`test/users`).push().key;
@@ -193,6 +194,7 @@ class DataStore {
         });
       })
       .catch(error => {
+        this.error = error.message;
         console.log(error.message);
       });
   }
