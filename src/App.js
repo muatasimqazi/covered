@@ -18,6 +18,7 @@ import { app } from './base';
 import { ROUTES } from './constants';
 import Roster from './components/Roster/Roster';
 import ShiftManager from './components/ShiftManager/ShiftManager';
+import CoverageManager from './components/CoverageManager/CoverageManager';
 import { dataStore } from './DataStore';
 import { observer } from 'mobx-react';
 import { Container } from 'react-grid-system';
@@ -97,6 +98,7 @@ class App extends Component {
               <Route path={ROUTES.blah} component={Blah} />
               <Route path="/roster" component={Roster} />
               <Route path={ROUTES.shifts} component={ShiftManager} />
+              <Route path={ROUTES.coverage} component={CoverageManager} />
               
               <Route exact path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
               <Redirect to="/" />

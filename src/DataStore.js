@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { app } from './base';
 import { computed, observable } from 'mobx';
 import md5 from "blueimp-md5"; // for gravatar email hash
@@ -71,18 +72,26 @@ class DataStore {
     let actionOptions = [];
     if (this.currentUser.role === 'supervisor') {
       if (!this.currUserViaSupervisor) {
-
+        // do nothing
+      } else if (!this.currUserViaSupervisor.shifts || !this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
+        actionOptions.push('add');
       } else if (this.currUserViaSupervisor.shifts[this.formatTargetDate]) {
         actionOptions.push('remove');
-      } else {
-        actionOptions.push('add');
-      }
-    } else if (this.currentUser.shifts[this.formatTargetDate]) {
-      actionOptions.push('remove');
+      } 
     } else {
-      actionOptions.push('add');
+      if (!this.currentUser.shifts || !this.currentUser.shifts[this.formatTargetDate]) {
+        actionOptions.push('add');
+      } else if (this.currentUser.shifts[this.formatTargetDate]) {
+        actionOptions.push('remove');
+      }
     }
     return actionOptions;
+  }
+
+  @computed get coverageObject() {
+    this.teamsObj && this.currentUser && this.currentUser.teamId
+    ? this.teamsObj[this.currentUser.teamId].coverage
+    : {}
   }
 
   constructor() {
@@ -244,6 +253,9 @@ class DataStore {
   }
   setShift(employee, yyyymmddDate, info) {
     db.ref(`test/users/${employee.id}/shifts/${yyyymmddDate}`).set(info);
+  }
+  setCoverage(yyyymmddDate, info) {
+    db.ref(`test/teams/${this.currentUser.teamId}/coverage/${yyyymmddDate}`).set(info);
   }
 
   resetDb() {
