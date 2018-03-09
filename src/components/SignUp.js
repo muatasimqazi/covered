@@ -1,11 +1,12 @@
 import React from 'react';
+import { observer } from 'mobx-react';
+import { dataStore } from '../DataStore';
+import { ROUTES } from '../constants';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import { app } from '../base';
 import { Row, Col } from 'react-grid-system'
 import Paper from 'material-ui/Paper';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 const styles = {
   card: {
@@ -21,89 +22,57 @@ const styles = {
   },
   button: {
     margin: 12,
+  },
+  radioButtonGroup: {
+    display: 'flex',
+    maxWidth: 130,
+  },
+  radioButton: {
+    flex: 1,
   }
 }
 
+@observer
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      role: "employee",
-      email: '',
-      password: '',
-      phone: '',
+      teamName: '',
+      user: {
+        firstName: '',
+        lastName: '',
+        role: 'supervisor',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+        teamId: '',
+      }
     }
+
   }
   handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+    let user = { ...this.state.user, [e.target.name]: e.target.value };
+    this.setState({ user });
   }
-  handleClick = (info) => {
-    // info is either null or { email, password }
-    if (info) {
-      const { firstName, lastName, phone, email, role } = this.state;
-      app.auth().createUserWithEmailAndPassword(info.email, info.password)
-        .then(stuff => {
-          const teamId = 'teamId0001';
-          if (role === 'supervisor') {
-            return app.database().ref(`teams/${teamId}/supervisors/${stuff.uid}`).set({
-              firstName,
-              lastName,
-              phone,
-              email,
-              role,
-              uid: stuff.uid
-            });
-          }
-          else {
-            const shifts = {};
-            for (let i = 0; i < 14; ++i) {
-              const d = new Date(Date.now() + i * 24 * 60 * 60 * 1000);
-              const yyyy = d.getFullYear().toString();
-              let mm = (d.getMonth() + 1).toString();
-              if (mm.length === 1) {
-                mm = '0' + mm;
-              }
-              let dd = d.getDate().toString();
-              if (dd.length === 1) {
-                dd = '0' + dd;
-              }
-              shifts[yyyy + mm + dd] = Math.random() < 0.50 ?
-                { "working": false, "shiftStart": null, "shiftEnd": null } :
-                { "working": true, "shiftStart": "08:00:00", "shiftEnd": "17:00:00" }
-            }
-            return app.database().ref(`teams/${teamId}/employees/${stuff.uid}`).set({
-              firstName,
-              lastName,
-              phone,
-              email,
-              role,
-              shifts,
-              uid: stuff.uid
-            });
-          }
-        })
-        .catch(function (error) {
-          // Handle Errors here.
-          console.log('Error:', error.code, error.message);
-        });
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let user = this.state.user;
+    if (user.role === 'employee') {
+      dataStore.createEmployeeAccount(user, () => {
+        console.log('...', dataStore.error)
+        if (!dataStore.error) {
+          this.props.history.push(ROUTES.dashboard);
+        }
+      });
+    } else {
+      dataStore.createSupervisorAccount(user, this.state.teamName);
     }
-    else {
-      this.props.history.push('/');
-    }
-    this.setState({
-      firstName: '',
-      lastName: '',
-      role: "employee",
-      email: '',
-      password: '',
-      phone: '',
-    });
+
   }
+
   render() {
+    let user = this.state.user;
     return (
       <div style={styles.container}>
         <Row>
@@ -111,63 +80,103 @@ class SignUp extends React.Component {
             <Paper style={styles.card}>
 
               <h1>Sign-Up</h1>
-              <TextField
-                hintText='First name'
-                name='firstName'
-                onChange={this.handleChange}
-                value={this.state.firstName}
-              />
-              <br />
-              <TextField
-                hintText='Last name'
-                name='lastName'
-                onChange={this.handleChange}
-                value={this.state.lastName}
-              />
-              <br />
-              <SelectField
-                // floatingLabelText="Frequency"
-                value={this.state.role}
-                onChange={(event, index, value) => this.handleChange({ target: { name: 'role', value } })}
-              >
-                <MenuItem value="employee" primaryText="Employee" />
-                <MenuItem value="supervisor" primaryText="Supervisor" />
-              </SelectField>
-              <br />
-              <TextField
-                hintText='Phone'
-                name='phone'
-                onChange={this.handleChange}
-                value={this.state.phone}
-              />
-              <br />
-              <TextField
-                hintText='Email'
-                name='email'
-                onChange={this.handleChange}
-                value={this.state.email}
-              />
-              <br />
-              <TextField
-                hintText='Password'
-                name='password'
-                onChange={this.handleChange}
-                type='password'
-                value={this.state.password}
-              />
-              <br />
-              <RaisedButton
-                label="Cancel"
-                primary={true}
-                style={styles.button}
-                onClick={() => this.handleClick(null)}
-              />
-              <RaisedButton
-                label="Submit"
-                secondary={true}
-                style={styles.button}
-                onClick={() => this.handleClick(this.state)}
-              />
+
+              <form onSubmit={evt => this.handleSubmit(evt)}>
+                <RadioButtonGroup name="role" defaultSelected="supervisor" style={styles.radioButtonGroup}
+                  onChange={this.handleChange}
+                >
+                  <RadioButton
+                    value="supervisor"
+                    label="Supervisor"
+                    style={styles.radioButton}
+                  />
+                  <RadioButton
+                    value="employee"
+                    label="Employee"
+                    style={styles.radioButton}
+                  />
+                </RadioButtonGroup>
+                {
+                  user.role === 'supervisor'
+                    ?
+                    <div>
+                      <p>Store Information:</p>
+                      <TextField
+                        hintText='Team Name'
+                        name='teamName'
+                        onChange={evt => this.setState({ teamName: evt.target.value })}
+                        value={this.state.teamName}
+                      />
+                      <p>Supervisor Information:</p>
+                    </div>
+                    :
+                    <TextField
+                      hintText='Team ID'
+                      name='teamId'
+                      onChange={this.handleChange}
+                      value={user.teamId}
+                    />
+                }
+                <TextField
+                  hintText='First name'
+                  name='firstName'
+                  onChange={this.handleChange}
+                  value={user.firstName}
+                />
+                <br />
+                <TextField
+                  hintText='Last name'
+                  name='lastName'
+                  onChange={this.handleChange}
+                  value={user.lastName}
+                />
+                <br />
+
+                <TextField
+                  hintText='Email'
+                  name='email'
+                  onChange={this.handleChange}
+                  value={user.email}
+                  type='email'
+                />
+                <br />
+                <TextField
+                  hintText='Phone Number'
+                  name='phone'
+                  onChange={this.handleChange}
+                  type='text'
+                  value={user.phone}
+                />
+                <br />
+                <TextField
+                  hintText='Password'
+                  name='password'
+                  onChange={this.handleChange}
+                  type='password'
+                  value={user.password}
+                />
+                <br />
+                <TextField
+                  hintText='Confirm Password'
+                  name='confirmPassword'
+                  onChange={this.handleChange}
+                  type='password'
+                  value={user.confirmPassword}
+                />
+                <br />
+                <RaisedButton
+                  label="Cancel"
+                  primary={true}
+                  style={styles.button}
+                  onClick={() => this.handleClick(null)}
+                />
+                <RaisedButton
+                  label="Submit"
+                  secondary={true}
+                  style={styles.button}
+                  type="submit"
+                />
+              </form>
 
             </Paper>
           </Col>

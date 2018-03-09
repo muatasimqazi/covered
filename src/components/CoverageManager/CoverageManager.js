@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import PaperCard from './../PaperCard';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -163,11 +164,11 @@ function formatDate(date) {
                                 <TableBody
                                     displayRowCheckbox={false}
                                 >
-                                {/* {
+                                {
                                     dataStore.coverageObject 
                                     ? { coverageDetails }
                                     : null
-                                } */}
+                                }
                                 </TableBody>
                             </Table>
                     </PaperCard>

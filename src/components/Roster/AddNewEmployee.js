@@ -36,7 +36,7 @@ class AddNewEmployeeForm extends Component {
 
     handleSumbit(evt) {
         evt.preventDefault();
-        dataStore.createEmployeeAccountFromRoster(this.state.employee, () => {
+        dataStore.createEmployeeAccount(this.state.employee, () => {
             console.log('...', dataStore.error)
             if (!dataStore.error) {
                 this.props.history.push(ROUTES.roster);
