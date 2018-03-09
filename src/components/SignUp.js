@@ -59,7 +59,7 @@ class SignUp extends React.Component {
     e.preventDefault();
     let user = this.state.user;
     if (user.role === 'employee') {
-      dataStore.createEmployeeAccountFromRoster(user, () => {
+      dataStore.createEmployeeAccount(user, () => {
         console.log('...', dataStore.error)
         if (!dataStore.error) {
           this.props.history.push(ROUTES.dashboard);

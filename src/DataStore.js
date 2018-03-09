@@ -140,7 +140,7 @@ class DataStore {
     });
   }
 
-  createEmployeeAccountFromRoster(employee, cb) {
+  createEmployeeAccount(employee, cb) {
     this.isBusy = true;
     this.isSuccess = false;
     this.error = '';
@@ -170,22 +170,22 @@ class DataStore {
         cb && cb();
       })
   }
-  createEmployeeAccount(user) {
-    auth.createUserWithEmailAndPassword(user.email, user.password)
-      .then(stuff => {
-        db.ref('test/users').orderByChild('email').equalTo(user.email)
-          .once('value', (snapshot, error) => {
-            if (error) {
-              return console.log(error.message);
-            }
-            db.ref(`test/users/${Object.keys(snapshot.val())[0]}`).update({ uid: stuff.uid });
-          });
-      })
-      .catch(error => {
-        this.error = error.message;
-        console.log(error.message);
-      });
-  }
+  // createEmployeeAccount(user) {
+  //   auth.createUserWithEmailAndPassword(user.email, user.password)
+  //     .then(stuff => {
+  //       db.ref('test/users').orderByChild('email').equalTo(user.email)
+  //         .once('value', (snapshot, error) => {
+  //           if (error) {
+  //             return console.log(error.message);
+  //           }
+  //           db.ref(`test/users/${Object.keys(snapshot.val())[0]}`).update({ uid: stuff.uid });
+  //         });
+  //     })
+  //     .catch(error => {
+  //       this.error = error.message;
+  //       console.log(error.message);
+  //     });
+  // }
   createSupervisorAccount(user, teamName) {
     auth.createUserWithEmailAndPassword(user.email, user.password)
       .then(stuff => {
