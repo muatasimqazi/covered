@@ -12,7 +12,10 @@ class DataStore {
 
   @observable isLoggedIn = false;
   @observable isBusy = true;
-  @observable currentUser = null;
+  @observable currentUserId = null;
+  @computed get currentUser() {
+    return this.currentUserId && this.usersObj[this.currentUserId];
+  }
   @observable usersObj = {};
   @observable teamsObj = {};
   @observable targetDate = date;
@@ -109,10 +112,11 @@ class DataStore {
               return console.log('Error:', error.message);
             }
             const obj = snapshot.val();
-            this.currentUser = obj && obj[Object.keys(obj)[0]];
+            this.currentUserId = obj && Object.keys(obj)[0];
+            const currentUser = obj && obj[this.currentUserId];
             // Now load users on same team:
-            if (this.currentUser) {
-              db.ref('test/users').orderByChild('teamId').equalTo(this.currentUser.teamId)
+            if (currentUser) {
+              db.ref('test/users').orderByChild('teamId').equalTo(currentUser.teamId)
                 .on('value', (snapshot, error) => {
                   if (error) {
                     return console.log('Error:', error.message);
@@ -130,7 +134,7 @@ class DataStore {
             console.log('Error:', error);
             return;
           }
-          this.teamsObj = observable(snapshot.val() || {});
+          this.teamsObj = snapshot.val() || {};
         });
       }
       else {
