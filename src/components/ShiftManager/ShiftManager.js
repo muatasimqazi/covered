@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import { Row, Col, Hidden } from 'react-grid-system'
+import { Row, Col, Hidden } from 'react-grid-system';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
 
@@ -83,6 +83,11 @@ function formatDate(date) {
 }
 
 function formatTime(timeEntry) {
+
+    if(!timeEntry || !validShiftString(timeEntry)) {
+        return 'invalid'
+    }
+
     let entryArr = timeEntry.split(":");
     // format hour as number in order to use comparison operators
     entryArr[0] = +entryArr[0];
@@ -96,8 +101,18 @@ function formatTime(timeEntry) {
     } else {
       return `${entryArr[0] - 12}:${entryArr[1]}pm`;
     }
+    return timeEntry;
     
   }
+
+function validShiftString(entry) {
+    let entryArr = entry.split(':');
+    let validNumbers = entryArr.filter((item) =>
+        !isNaN(item)
+    );
+
+    return validNumbers.length === 3 ? true : false;
+}
 
 function toDateProperty(date) {
     let day = date.getDate();
@@ -262,8 +277,7 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
 
         let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)]
         let employeeRows = dataStore.employeesArray.map((employee, index) => {
-            const employeeShifts = employee.shifts; 
-            return employeeShifts 
+            return employee.shifts 
             ? <TableRow
                 key={index}>
                 <TableRowColumn style={styles.tableEmployee}>{employee.firstName} {employee.lastName}</TableRowColumn>
