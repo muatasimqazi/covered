@@ -63,6 +63,19 @@ function formatDate(date) {
   return `${month}/${day}/${year}`;
 }
 
+function formatShiftTime(date){
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+
+  if(hours < 10) {
+    '0' + hours;
+  } else if (minutes < 10) {
+    '0' + minutes;
+  }
+
+  return `${hours}:${minutes}:00`;
+}
+
 function formatTime(timeEntry) {
   let entryArr = timeEntry.split(":");
   // format hour as number in order to use comparison operators
@@ -128,60 +141,44 @@ function formatTime(timeEntry) {
     this.setState({ requestAction: evt.target.value });
   }
 
-  // submitRequest() {
-  //   let currUser = dataStore.currentUser.role === 'employee' ? dataStore.currentUser : dataStore.currUserViaSupervisor;
-  //   if (dataStore.requestActions[0] === 'add') {
-  //     if (!this.state.requestTimeStart || !this.state.requestTimeEnd) {
-  //       this.setState({
-  //         errorText: 'Please input shift start and shift end',
-  //         successText: null,
-  //         isError: true,
-  //         isSuccess: false
-  //       });          
-  //     } else if (this.state.requestTimeStart > this.state.requestTimeEnd) {
-  //       this.setState({
-  //         errorText: 'Please correct shift entry - shift start must be earlier than shift end ',
-  //         successText: null,
-  //         isError: true,
-  //         isSuccess: false
-  //       });
-  //       return;
-  //     } else {
-  //       dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: this.formatShiftTime(this.state.requestTimeStart), shiftEnd: this.formatShiftTime(this.state.requestTimeEnd)});
-  //       this.setState({
-  //         errorText: null,
-  //         successText: 'Shift added!',
-  //         isError: false,
-  //         isSuccess: true
-  //       });
-
-  //     }
-  //   } else if (dataStore.requestActions[0] === 'remove') {
-  //       dataStore.setShift(currUser, dataStore.formatTargetDate, null);
-  //       this.setState({
-  //         errorText: null,
-  //         successText: 'Shift removed!',
-  //         isError: false,
-  //         isSuccess: true
-  //       });
-  //   }
-  //   this.rerenderMessages();
-  // }
-
   submitRequest() {
     let currUser = dataStore.currentUser.role === 'employee' ? dataStore.currentUser : dataStore.currUserViaSupervisor;
     if (dataStore.requestActions[0] === 'add') {
-      if(this.state.requestTimeStart > this.state.requestTimeEnd) {
-        this.setState({errorText: 'Shift must start before it ends.'});
+      if (!this.state.requestTimeStart || !this.state.requestTimeEnd) {
+        this.setState({
+          errorText: 'Please input shift start and shift end',
+          successText: null,
+          isError: true,
+          isSuccess: false
+        });          
+      } else if (this.state.requestTimeStart > this.state.requestTimeEnd) {
+        this.setState({
+          errorText: 'Please correct shift entry - shift start must be earlier than shift end ',
+          successText: null,
+          isError: true,
+          isSuccess: false
+        });
         return;
       } else {
-        this.setState({errorText: null});
-        dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: this.formatShiftTime(this.state.requestTimeStart), shiftEnd: this.formatShiftTime(this.state.requestTimeEnd)});
+        dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: formatShiftTime(this.state.requestTimeStart), shiftEnd: formatShiftTime(this.state.requestTimeEnd)});
+        this.setState({
+          errorText: null,
+          successText: 'Shift added!',
+          isError: false,
+          isSuccess: true
+        });
+
       }
     } else if (dataStore.requestActions[0] === 'remove') {
-      this.setState({errorText: null});
-        dataStore.setShift(currUser, dataStore.formatTargetDate, null)
+        dataStore.setShift(currUser, dataStore.formatTargetDate, null);
+        this.setState({
+          errorText: null,
+          successText: 'Shift removed!',
+          isError: false,
+          isSuccess: true
+        });
     }
+    this.rerenderMessages();
   }
 
   handleTimePickerStart(evt, date) {
@@ -190,19 +187,6 @@ function formatTime(timeEntry) {
 
   handleTimePickerEnd(evt, date) {
     this.setState({requestTimeEnd: date})
-  }
-
-  formatShiftTime(date){
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-
-    if(hours < 10) {
-      '0' + hours;
-    } else if (minutes < 10) {
-      '0' + minutes;
-    }
-
-    return `${hours}:${minutes}:00`;
   }
 
   printCurrentShift() {
@@ -234,6 +218,7 @@ function formatTime(timeEntry) {
         dataStore.currUserViaSupervisor = dataStore.employeesArray[0];
       }
     }
+    
   }
 
   rerenderMessages() {
