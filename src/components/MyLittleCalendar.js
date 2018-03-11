@@ -84,12 +84,12 @@ class MyLittleCalendar extends React.Component {
           }
         });
 
-        const nNeeded = i === 0 || i === 6 ? 2 : 3 // num of emps needed for this day
+        const nNeeded = dataStore.coverageObject[yyyymmdd] || 0; // num of emps needed for this day
         const userIsSupervisor = dataStore.currentUser.role === 'supervisor';
         let text = '';
         
         if (userIsSupervisor) {
-          text = `${Math.round(nScheduled / nNeeded * 100)}% coverage`;
+          text = nNeeded ? `${Math.round(nScheduled / nNeeded * 100)}% coverage` : '';
         }
         else {
           const shift = dataStore.currentUser.shifts &&  dataStore.currentUser.shifts[yyyymmdd];
@@ -156,6 +156,8 @@ class MyLittleCalendar extends React.Component {
   render() {
     function addColors(classes, day) {
       if (day.isBeforeToday) {
+        // no color
+      } else if (day.nNeeded === 0) {
         // no color
       } else if (day.nScheduled < day.nNeeded * 0.50) {
         classes.push('rbc-red');

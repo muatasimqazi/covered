@@ -92,7 +92,7 @@ class DataStore {
   }
 
   @computed get coverageObject() {
-    this.teamsObj && this.currentUser && this.currentUser.teamId
+    return this.teamsObj && this.currentUser && this.currentUser.teamId
     ? this.teamsObj[this.currentUser.teamId].coverage
     : {}
   }
