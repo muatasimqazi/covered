@@ -7,6 +7,8 @@ import Calendar from '../Calendar';
 import { Row, Col } from 'react-grid-system';
 import { observer } from 'mobx-react';
 import NotificationMessages from '../NotificationMessages';
+import ColorKey from '../ColorKey';
+import { dataStore } from '../../DataStore';
 
 @observer
 class Supervisor extends React.Component {
@@ -16,8 +18,8 @@ class Supervisor extends React.Component {
                 <Row>
                     <Col sm={9}>
                         <PaperCard
-                            slug="Manager Dashboard"
-                            title="Today's Shifts"
+                            slug={`${dataStore.currentUser.firstName} ${dataStore.currentUser.lastName}`}
+                            title="Supervisor Calendar"
                         >
                             <br />
                             <Calendar />
@@ -29,8 +31,13 @@ class Supervisor extends React.Component {
                             <RequestForm />
                         </PaperCard>
                         <PaperCard
+                            slug="Color Key"
+                        >
+                            <ColorKey />
+                        </PaperCard>
+                        <PaperCard
                             slug="New Requests"
-                            titl="Notifications">
+                            title="Notifications">
                             <NotificationMessages />
                         </PaperCard>
                     </Col>
