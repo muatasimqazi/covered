@@ -92,7 +92,7 @@ class DataStore {
   }
 
   @computed get coverageObject() {
-    return this.teamsObj[this.currentUser.teamId].coverage;
+    return this.teamsObj[this.currentUser.teamId].coverage || {};
   }
 
   constructor() {
