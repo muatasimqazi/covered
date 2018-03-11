@@ -92,9 +92,13 @@ class DataStore {
   }
 
   @computed get coverageObject() {
+<<<<<<< Updated upstream
     return this.teamsObj && this.currentUser && this.currentUser.teamId
     ? this.teamsObj[this.currentUser.teamId].coverage
     : {}
+=======
+    return this.teamsObj[this.currentUser.teamId].coverage;
+>>>>>>> Stashed changes
   }
 
   constructor() {

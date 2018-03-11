@@ -23,6 +23,13 @@ const styles = {
         fontSize: 14,
         color: 'black',
         fontWeight: 'bold'
+    },
+    coverageInput: {
+        align: 'center'
+    },
+    errorText: {
+        color: 'red',
+        fontWeight: 'bold'
     }
 };
 
@@ -43,6 +50,22 @@ function formatDate(date) {
     return `${month}/${day}/${year}`;
 }
 
+function toDateProperty(date) {
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (day < 10) {
+      day = '0' + day;
+    }
+
+    if (month < 10) {
+      month = '0' + month;
+    }
+
+    return `${year}${month}${day}`;
+}
+
 @observer export default class CoverageManager extends React.Component {
     constructor(props) {
         super(props);
@@ -50,11 +73,14 @@ function formatDate(date) {
         this.handlePrevWeekClick = this.handlePrevWeekClick.bind(this);
         this.handleNextWeekClick = this.handleNextWeekClick.bind(this);
         this.findCoverageByDate = this.findCoverageByDate.bind(this);
+        this.printCoverageValues = this.printCoverageValues.bind(this);
+        this.updateCoverage = this.updateCoverage.bind(this);
 
         const now = new Date();
 
         this.state = {
-            startOfWeek: new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay())
+            startOfWeek: new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()),
+            errorText: null
         }
 
     }
@@ -86,19 +112,41 @@ function formatDate(date) {
     
         let dateProp =  `${year}${month}${day}`;
 
-        // return dataStore.coverageObject[dateProp];
+        return dataStore.coverageObject[dateProp] !== undefined ? dataStore.coverageObject[dateProp] : 0;
+    }
+
+    printCoverageValues() {
+        // let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)];
+        // return weekDatesArr.map((entry, index) => {
+        //    return <TableRowColumn key={index}>
+        //         <TextField
+        //             key={index*10}
+        //             style={styles.coverageInput}
+        //             name={toDateProperty(weekDatesArr[index])}
+        //             type='text'
+        //             onChange={this.updateCoverage}
+        //             defaultValue={this.findCoverageByDate(weekDatesArr[index])}
+        //         />
+        //     </TableRowColumn>
+        // });
+    }
+
+    updateCoverage(evt, newValue) {
+       const textFieldDate = evt.target.name;
+
+       if (newValue === '') {
+            return;
+       } else if (isNaN(newValue) || newValue < 0) {
+            this.setState({errorText: 'Coverage input must be a number'})
+            return;
+       }
+        
+        this.setState({errorText: null});
+        dataStore.setCoverage(textFieldDate, +newValue);
     }
 
     render() {
-        let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)]
-        let coverageDetails = weekDatesArr.map((entry, index) => {
-           return <TableRowColumn>
-                <TextField
-                    type='text'
-                    defaultValue={this.findCoverageByDate(weekDatesArr[index])}
-                />
-            </TableRowColumn>
-        });
+        let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)];
 
         return (
             <Row>
@@ -136,7 +184,7 @@ function formatDate(date) {
                                         displayBorder={false}
                                         hoverable={false}>
                                         <Hidden xs sm>
-                                            <TableHeaderColumn style={{ width: 5, align: 'center' }}></TableHeaderColumn>
+                                            <TableHeaderColumn style={{ width: 0, align: 'center' }}></TableHeaderColumn>
                                         </Hidden>
                                             <TableHeaderColumn style={styles.shiftTableHeader}>Sunday</TableHeaderColumn>
                                             <TableHeaderColumn style={styles.shiftTableHeader}>Monday</TableHeaderColumn>
@@ -151,7 +199,7 @@ function formatDate(date) {
                                         displayBorder={false}
                                         hoverable={false}>
                                         <Hidden xs sm>
-                                            <TableHeaderColumn style={{ width: 5, align: 'center' }}></TableHeaderColumn>
+                                            <TableHeaderColumn style={{ width: 0, align: 'center' }}></TableHeaderColumn>
                                         </Hidden>
                                         {
                                             weekDatesArr.map((header, index) => {
@@ -164,13 +212,31 @@ function formatDate(date) {
                                 <TableBody
                                     displayRowCheckbox={false}
                                 >
-                                {
-                                    dataStore.coverageObject 
-                                    ? { coverageDetails }
-                                    : null
-                                }
+                                
                                 </TableBody>
                             </Table>
+                            <Row>
+                            {
+                                dataStore.currentUser
+                                ?
+                                    dataStore.coverageObject 
+                                    ?  weekDatesArr.map((entry, index) => {
+                                        return <Col key={index}>
+                                             <TextField
+                                                 key={index*10}
+                                                 style={styles.coverageInput}
+                                                 name={toDateProperty(weekDatesArr[index])}
+                                                 type='text'
+                                                 onChange={this.updateCoverage}
+                                                 value={this.findCoverageByDate(entry)}
+                                            />
+                                        </Col>
+                                     })
+                                    : <Col></Col>
+                                : <Col></Col>
+                            }
+                            </Row>
+                            <div style={styles.errorText}>{this.state.errorText}</div>
                     </PaperCard>
                 </Col>
             </Row>
