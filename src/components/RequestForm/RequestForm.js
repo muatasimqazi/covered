@@ -6,12 +6,6 @@ import TimePicker from 'material-ui/TimePicker';
 import TeamRosterDropdown from './TeamRosterDropdown';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
-/*
-
-Known Issues
--- Shift information doesn't update after change (add visual success change)
-*/
-
 
 const styles = {
   mainRadioButton: {
@@ -68,9 +62,9 @@ function formatShiftTime(date){
   let minutes = date.getMinutes();
 
   if(hours < 10) {
-    '0' + hours;
+    hours = '0' + hours;
   } else if (minutes < 10) {
-    '0' + minutes;
+    minutes = '0' + minutes;
   }
 
   return `${hours}:${minutes}:00`;

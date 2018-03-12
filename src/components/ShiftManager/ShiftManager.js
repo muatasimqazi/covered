@@ -177,10 +177,9 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
     } else if (endTimeOfDay === 2) {
         endArr[0] = +endArr[0] + 12;
     }
-
     if (isNaN(startArr.reduce((prev, next) => prev + next)) || isNaN(endArr.reduce((prev, next) => prev + next))) {
         return false;
-    } else if (+startArr[0] < 0 || +startArr[0] > 24 || +endArr[0] < 24 || +endArr[0] > 24 || +startArr[1] > 59 || +startArr[1] < 0 || +endArr[1] > 59 || +endArr[1] < 0) { 
+    } else if (+startArr[0] < 0 || +startArr[0] > 24 || +endArr[0] < 0 || +endArr[0] > 24 || +startArr[1] > 59 || +startArr[1] < 0 || +endArr[1] > 59 || +endArr[1] < 0) { 
         return false;
     } else if (+startArr[0] === +endArr[0]) {
         if(+startArr[1] > +endArr[1]) {
@@ -266,7 +265,6 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
         }
 
         if (!dataStore.employeesArray[userIndex].shifts || !dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]) {
-            console.log('hi');
             if (!isTimeValid(this.state.shiftStartTime, this.state.shiftEndTime, this.state.startShiftDropdown, this.state.endShiftDropdown)){
                 this.setState({errorText: `Shifts need to be in the format - hh:mm`});
             } else {
