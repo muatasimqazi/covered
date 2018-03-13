@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import { Row, Col, Hidden } from 'react-grid-system'
+import { Row, Col, Hidden } from 'react-grid-system';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
 
@@ -61,6 +61,11 @@ const styles = {
         paddingTop: 10,
         paddingBottom: 10,
         cursor: 'pointer'
+    },
+    shiftCellPast: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        backgroundColor: '#e5e5e5'
     }
 
 };
@@ -83,6 +88,11 @@ function formatDate(date) {
 }
 
 function formatTime(timeEntry) {
+
+    if(!timeEntry || !validShiftString(timeEntry)) {
+        return 'invalid'
+    }
+
     let entryArr = timeEntry.split(":");
     // format hour as number in order to use comparison operators
     entryArr[0] = +entryArr[0];
@@ -96,8 +106,18 @@ function formatTime(timeEntry) {
     } else {
       return `${entryArr[0] - 12}:${entryArr[1]}pm`;
     }
+    return timeEntry;
     
   }
+
+function validShiftString(entry) {
+    let entryArr = entry.split(':');
+    let validNumbers = entryArr.filter((item) =>
+        !isNaN(item)
+    );
+
+    return validNumbers.length === 3 ? true : false;
+}
 
 function toDateProperty(date) {
     let day = date.getDate();
@@ -134,7 +154,8 @@ function formatAs24Hr(time, isPM) {
 }
 
 function isDateAfterToday(date) {
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     if (date >= today) {
         return true;
     }
@@ -156,10 +177,9 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
     } else if (endTimeOfDay === 2) {
         endArr[0] = +endArr[0] + 12;
     }
-
     if (isNaN(startArr.reduce((prev, next) => prev + next)) || isNaN(endArr.reduce((prev, next) => prev + next))) {
         return false;
-    } else if (+startArr[0] > 24 || +endArr[0] > 24 || +startArr[1] > 59 || +endArr[1] > 59) { 
+    } else if (+startArr[0] < 0 || +startArr[0] > 24 || +endArr[0] < 0 || +endArr[0] > 24 || +startArr[1] > 59 || +startArr[1] < 0 || +endArr[1] > 59 || +endArr[1] < 0) { 
         return false;
     } else if (+startArr[0] === +endArr[0]) {
         if(+startArr[1] > +endArr[1]) {
@@ -237,40 +257,51 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
             return;
         } 
 
+
         if (!isDateAfterToday(weekDatesArr[dateIndex - 1])){
             let today = new Date();
             this.setState({errorText: `Selected shifts must be after today, ${formatDate(today)}` });
             return;
         }
 
-        if (dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]){
-            dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex - 1]), null);
-        } else {
+        if (!dataStore.employeesArray[userIndex].shifts || !dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]) {
             if (!isTimeValid(this.state.shiftStartTime, this.state.shiftEndTime, this.state.startShiftDropdown, this.state.endShiftDropdown)){
                 this.setState({errorText: `Shifts need to be in the format - hh:mm`});
             } else {
                 this.setState({errorText: null});
                 dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex -1]), {shiftStart: formatAs24Hr(this.state.shiftStartTime, this.state.startShiftDropdown), shiftEnd: formatAs24Hr(this.state.shiftEndTime, this.state.endShiftDropdown)});
             }
+        } else if (dataStore.employeesArray[userIndex].shifts[toDateProperty(weekDatesArr[dateIndex - 1])]){
+            dataStore.setShift(dataStore.employeesArray[userIndex], toDateProperty(weekDatesArr[dateIndex - 1]), null);
         }
     }
 
     render() {
 
-        /* Shift error handler text */
-
         let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)]
         let employeeRows = dataStore.employeesArray.map((employee, index) => {
-            return <TableRow
+            return employee.shifts 
+            ? <TableRow
                 key={index}>
                 <TableRowColumn style={styles.tableEmployee}>{employee.firstName} {employee.lastName}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[0])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[1])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[1])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[1])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[2])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[2])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[2])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[3])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[3])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[3])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[4])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[5])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftEnd)} ` : '---'}</TableRowColumn>
-                <TableRowColumn style={styles.shiftCell}>{employee.shifts[toDateProperty(weekDatesArr[6])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[0]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[0])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[0])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[1]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[1])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[1])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[1])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[2]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[2])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[2])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[2])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[3]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[3])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[3])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[3])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[4]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[4])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[4])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[5]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[5])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[5])].shiftEnd)} ` : '---'}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[6]) ? styles.shiftCell: styles.shiftCellPast}>{employee.shifts[toDateProperty(weekDatesArr[6])] ? `${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftStart)} - ${formatTime(employee.shifts[toDateProperty(weekDatesArr[6])].shiftEnd)} ` : '---'}</TableRowColumn>
+            </TableRow>
+            : <TableRow
+                key={index}>
+                <TableRowColumn style={styles.tableEmployee}>{employee.firstName} {employee.lastName}</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[0]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[1]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>                
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[2]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>                
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[3]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>                
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[4]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>                
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[5]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>                
+                <TableRowColumn style={isDateAfterToday(weekDatesArr[6]) ? styles.shiftCell: styles.shiftCellPast}>---</TableRowColumn>            
             </TableRow>
         });
 

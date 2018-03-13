@@ -5,6 +5,8 @@ import RequestForm from '../RequestForm/RequestForm';
 import Calendar from '../Calendar';
 import { Row, Col } from 'react-grid-system';
 import { observer } from 'mobx-react';
+import ColorKey from '../ColorKey';
+import { dataStore } from '../../DataStore';
 
 @observer
 class Employee extends React.Component {
@@ -14,10 +16,10 @@ class Employee extends React.Component {
                 <Row>
                     <Col sm={9}>
                         <PaperCard
-                            slug="Employee Dashboard"
-                            title="Today's Shifts"
+                          slug={`${dataStore.currentUser.firstName} ${dataStore.currentUser.lastName}`}
+                          title="Employee Calendar"
                         >
-
+                            <br />
                             <Calendar />
                         </PaperCard>
                     </Col>
@@ -25,6 +27,11 @@ class Employee extends React.Component {
                         <PaperCard>
                             <h4>Request a Change</h4>
                             <RequestForm />
+                        </PaperCard>
+                        <PaperCard
+                            slug="Color Key"
+                        >
+                            <ColorKey />
                         </PaperCard>
                     </Col>
                 </Row>

@@ -4,15 +4,8 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TimePicker from 'material-ui/TimePicker';
 import TeamRosterDropdown from './TeamRosterDropdown';
-import CurrentlyWorkingDropdown from './CurrentlyWorkingDropdown';
 import { observer } from 'mobx-react';
 import { dataStore } from '../../DataStore';
-/*
-
-Known Issues
--- Shift information doesn't update after change (add visual success change)
-*/
-
 
 const styles = {
   mainRadioButton: {
@@ -37,8 +30,14 @@ const styles = {
     color: 'white'
   },
   errorText: {
+    marginTop: 10,
     color: 'red',
-    textAlign: 'center'
+    fontWeight: 'bold'
+  },
+  successText: {
+    marginTop: 10,
+    color: 'rgb(89, 141, 28)',
+    fontWeight: 'bold'
   }
 };
 
@@ -56,6 +55,19 @@ function formatDate(date) {
   }
 
   return `${month}/${day}/${year}`;
+}
+
+function formatShiftTime(date){
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+
+  if(hours < 10) {
+    hours = '0' + hours;
+  } else if (minutes < 10) {
+    minutes = '0' + minutes;
+  }
+
+  return `${hours}:${minutes}:00`;
 }
 
 function formatTime(timeEntry) {
@@ -84,12 +96,16 @@ function formatTime(timeEntry) {
     this.handleTimePickerStart = this.handleTimePickerStart.bind(this);
     this.handleTimePickerEnd = this.handleTimePickerEnd.bind(this);
     this.printCurrentShift = this.printCurrentShift.bind(this);
+    this.rerenderMessages = this.rerenderMessages.bind(this);
 
     this.state = {
       requestAction: null,
       requestTimeStart: null,
       requestTimeEnd: null,
-      errorText: null
+      errorText: null,
+      successText: null,
+      isError: false,
+      isSuccess: false
     }
   }
 
@@ -122,17 +138,41 @@ function formatTime(timeEntry) {
   submitRequest() {
     let currUser = dataStore.currentUser.role === 'employee' ? dataStore.currentUser : dataStore.currUserViaSupervisor;
     if (dataStore.requestActions[0] === 'add') {
-      if(this.state.requestTimeStart > this.state.requestTimeEnd) {
-        this.setState({errorText: 'Shift must start before it ends.'});
+      if (!this.state.requestTimeStart || !this.state.requestTimeEnd) {
+        this.setState({
+          errorText: 'Please input shift start and shift end',
+          successText: null,
+          isError: true,
+          isSuccess: false
+        });          
+      } else if (this.state.requestTimeStart > this.state.requestTimeEnd) {
+        this.setState({
+          errorText: 'Please correct shift entry - shift start must be earlier than shift end ',
+          successText: null,
+          isError: true,
+          isSuccess: false
+        });
         return;
       } else {
-        this.setState({errorText: null});
-        dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: this.formatShiftTime(this.state.requestTimeStart), shiftEnd: this.formatShiftTime(this.state.requestTimeEnd)});
+        dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: formatShiftTime(this.state.requestTimeStart), shiftEnd: formatShiftTime(this.state.requestTimeEnd)});
+        this.setState({
+          errorText: null,
+          successText: 'Shift added!',
+          isError: false,
+          isSuccess: true
+        });
+
       }
     } else if (dataStore.requestActions[0] === 'remove') {
-      this.setState({errorText: null});
-        dataStore.setShift(currUser, dataStore.formatTargetDate, null)
+        dataStore.setShift(currUser, dataStore.formatTargetDate, null);
+        this.setState({
+          errorText: null,
+          successText: 'Shift removed!',
+          isError: false,
+          isSuccess: true
+        });
     }
+    this.rerenderMessages();
   }
 
   handleTimePickerStart(evt, date) {
@@ -143,28 +183,20 @@ function formatTime(timeEntry) {
     this.setState({requestTimeEnd: date})
   }
 
-  formatShiftTime(date){
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-
-    if(hours < 10) {
-      '0' + hours;
-    } else if (minutes < 10) {
-      '0' + minutes;
-    }
-
-    return `${hours}:${minutes}:00`;
-  }
-
   printCurrentShift() {
+
     if(dataStore.currentUser.role === 'employee') {
-      if (dataStore.currentUser.shifts[dataStore.formatTargetDate]){
+      if(!dataStore.currentUser.shifts) {
+        return '';
+      } else if (dataStore.currentUser.shifts[dataStore.formatTargetDate]){
        return formatTime(dataStore.currentUser.shifts[dataStore.formatTargetDate].shiftStart) + ' - ' + formatTime(dataStore.currentUser.shifts[dataStore.formatTargetDate].shiftEnd);
       } else {
         return 'Not scheduled';
       }
     } else if (dataStore.currUserViaSupervisor) {
-      if (dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate]){
+      if(!dataStore.currUserViaSupervisor.shifts) {
+        return '';
+      } else if (dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate]){
         return formatTime(dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate].shiftStart) + ' - ' + formatTime(dataStore.currUserViaSupervisor.shifts[dataStore.formatTargetDate].shiftEnd);
       } else {
         return 'Not scheduled';
@@ -180,6 +212,17 @@ function formatTime(timeEntry) {
         dataStore.currUserViaSupervisor = dataStore.employeesArray[0];
       }
     }
+    
+  }
+
+  rerenderMessages() {
+    setInterval(function() {  
+      this.setState({
+        requestAction: dataStore.requestActions[0],
+        isSuccess: false,
+        isError: false
+      });   
+    }.bind(this), 2000);
   }
 
 
@@ -217,12 +260,23 @@ function formatTime(timeEntry) {
             : <div></div>
            }
 
+          {
+            this.state.isSuccess
+            ? <div style={styles.successText}>{this.state.successText}</div>
+            : null
+          }
+
           <RaisedButton 
             label='Submit Changes'
             onClick={this.submitRequest}
             style={styles.submitButton}
           />
-          <div style={styles.errorText}>{this.state.errorText}</div>
+          {
+            this.state.isError
+            ? <div style={styles.errorText}>{this.state.errorText}</div>
+            : null
+          }
+          
         </div> 
       }
       </div>
