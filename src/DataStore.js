@@ -120,12 +120,13 @@ class DataStore {
                     return console.log('Error:', error.message);
                   }
                   this.usersObj = snapshot.val() || {};
+                  this.isLoggedIn = true;
                 });
             }
-            else {
+            else { // email not found; this user has not been entered into the db
               this.usersObj = {};
+              this.isLoggedIn = true;
             }
-            this.isLoggedIn = true;
           });
         db.ref('test/teams').on('value', (snapshot, error) => {
           if (error) {

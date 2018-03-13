@@ -67,20 +67,24 @@ class AppBarTop extends React.Component {
               leftIcon={<FontIcon className="material-icons" style={styles.icons}>people</FontIcon>}
               containerElement={<Link to={ROUTES.roster} />}
             />
-            <Divider />
-            <MenuItem
-              onClick={this.props.handleDrawerToggle}
-              primaryText="Manage Shifts"
-              leftIcon={<FontIcon className="material-icons" style={styles.icons}>access_time</FontIcon>}
-              containerElement={<Link to={ROUTES.shifts} />}
-            />
-            <Divider />
-            <MenuItem
-              onClick={this.props.handleDrawerToggle}
-              primaryText="Coverage"
-              leftIcon={<FontIcon className="material-icons" style={styles.icons}>event_available</FontIcon>}
-              containerElement={<Link to={ROUTES.coverage} />}
-            />
+            {dataStore.currentUser && dataStore.currentUser.role === 'supervisor' &&
+              <div>
+                <Divider />
+                <MenuItem
+                  onClick={this.props.handleDrawerToggle}
+                  primaryText="Manage Shifts"
+                  leftIcon={<FontIcon className="material-icons" style={styles.icons}>access_time</FontIcon>}
+                  containerElement={<Link to={ROUTES.shifts} />}
+                />
+                <Divider />
+                <MenuItem
+                  onClick={this.props.handleDrawerToggle}
+                  primaryText="Coverage"
+                  leftIcon={<FontIcon className="material-icons" style={styles.icons}>event_available</FontIcon>}
+                  containerElement={<Link to={ROUTES.coverage} />}
+                />
+              </div>
+            }
           </Menu>
         </Drawer>
         <div style={{ height: 64 }} />
