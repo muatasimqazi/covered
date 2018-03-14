@@ -20,7 +20,10 @@ class DataStore {
   @observable teamsObj = {};
   @observable targetDate = date;
   @observable isOpenDialog = true;
-  @observable currUserViaSupervisor = null;
+  @computed get currUserViaSupervisor() {
+    return this.usersObj[this.employeesArray[this.currUserViaSupIndex].id];
+  }
+  @observable currUserViaSupIndex = 0;
   @observable selectedEmployee = {};
   @observable isSuccess = false;
   @observable error = '';

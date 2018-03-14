@@ -26,12 +26,11 @@ const styles = {
   }
 
   handleDropDownVal2(event, index, value) {
-    dataStore.currUserViaSupervisor = dataStore.employeesArray[value - 1];
+    dataStore.currUserViaSupIndex = value - 1;
     this.setState({ dropDownVal2: value });
   }
 
     createRosterList() {
-        if(!dataStore.currUserViaSupervisor) dataStore.employeesArray[0];
         return dataStore.employeesArray.map((employee, index) => 
             <MenuItem key={employee.id} value={index + 1} primaryText={employee.firstName + ' ' + employee.lastName} />
         );
