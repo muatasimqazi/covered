@@ -20,7 +20,10 @@ class DataStore {
   @observable teamsObj = {};
   @observable targetDate = date;
   @observable isOpenDialog = true;
-  @observable currUserViaSupervisor = null;
+  @computed get currUserViaSupervisor() {
+    return this.usersObj[this.employeesArray[this.currUserViaSupIndex].id];
+  }
+  @observable currUserViaSupIndex = 0;
   @observable selectedEmployee = {};
   @observable isSuccess = false;
   @observable error = '';
@@ -120,12 +123,13 @@ class DataStore {
                     return console.log('Error:', error.message);
                   }
                   this.usersObj = snapshot.val() || {};
+                  this.isLoggedIn = true;
                 });
             }
-            else {
+            else { // email not found; this user has not been entered into the db
               this.usersObj = {};
+              this.isLoggedIn = true;
             }
-            this.isLoggedIn = true;
           });
         db.ref('test/teams').on('value', (snapshot, error) => {
           if (error) {

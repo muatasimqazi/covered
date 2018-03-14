@@ -156,6 +156,8 @@ function formatTime(timeEntry) {
       } else {
         dataStore.setShift(currUser, dataStore.formatTargetDate, {shiftStart: formatShiftTime(this.state.requestTimeStart), shiftEnd: formatShiftTime(this.state.requestTimeEnd)});
         this.setState({
+          requestTimeStart: null,
+          requestTimeEnd: null,
           errorText: null,
           successText: 'Shift added!',
           isError: false,
@@ -204,15 +206,6 @@ function formatTime(timeEntry) {
     } else {
       return '';
     }
-  }
-
-  componentWillMount() {
-    if (dataStore.currentUser.role === 'supervisor') {
-      if (!dataStore.currUserViaSupervisor) {
-        dataStore.currUserViaSupervisor = dataStore.employeesArray[0];
-      }
-    }
-    
   }
 
   rerenderMessages() {

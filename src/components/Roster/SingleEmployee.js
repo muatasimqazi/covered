@@ -44,12 +44,20 @@ export default class SingleEmployee extends React.Component {
                         <FlatButton
                             label="Edit"
                             style={styles.button}
-                            containerElement={<Link to={`${ROUTES.roster}/${employee.id}`} />}
+                            disabled={dataStore.currentUser.role === 'employee'}
+                            containerElement={
+                                <Link to={dataStore.currentUser.role === 'supervisor' && `${ROUTES.roster}/${employee.id}`} />
+                            }
                         />
                         <FlatButton
                             label="Delete"
-                            style={{ color: '#B71C1C', ...styles.button }}
-                            onClick={this.handleDelete}
+                            style={dataStore.currentUser.role === 'supervisor' ?
+                                { color: '#B71C1C', ...styles.button }
+                            :
+                                { ...styles.button }
+                            }
+                            onClick={dataStore.currentUser.role === 'supervisor' && this.handleDelete}
+                            disabled={dataStore.currentUser.role === 'employee'}
                         />
                     </div>
                 </TableRowColumn>

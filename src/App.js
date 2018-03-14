@@ -45,13 +45,14 @@ class App extends Component {
 
   }
   handleLoginClick = (e) => {
-    this.props.history.push(ROUTES.signIn)
+    this.props.history.push(ROUTES.signIn);
   }
   handleLogoutClick = () => {
     dataStore.logOut();
     this.setState({
       openLoginDialog: false,
     });
+    this.props.history.push('/');
   }
   handleLoginClose = () => {
     this.setState({
