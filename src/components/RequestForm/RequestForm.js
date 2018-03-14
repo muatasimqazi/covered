@@ -46,13 +46,9 @@ function formatDate(date) {
   let month = date.getMonth()+1;
   let year = date.getFullYear();
 
-  if(day < 10) {
-    day = day;
-  }
+  if(day < 10) day = day;
 
-  if(month < 10) {
-    month = month;
-  }
+  if(month < 10) month = month;
 
   return `${month}/${day}/${year}`;
 }
@@ -61,11 +57,8 @@ function formatShiftTime(date){
   let hours = date.getHours();
   let minutes = date.getMinutes();
 
-  if(hours < 10) {
-    hours = '0' + hours;
-  } else if (minutes < 10) {
-    minutes = '0' + minutes;
-  }
+  if (hours < 10) hours = '0' + hours;
+  if (minutes < 10)  minutes = '0' + minutes;
 
   return `${hours}:${minutes}:00`;
 }

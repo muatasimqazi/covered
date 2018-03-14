@@ -34,18 +34,12 @@ const styles = {
 };
 
 function formatDate(date) {
-    // todo: consider making more human friendly - i.e. March 24th, 2018
     let day = date.getDate();
     let month = date.getMonth()+1;
     let year = date.getFullYear();
   
-    if(day < 10) {
-      day = day;
-    }
-  
-    if(month < 10) {
-      month = month;
-    }
+    if (day < 10) day = day;
+    if (month < 10) month = month;
   
     return `${month}/${day}/${year}`;
 }
@@ -55,13 +49,8 @@ function toDateProperty(date) {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
-    if (day < 10) {
-      day = '0' + day;
-    }
-
-    if (month < 10) {
-      month = '0' + month;
-    }
+    if (day < 10) day = '0' + day;
+    if (month < 10) month = '0' + month;
 
     return `${year}${month}${day}`;
 }
@@ -73,7 +62,6 @@ function toDateProperty(date) {
         this.handlePrevWeekClick = this.handlePrevWeekClick.bind(this);
         this.handleNextWeekClick = this.handleNextWeekClick.bind(this);
         this.findCoverageByDate = this.findCoverageByDate.bind(this);
-        this.printCoverageValues = this.printCoverageValues.bind(this);
         this.updateCoverage = this.updateCoverage.bind(this);
 
         const now = new Date();
@@ -102,33 +90,13 @@ function toDateProperty(date) {
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
     
-        if (day < 10) {
-          day = '0' + day;
-        }
+        if (day < 10) day = '0' + day;
     
-        if (month < 10) {
-          month = '0' + month;
-        }
+        if (month < 10) month = '0' + month;
     
         let dateProp =  `${year}${month}${day}`;
 
         return dataStore.coverageObject[dateProp] !== undefined ? dataStore.coverageObject[dateProp] : 0;
-    }
-
-    printCoverageValues() {
-        // let weekDatesArr = [this.state.startOfWeek, new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 1), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 2), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 3), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 4), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 5), new Date(this.state.startOfWeek.getFullYear(), this.state.startOfWeek.getMonth(), this.state.startOfWeek.getDate() + 6)];
-        // return weekDatesArr.map((entry, index) => {
-        //    return <TableRowColumn key={index}>
-        //         <TextField
-        //             key={index*10}
-        //             style={styles.coverageInput}
-        //             name={toDateProperty(weekDatesArr[index])}
-        //             type='text'
-        //             onChange={this.updateCoverage}
-        //             defaultValue={this.findCoverageByDate(weekDatesArr[index])}
-        //         />
-        //     </TableRowColumn>
-        // });
     }
 
     updateCoverage(evt, newValue) {

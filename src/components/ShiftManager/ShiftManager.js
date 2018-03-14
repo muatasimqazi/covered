@@ -76,13 +76,8 @@ function formatDate(date) {
     let month = date.getMonth()+1;
     let year = date.getFullYear();
   
-    if(day < 10) {
-      day = day;
-    }
-  
-    if(month < 10) {
-      month = month;
-    }
+    if(day < 10) day = day;
+    if(month < 10) month = month;
   
     return `${month}/${day}/${year}`;
 }
@@ -124,13 +119,8 @@ function toDateProperty(date) {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
-    if (day < 10) {
-      day = '0' + day;
-    }
-
-    if (month < 10) {
-      month = '0' + month;
-    }
+    if (day < 10) day = '0' + day;
+    if (month < 10) month = '0' + month;
 
     return `${year}${month}${day}`;
 }
@@ -140,9 +130,7 @@ function formatAs24Hr(time, isPM) {
     let hours = timeArr[0];
     let minutes = timeArr[1];
 
-    if(isPM === 2) {
-        hours = +hours + 12;
-    }
+    if(isPM === 2) hours = +hours + 12;
 
     if(hours < 10) {
         '0' + hours;
