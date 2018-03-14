@@ -33,6 +33,7 @@ class SignIn extends React.Component {
             displayName: '',
         }
         this.handleSignIn = this.handleSignIn.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
     }
 
     componentDidMount() {
@@ -52,7 +53,9 @@ class SignIn extends React.Component {
         let password = this.state.password;
         dataStore.logIn(email, password);
         this.props.history.push(ROUTES.dashboard)
-
+    }
+    handleCancel() {
+      this.props.history.push(ROUTES.dashboard)
     }
 
     render() {
@@ -81,7 +84,7 @@ class SignIn extends React.Component {
                                 label="Cancel"
                                 secondary={true}
                                 style={styles.button}
-                                onClick={() => this.handleClick(null)}
+                                onClick={this.handleCancel}
                             />
                             <RaisedButton
                                 label="Login"
