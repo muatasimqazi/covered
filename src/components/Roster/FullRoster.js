@@ -73,20 +73,21 @@ export default class FullRoster extends React.Component {
                                     {employees}
                                 </TableBody>
                             </Table>
-                            <div align="right">
-                                <RaisedButton
-                                    label="Add New Employee"
-                                    align="right"
-                                    primary={true}
-                                    style={{ color: '#B71C1C', ...styles.button }}
-                                    containerElement={<Link to={`${ROUTES.addEmployee}`} />}
-                                />
-                            </div>
-
+                            {dataStore.currentUser && dataStore.currentUser.role === 'supervisor' &&
+                                <div align="right">
+                                    <RaisedButton
+                                        label="Add New Employee"
+                                        align="right"
+                                        primary={true}
+                                        style={{ color: '#B71C1C', ...styles.button }}
+                                        containerElement={<Link to={`${ROUTES.addEmployee}`} />}
+                                    />
+                                </div>
+                            }
                         </PaperCard>
                     </Col>
                 </Row>
-            </div >
+            </div>
         );
     }
 }
