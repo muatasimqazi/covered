@@ -79,7 +79,7 @@ class AppBarTop extends React.Component {
                 <Divider />
                 <MenuItem
                   onClick={this.props.handleDrawerToggle}
-                  primaryText="Coverage"
+                  primaryText="Manage Coverage"
                   leftIcon={<FontIcon className="material-icons" style={styles.icons}>event_available</FontIcon>}
                   containerElement={<Link to={ROUTES.coverage} />}
                 />

@@ -27,7 +27,7 @@ const styles = {
 
   handleDropDownVal(event, index, value) {
     dataStore.currUserViaSupIndex = value - 1;
-    this.setState({ dropDownVal2: value });
+    this.setState({ dropDownVal: value });
   }
 
     createRosterList() {
