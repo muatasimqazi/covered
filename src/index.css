@@ -61,20 +61,21 @@ div.rbc-date-cell {
 }
 
 /* colored days */
+/* change background opacity */
 div.rbc-day-bg.rbc-red {
-	background-color: rgba(255, 87, 34, .05);
+	background-color: rgba(255, 87, 34, .5);
 }
 
 div.rbc-day-bg.rbc-yellow {
-	background-color: rgba(255, 167, 38, .05);
+	background-color: rgba(255, 167, 3, .5);
 }
 
 div.rbc-day-bg.rbc-green {
-	background-color: rgba(56, 142, 60, .05);
+	background-color: rgba(56, 142, 60, .5);
 }
 
 div.rbc-day-bg.rbc-blue {
-	background-color: rgba(0, 145, 234, .05);
+	background-color: rgba(0, 145, 234, .5);
 }
 
 /* colored off-range (not current month) days */
