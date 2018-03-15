@@ -55,60 +55,79 @@ h5 {
 }*/
 
 /* make date-cell transparent */
+
 div.rbc-date-cell {
 	background-color: rgba(0, 0, 0, 0);
 }
 
 /* colored days */
 div.rbc-day-bg.rbc-red {
-  background-color: #fbb;
+	background-color: rgba(255, 87, 34, .2);
 }
+
 div.rbc-day-bg.rbc-yellow {
-  background-color: #ffb;
+	background-color: rgba(255, 167, 38, .2);
 }
+
 div.rbc-day-bg.rbc-green {
-  background-color: #bfb;
+	background-color: rgba(56, 142, 60, .2);
 }
+
 div.rbc-day-bg.rbc-blue {
-  background-color: #bbf;
+	background-color: rgba(0, 145, 234, .2);
 }
 
 /* colored off-range (not current month) days */
 div.rbc-day-bg.rbc-off-range-bg.rbc-red {
-  background-color: #fdd;
+	background-color: #fdd;
 }
+
 div.rbc-day-bg.rbc-off-range-bg.rbc-yellow {
-  background-color: #ffd;
+	background-color: #f3cc4b;
 }
+
 div.rbc-day-bg.rbc-off-range-bg.rbc-green {
-  background-color: #dfd;
+	background-color: #6abf69;
 }
+
 div.rbc-day-bg.rbc-off-range-bg.rbc-blue {
-  background-color: #ddf;
+	background-color: #ddf;
 }
 
 /* border around today */
 div.rbc-day-bg.rbc-today {
-  border: 1px solid #888;
+	border: 1px solid #888;
 }
 
 /* border around clicked day */
 div.rbc-day-bg.rbc-clicked {
-  border: 1px solid #d66;
+	border: 1px solid #d66;
 }
 
 /* colored events */
 div.rbc-event.rbc-event-allday.rbc-red {
-  background-color: #faa;
+	background-color: rgb(255, 87, 34);
+	margin: 0px;
+	padding: 0;
 }
+
 div.rbc-event.rbc-event-allday.rbc-yellow {
-  background-color: #dd8;
+	background-color: rgb(255, 167, 38);
+	padding: 0;
 }
+
 div.rbc-event.rbc-event-allday.rbc-green {
-  background-color: #9e9;
+	background-color: rgb(56, 142, 60);
+	padding: 0;
 }
+
 div.rbc-event.rbc-event-allday.rbc-blue {
-  background-color: #99e;
+	background-color: rgb(0, 145, 234);
+	padding: 0;
+}
+
+.rbc-event {
+	border-radius: 0 !important;
 }
 
 @media(min-width: 780px) {
