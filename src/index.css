@@ -128,7 +128,10 @@ div.rbc-event.rbc-event-allday.rbc-blue {
 .rbc-event {
 	border-radius: 0 !important;
 }
-
+.rbc-event-content {
+	text-align: center;
+	-webkit-font-smoothing: antialiased;
+}
 @media(min-width: 780px) {
 	.hero {
 		height: 65vh;
