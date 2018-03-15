@@ -13,7 +13,6 @@ import { observer } from 'mobx-react';
 import { dataStore } from '../DataStore';
 import { green700, green900 } from 'material-ui/styles/colors'
 
-
 const styles = {
   appBar: {
     backgroundColor: green700,
@@ -27,27 +26,16 @@ const styles = {
 };
 
 class AppBarTop extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.state = {
-      drawerOpen: false,
-    }
-  }
-  handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen });
-  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
 
-  handleClick(e) {
-    e.preventDefault();
-    this.props.history.push('/')
-  }
-  handleLogin = () => {
-    this.props.history.push(ROUTES.signIn);
-  }
+  handleClick = () => this.props.history.push('/');
+
+  handleLogIn = () => this.props.history.push(ROUTES.signIn);
+
   handleLogOut = () => {
     dataStore.logOut();
     this.props.history.push('/');
   }
+
   render() {
     return (
       <div>
@@ -57,17 +45,17 @@ class AppBarTop extends React.Component {
           titleStyle={{ cursor: 'pointer' }}
           zDepth={0}
           onTitleClick={this.handleClick}
-          onLeftIconButtonClick={() => this.handleDrawerToggle()}
-          showMenuIconButton={dataStore.currentUser ? true : false}
-          iconElementRight={dataStore.currentUser ?
+          onLeftIconButtonClick={this.props.handleDrawerToggle}
+          showMenuIconButton={dataStore.isLoggedIn}
+          iconElementRight={dataStore.isLoggedIn ?
             <FlatButton label="Log Out" onClick={() => this.handleLogOut()} /> :
-            <FlatButton label="Log In" onClick={() => this.handleLogin()} />
+            <FlatButton label="Log In" onClick={() => this.handleLogIn()} />
           }
         />
         <Drawer
           docked={false}
-          open={this.state.drawerOpen}
-          onRequestChange={(open) => this.handleDrawerOverlay(open)}
+          open={this.props.drawerOpen}
+          onRequestChange={(open) => this.props.handleDrawerOverlay(open)}
           swipeAreaWidth={100}
           overlayStyle={{ background: undefined }}
         >

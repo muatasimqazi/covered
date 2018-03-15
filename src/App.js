@@ -38,23 +38,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-     
+      drawerOpen: false,
     }
-
   }
 
-
-
-
-
-  componentDidMount() {
-    // simulates an async action, and hides the spinner
-    setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
-  }
-
+  handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen }); 
+  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
+  
   render() {
     const contentStyle = { transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)' };
-
     if (this.state.drawerOpen) {
       contentStyle.marginLeft = 256;
     }
@@ -63,21 +55,22 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={contentStyle}>
-          <AppBarTop/>
+          <AppBarTop
+            onLeftIconButtonClick={this.handleDrawerToggle}
+            handleDrawerToggle={this.handleDrawerToggle}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerOverlay={this.handleDrawerOverlay}
+          />
           <Container fluid style={!dataStore.isLoggedIn ? { paddingLeft: 0, paddingRight: 0 } : undefined}>
-
             <Switch>
               <Route path={ROUTES.signUp} component={SignUp} />
               <Route path={ROUTES.signIn} component={signIn} />
-              <Route path={ROUTES.employee} component={Employee} />
-              <Route path={ROUTES.manager} component={Manager} />
               <Route path={ROUTES.blah} component={Blah} />
-              <Route path="/roster" component={Roster} />
+              <Route path={ROUTES.roster} component={Roster} />
               <Route path={ROUTES.shifts} component={ShiftManager} />
               <Route path={ROUTES.coverage} component={CoverageManager} />
-
-              <Route exact path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
-              <Redirect to="/" />
+              <Route exact path={ROUTES.home} component={HomePage} />
+              <Redirect to={ROUTES.home} />
             </Switch>
           </Container>
         </div>
