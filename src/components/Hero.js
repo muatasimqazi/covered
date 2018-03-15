@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel';
-import { green700, green800 } from 'material-ui/styles/colors';
+import {green700, amber300} from 'material-ui/styles/colors';
 import calendar from '../img/calendar.svg';
 import location from '../img/location.svg';
 import team from '../img/team.svg';
@@ -56,8 +56,8 @@ class Hero extends React.Component {
                             <Slide
                                 key={index}
                                 media={<img src={item.image} alt={item.title} />}
-                                mediaBackgroundStyle={{ backgroundColor: green700 }}
-                                contentStyle={{ backgroundColor: green800 }}
+                                mediaBackgroundStyle={{background: green700, backgroundImage: `linear-gradient(to top, ${green700} 10%, ${amber300} 140%)`}}
+                                contentStyle={{ backgroundColor: green700 }}
                                 title={item.title}
                                 subtitle={item.desc}
                             />
