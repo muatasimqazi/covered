@@ -13,7 +13,6 @@ import { observer } from 'mobx-react';
 import { dataStore } from '../DataStore';
 import { green700, green900 } from 'material-ui/styles/colors'
 
-
 const styles = {
   appBar: {
     backgroundColor: green700,
@@ -27,18 +26,16 @@ const styles = {
 };
 
 class AppBarTop extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.state = {
-      drawerOpen: false,
-    }
+
+  handleClick = () => this.props.history.push('/');
+
+  handleLogIn = () => this.props.history.push(ROUTES.signIn);
+
+  handleLogOut = () => {
+    dataStore.logOut();
+    this.props.history.push('/');
   }
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
-  handleClick(e) {
-    e.preventDefault();
-    this.props.history.push('/')
-  }
+
   render() {
     return (
       <div>
@@ -49,10 +46,10 @@ class AppBarTop extends React.Component {
           zDepth={0}
           onTitleClick={this.handleClick}
           onLeftIconButtonClick={this.props.handleDrawerToggle}
-          showMenuIconButton={this.props.loggedIn}
-          iconElementRight={this.props.loggedIn ?
-            <FlatButton label="Log Out" onClick={this.props.onLogoutClick} /> :
-            <FlatButton label="Log In" onClick={this.props.onLoginClick} />
+          showMenuIconButton={dataStore.isLoggedIn}
+          iconElementRight={dataStore.isLoggedIn ?
+            <FlatButton label="Log Out" onClick={() => this.handleLogOut()} /> :
+            <FlatButton label="Log In" onClick={() => this.handleLogIn()} />
           }
         />
         <Drawer

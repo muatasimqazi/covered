@@ -1,6 +1,7 @@
 //TODO: use this file to define and export constants
 //that are in multiple components or other files
 export const ROUTES = {
+    home: '/',
     signIn: '/signin',
     signUp: '/signup',
     dashboard: '/dashboard',

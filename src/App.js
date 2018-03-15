@@ -11,7 +11,6 @@ import SignUp from './components/SignUp';
 import signIn from './components/SignIn';
 import Employee from './components/Employee';
 import Manager from './components/Manager';
-import LoginDialog from './components/LoginDialog';
 import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
@@ -33,44 +32,21 @@ const muiTheme = getMuiTheme({
     alternateTextColor: '#FFF',
   }
 });
-  
+
 @observer
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       drawerOpen: false,
-      openLoginDialog: false,
     }
-
-  }
-  handleLoginClick = (e) => {
-    this.props.history.push(ROUTES.signIn);
-  }
-  handleLogoutClick = () => {
-    dataStore.logOut();
-    this.setState({
-      openLoginDialog: false,
-    });
-    this.props.history.push('/');
-  }
-  handleLoginClose = () => {
-    this.setState({
-      openLoginDialog: false,
-    })
   }
 
   handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen });
   handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
 
-  componentDidMount() {
-    // simulates an async action, and hides the spinner
-    setTimeout(() => this.setState({ loading: false }), 1000); // 1 sec
-  }
-
   render() {
     const contentStyle = { transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)' };
-
     if (this.state.drawerOpen) {
       contentStyle.marginLeft = 256;
     }
@@ -80,42 +56,22 @@ class App extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={contentStyle}>
           <AppBarTop
-            loggedIn={dataStore.isLoggedIn}
-            displayName={this.state.displayName}
-            onLoginClick={this.handleLoginClick}
-            onLogoutClick={this.handleLogoutClick}
             onLeftIconButtonClick={this.handleDrawerToggle}
             handleDrawerToggle={this.handleDrawerToggle}
             drawerOpen={this.state.drawerOpen}
             handleDrawerOverlay={this.handleDrawerOverlay}
           />
           <Container fluid style={!dataStore.isLoggedIn ? { paddingLeft: 0, paddingRight: 0 } : undefined}>
-
             <Switch>
               <Route path={ROUTES.signUp} component={SignUp} />
               <Route path={ROUTES.signIn} component={signIn} />
-              <Route path={ROUTES.employee} component={Employee} />
-              <Route path={ROUTES.manager} component={Manager} />
               <Route path={ROUTES.blah} component={Blah} />
-              <Route path="/roster" component={Roster} />
+              <Route path={ROUTES.roster} component={Roster} />
               <Route path={ROUTES.shifts} component={ShiftManager} />
               <Route path={ROUTES.coverage} component={CoverageManager} />
-              
-              <Route exact path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
-              <Redirect to="/" />
+              <Route exact path={ROUTES.home} component={HomePage} />
+              <Redirect to={ROUTES.home} />
             </Switch>
-
-
-            {
-              openLoginDialog
-                ?
-                <LoginDialog
-                  onClose={this.handleLoginClose}
-                  open={openLoginDialog}
-                />
-                :
-                undefined
-            }
           </Container>
         </div>
       </MuiThemeProvider>
