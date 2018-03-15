@@ -11,7 +11,6 @@ import SignUp from './components/SignUp';
 import signIn from './components/SignIn';
 import Employee from './components/Employee';
 import Manager from './components/Manager';
-import LoginDialog from './components/LoginDialog';
 import Blah from './components/Blah';
 import Snackbar from 'material-ui/Snackbar';
 import { app } from './base';
@@ -33,35 +32,20 @@ const muiTheme = getMuiTheme({
     alternateTextColor: '#FFF',
   }
 });
-  
+
 @observer
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      drawerOpen: false,
-      openLoginDialog: false,
+     
     }
 
   }
-  handleLoginClick = (e) => {
-    this.props.history.push(ROUTES.signIn);
-  }
-  handleLogoutClick = () => {
-    dataStore.logOut();
-    this.setState({
-      openLoginDialog: false,
-    });
-    this.props.history.push('/');
-  }
-  handleLoginClose = () => {
-    this.setState({
-      openLoginDialog: false,
-    })
-  }
 
-  handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen });
-  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
+
+
+
 
   componentDidMount() {
     // simulates an async action, and hides the spinner
@@ -79,16 +63,7 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={contentStyle}>
-          <AppBarTop
-            loggedIn={dataStore.isLoggedIn}
-            displayName={this.state.displayName}
-            onLoginClick={this.handleLoginClick}
-            onLogoutClick={this.handleLogoutClick}
-            onLeftIconButtonClick={this.handleDrawerToggle}
-            handleDrawerToggle={this.handleDrawerToggle}
-            drawerOpen={this.state.drawerOpen}
-            handleDrawerOverlay={this.handleDrawerOverlay}
-          />
+          <AppBarTop/>
           <Container fluid style={!dataStore.isLoggedIn ? { paddingLeft: 0, paddingRight: 0 } : undefined}>
 
             <Switch>
@@ -100,22 +75,10 @@ class App extends Component {
               <Route path="/roster" component={Roster} />
               <Route path={ROUTES.shifts} component={ShiftManager} />
               <Route path={ROUTES.coverage} component={CoverageManager} />
-              
+
               <Route exact path="/" component={() => <HomePage authenticated={this.state.loggedIn} />} />
               <Redirect to="/" />
             </Switch>
-
-
-            {
-              openLoginDialog
-                ?
-                <LoginDialog
-                  onClose={this.handleLoginClose}
-                  open={openLoginDialog}
-                />
-                :
-                undefined
-            }
           </Container>
         </div>
       </MuiThemeProvider>

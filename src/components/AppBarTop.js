@@ -34,10 +34,19 @@ class AppBarTop extends React.Component {
       drawerOpen: false,
     }
   }
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleDrawerToggle = () => dataStore.isLoggedIn && this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleDrawerOverlay = (open) => this.setState({ drawerOpen: open });
+
   handleClick(e) {
     e.preventDefault();
     this.props.history.push('/')
+  }
+  handleLogin = () => {
+    this.props.history.push(ROUTES.signIn);
+  }
+  handleLogOut = () => {
+    dataStore.logOut();
+    this.props.history.push('/');
   }
   render() {
     return (
@@ -48,17 +57,17 @@ class AppBarTop extends React.Component {
           titleStyle={{ cursor: 'pointer' }}
           zDepth={0}
           onTitleClick={this.handleClick}
-          onLeftIconButtonClick={this.props.handleDrawerToggle}
-          showMenuIconButton={this.props.loggedIn}
-          iconElementRight={this.props.loggedIn ?
-            <FlatButton label="Log Out" onClick={this.props.onLogoutClick} /> :
-            <FlatButton label="Log In" onClick={this.props.onLoginClick} />
+          onLeftIconButtonClick={() => this.handleDrawerToggle()}
+          showMenuIconButton={dataStore.currentUser ? true : false}
+          iconElementRight={dataStore.currentUser ?
+            <FlatButton label="Log Out" onClick={() => this.handleLogOut()} /> :
+            <FlatButton label="Log In" onClick={() => this.handleLogin()} />
           }
         />
         <Drawer
           docked={false}
-          open={this.props.drawerOpen}
-          onRequestChange={(open) => this.props.handleDrawerOverlay(open)}
+          open={this.state.drawerOpen}
+          onRequestChange={(open) => this.handleDrawerOverlay(open)}
           swipeAreaWidth={100}
           overlayStyle={{ background: undefined }}
         >
