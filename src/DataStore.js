@@ -21,7 +21,9 @@ class DataStore {
   @observable targetDate = date;
   @observable isOpenDialog = true;
   @computed get currUserViaSupervisor() {
-    return this.usersObj[this.employeesArray[this.currUserViaSupIndex].id];
+    return  this.employeesArray[this.currUserViaSupIndex] === undefined ? {} : this.usersObj[this.employeesArray[this.currUserViaSupIndex].id];
+    // return this.usersObj[this.employeesArray[this.currUserViaSupIndex].id] || {};
+    // return this.employeesArray > 0 ? this.usersObj[this.employeesArray[this.currUserViaSupIndex].id] : null;
   }
   @observable currUserViaSupIndex = 0;
   @observable selectedEmployee = {};

@@ -11,13 +11,14 @@ import { Divider } from 'material-ui';
 import { ROUTES } from '../constants';
 import { observer } from 'mobx-react';
 import { dataStore } from '../DataStore';
+import { green700, green900 } from 'material-ui/styles/colors'
 
 const styles = {
   appBar: {
-    backgroundColor: '#598d1c',
+    backgroundColor: green700,
     position: 'fixed',
     top: 0,
-    zIndex: 999,
+    zIndex: 1500,
   },
   icons: {
     color: '#9a9a9a'
@@ -25,18 +26,16 @@ const styles = {
 };
 
 class AppBarTop extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.state = {
-      drawerOpen: false,
-    }
+
+  handleClick = () => this.props.history.push('/');
+
+  handleLogIn = () => this.props.history.push(ROUTES.signIn);
+
+  handleLogOut = () => {
+    dataStore.logOut();
+    this.props.history.push('/');
   }
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
-  handleClick(e) {
-    e.preventDefault();
-    this.props.history.push('/')
-  }
+
   render() {
     return (
       <div>
@@ -47,10 +46,10 @@ class AppBarTop extends React.Component {
           zDepth={0}
           onTitleClick={this.handleClick}
           onLeftIconButtonClick={this.props.handleDrawerToggle}
-          showMenuIconButton={true}
-          iconElementRight={this.props.loggedIn ?
-            <FlatButton label="Log Out" onClick={this.props.onLogoutClick} /> :
-            <FlatButton label="Log In" onClick={this.props.onLoginClick} />
+          showMenuIconButton={dataStore.isLoggedIn}
+          iconElementRight={dataStore.isLoggedIn ?
+            <FlatButton label="Log Out" onClick={() => this.handleLogOut()} /> :
+            <FlatButton label="Log In" onClick={() => this.handleLogIn()} />
           }
         />
         <Drawer
@@ -79,7 +78,7 @@ class AppBarTop extends React.Component {
                 <Divider />
                 <MenuItem
                   onClick={this.props.handleDrawerToggle}
-                  primaryText="Coverage"
+                  primaryText="Manage Coverage"
                   leftIcon={<FontIcon className="material-icons" style={styles.icons}>event_available</FontIcon>}
                   containerElement={<Link to={ROUTES.coverage} />}
                 />

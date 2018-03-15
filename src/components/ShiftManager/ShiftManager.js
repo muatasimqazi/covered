@@ -76,13 +76,8 @@ function formatDate(date) {
     let month = date.getMonth()+1;
     let year = date.getFullYear();
   
-    if(day < 10) {
-      day = day;
-    }
-  
-    if(month < 10) {
-      month = month;
-    }
+    if(day < 10) day = day;
+    if(month < 10) month = month;
   
     return `${month}/${day}/${year}`;
 }
@@ -124,13 +119,8 @@ function toDateProperty(date) {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
-    if (day < 10) {
-      day = '0' + day;
-    }
-
-    if (month < 10) {
-      month = '0' + month;
-    }
+    if (day < 10) day = '0' + day;
+    if (month < 10) month = '0' + month;
 
     return `${year}${month}${day}`;
 }
@@ -140,9 +130,7 @@ function formatAs24Hr(time, isPM) {
     let hours = timeArr[0];
     let minutes = timeArr[1];
 
-    if(isPM === 2) {
-        hours = +hours + 12;
-    }
+    if(isPM === 2) hours = +hours + 12;
 
     if(hours < 10) {
         '0' + hours;
@@ -164,6 +152,7 @@ function isDateAfterToday(date) {
 }
 
 function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
+    console.log(start, end);
     // todo: we can easily split this into multiple small fns
     if(!start || !end) return;
 
@@ -172,11 +161,9 @@ function isTimeValid(start, end, startTimeOfDay, endTimeOfDay) {
 
 
     // convert into 24 hour numbers
-    if (startTimeOfDay === 2) {
-        startArr[0] = +startArr[0] + 12;
-    } else if (endTimeOfDay === 2) {
-        endArr[0] = +endArr[0] + 12;
-    }
+    if (startTimeOfDay === 2) startArr[0] = +startArr[0] + 12;
+    if (endTimeOfDay === 2) endArr[0] = +endArr[0] + 12;
+
     if (isNaN(startArr.reduce((prev, next) => prev + next)) || isNaN(endArr.reduce((prev, next) => prev + next))) {
         return false;
     } else if (+startArr[0] < 0 || +startArr[0] > 24 || +endArr[0] < 0 || +endArr[0] > 24 || +startArr[1] > 59 || +startArr[1] < 0 || +endArr[1] > 59 || +endArr[1] < 0) { 

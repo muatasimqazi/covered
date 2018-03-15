@@ -17,17 +17,17 @@ const styles = {
 @observer class TeamRosterDropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.handleDropDownVal2 = this.handleDropDownVal2.bind(this);
+    this.handleDropDownVal = this.handleDropDownVal.bind(this);
     this.createRosterList = this.createRosterList.bind(this);
 
     this.state = {
-        dropDownVal2: 1
+        dropDownVal: 1
     }
   }
 
-  handleDropDownVal2(event, index, value) {
+  handleDropDownVal(event, index, value) {
     dataStore.currUserViaSupIndex = value - 1;
-    this.setState({ dropDownVal2: value });
+    this.setState({ dropDownVal: value });
   }
 
     createRosterList() {
@@ -40,8 +40,8 @@ const styles = {
 
     return (
         <DropDownMenu
-        value={this.state.dropDownVal2}
-        onChange={this.handleDropDownVal2}
+        value={this.state.dropDownVal}
+        onChange={this.handleDropDownVal}
         style={styles.dropDown}
         autoWidth={false}
         >
