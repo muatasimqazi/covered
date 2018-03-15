@@ -38,22 +38,22 @@ const icons = [
     {
         icon: 'add_location',
         title: 'Add Location',
-        desc: 'Some text that explains the feature offered'
+        desc: 'Provide details of your store'
     },
     {
         icon: 'group',
         title: 'Create Teams',
-        desc: 'Some text that explains the feature offered'
+        desc: 'Add members to your team'
     },
     {
         icon: 'schedule',
         title: 'Track Shifts',
-        desc: 'Some text that explains the feature offered'
+        desc: 'Run your store more smoothly'
     },
     {
         icon: 'notifications',
         title: 'Stay Updated',
-        desc: 'Some text that explains the feature offered'
+        desc: 'Get notifications of new requests'
     },
 ]
 

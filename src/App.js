@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { lightGreen800, amberA400 } from 'material-ui/styles/colors';
+import { green700, amberA400 } from 'material-ui/styles/colors';
 import AppBarTop from './components/AppBarTop';
 import HomePage from './components/HomePage';
 import SignUp from './components/SignUp';
@@ -25,7 +25,7 @@ import { Container } from 'react-grid-system';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: lightGreen800,
+    primary1Color: green700,
     accent1Color: '#ffa726',
     primaryTextColor: '#FFF',
     secondaryTextColor: '#000',

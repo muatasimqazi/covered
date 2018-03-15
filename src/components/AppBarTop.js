@@ -11,13 +11,15 @@ import { Divider } from 'material-ui';
 import { ROUTES } from '../constants';
 import { observer } from 'mobx-react';
 import { dataStore } from '../DataStore';
+import { green700, green900 } from 'material-ui/styles/colors'
+
 
 const styles = {
   appBar: {
-    backgroundColor: '#598d1c',
+    backgroundColor: green700,
     position: 'fixed',
     top: 0,
-    zIndex: 999,
+    zIndex: 1500,
   },
   icons: {
     color: '#9a9a9a'
@@ -47,7 +49,7 @@ class AppBarTop extends React.Component {
           zDepth={0}
           onTitleClick={this.handleClick}
           onLeftIconButtonClick={this.props.handleDrawerToggle}
-          showMenuIconButton={true}
+          showMenuIconButton={this.props.loggedIn}
           iconElementRight={this.props.loggedIn ?
             <FlatButton label="Log Out" onClick={this.props.onLogoutClick} /> :
             <FlatButton label="Log In" onClick={this.props.onLoginClick} />
