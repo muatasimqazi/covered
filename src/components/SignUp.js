@@ -71,6 +71,8 @@ class SignUp extends React.Component {
 
   }
 
+  handleClick = () => this.props.history.push("/");
+
   render() {
     let user = this.state.user;
     return (
@@ -168,7 +170,7 @@ class SignUp extends React.Component {
                   label="Cancel"
                   primary={true}
                   style={styles.button}
-                  onClick={() => this.handleClick(null)}
+                  onClick={() => this.handleClick()}
                 />
                 <RaisedButton
                   label="Submit"
