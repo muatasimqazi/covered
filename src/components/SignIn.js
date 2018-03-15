@@ -2,23 +2,13 @@ import React from 'react';
 import { ROUTES } from '../constants';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import { Row, Col } from 'react-grid-system'
-import Paper from 'material-ui/Paper';
+import { Container, Row, Col } from 'react-grid-system'
+import PaperCard from './PaperCard';
+import Divider from 'material-ui/Divider';
 import { observer } from 'mobx-react';
 import { dataStore } from '../DataStore';
 
 const styles = {
-    card: {
-        width: 350,
-        margin: 20,
-        padding: 20,
-        display: 'inline-block',
-    },
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     button: {
         margin: 12,
     }
@@ -32,8 +22,6 @@ class SignIn extends React.Component {
             password: '',
             displayName: '',
         }
-        this.handleSignIn = this.handleSignIn.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
     }
 
     componentDidMount() {
@@ -48,54 +36,64 @@ class SignIn extends React.Component {
             [e.target.name]: e.target.value
         });
     }
-    handleSignIn() {
+    handleSubmit(evt) {
+        evt.preventDefault();
         let email = this.state.email;
         let password = this.state.password;
         dataStore.logIn(email, password);
         this.props.history.push(ROUTES.dashboard)
     }
     handleCancel() {
-      this.props.history.push(ROUTES.dashboard)
+        this.props.history.push(ROUTES.home)
     }
 
     render() {
         return (
-            <div style={styles.container}>
+            <Container>
                 <Row>
-                    <Col sm={12}>
-                        <Paper style={styles.card}>
-                            <h4>Login</h4>
-                            <br />
-                            <TextField
-                                hintText='Email'
-                                name='email'
-                                onChange={this.handleChange}
-                                value={this.state.email}
-                            />
-                            <br />
-                            <TextField
-                                hintText='Password'
-                                name='password'
-                                onChange={this.handleChange}
-                                type='password'
-                                value={this.state.password}
-                            />
-                            <RaisedButton
-                                label="Cancel"
-                                secondary={true}
-                                style={styles.button}
-                                onClick={this.handleCancel}
-                            />
-                            <RaisedButton
-                                label="Login"
-                                primary={true}
-                                style={styles.button}
-                                onClick={this.handleSignIn}
-                            />
-                        </Paper>
+                    <Col className="auth" md={5} sm={12}>
+                        <PaperCard>
+                            <div>
+                                <h4 style={{ padding: 5 }}>Login</h4>
+                                <Divider />
+                                <br />
+                                <form onSubmit={evt => this.handleSubmit(evt)}>
+                                    <TextField
+                                        hintText='Email'
+                                        name='email'
+                                        onChange={this.handleChange}
+                                        value={this.state.email}
+                                        fullWidth={true}
+                                    />
+                                    <br />
+                                    <TextField
+                                        hintText='Password'
+                                        name='password'
+                                        onChange={this.handleChange}
+                                        type='password'
+                                        value={this.state.password}
+                                        fullWidth={true}
+                                    />
+                                    <div align="right">
+                                        <RaisedButton
+                                            label="Cancel"
+                                            secondary={true}
+                                            style={styles.button}
+                                            onClick={() => this.handleCancel()}
+                                        />
+                                        <RaisedButton
+                                            label="Login"
+                                            primary={true}
+                                            style={styles.button}
+                                            type="submit"
+                                        />
+                                    </div>
+                                </form>
+                            </div>
+                        </PaperCard>
                     </Col>
                 </Row>
-            </div>
+            </Container>
         );
     }
 }
