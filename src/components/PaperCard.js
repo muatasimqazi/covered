@@ -1,7 +1,6 @@
 //@ts-check
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import FontIcon from 'material-ui/FontIcon/FontIcon';
 
 const style = {
   padding: 16,
@@ -19,7 +18,6 @@ class PaperCard extends React.Component {
       >
         <div style={{ display: 'flex' }}>
           <h5 style={{ flex: 1 }}> {this.props.slug}</h5>
-          <FontIcon className="material-icons" style={{ color: '#9a9a9a' }}>more_vert</FontIcon>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>{this.props.image}<h4>{this.props.title}</h4></div>
         {this.props.children}
